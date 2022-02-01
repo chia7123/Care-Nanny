@@ -3,7 +3,7 @@ import 'package:fyp2/authentication/login.dart';
 import 'package:fyp2/authentication/signup.dart';
 
 class Authenticate extends StatefulWidget {
-  const Authenticate({ Key? key }) : super(key: key);
+  const Authenticate({ Key key }) : super(key: key);
 
   @override
   _AuthenticateState createState() => _AuthenticateState();

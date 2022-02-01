@@ -2,21 +2,22 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp2/screen/personalInfo.dart';
 
 class SignUp extends StatefulWidget {
   final Function toggleScreen;
-  const SignUp({Key? key, required this.toggleScreen}) : super(key: key);
+  const SignUp({Key key,this.toggleScreen}) : super(key: key);
 
   @override
   _SignUpState createState() => _SignUpState();
 }
 
 class _SignUpState extends State<SignUp> {
-  late TextEditingController _emailController;
-  late TextEditingController _passwordController;
+  TextEditingController _emailController;
+  TextEditingController _passwordController;
   final _formkey = GlobalKey<FormState>();
   bool _isLoading = false;
-  late String _errorMessage;
+  String _errorMessage;
   bool get isLoading => _isLoading;
   String get errorMessage => _errorMessage;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -41,15 +42,15 @@ class _SignUpState extends State<SignUp> {
       UserCredential authResult;
       authResult = await firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
-      // Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (context) =>
-      //             InitialProfileScreen(_emailController.text)));
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  PersonalInfo(_emailController.text)));
       setLoading(false);
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(authResult.user!.uid)
+          .doc(authResult.user.uid)
           .set({
         'email': email,
         'name': null,
@@ -110,7 +111,7 @@ class _SignUpState extends State<SignUp> {
                 ),
                 TextFormField(
                   validator: (val) {
-                    if (val!.isEmpty) {
+                    if (val.isEmpty) {
                       return 'Please enter a email address';
                     } else {
                       if (!val.contains('@')) {
@@ -133,7 +134,7 @@ class _SignUpState extends State<SignUp> {
                 ),
                 TextFormField(
                   validator: (val) =>
-                      val!.length < 8 ? 'Enter more then 8 character' : null,
+                      val.length < 8 ? 'Enter more then 8 character' : null,
                   decoration: InputDecoration(
                     hintText: 'Password',
                     prefixIcon: Icon(Icons.vpn_key),
@@ -149,7 +150,7 @@ class _SignUpState extends State<SignUp> {
                 ),
                 MaterialButton(
                   onPressed: () async {
-                    if (_formkey.currentState!.validate()) {
+                    if (_formkey.currentState.validate()) {
                       await signup(_emailController.text.trim(),
                           _passwordController.text.trim());
                     }

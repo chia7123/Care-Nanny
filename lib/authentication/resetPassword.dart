@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class ResetPassword extends StatelessWidget {
-  ResetPassword({Key? key}) : super(key: key);
+  ResetPassword({Key key}) : super(key: key);
 
   final auth = FirebaseAuth.instance;
   final TextEditingController email = TextEditingController();

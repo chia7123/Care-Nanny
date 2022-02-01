@@ -6,18 +6,18 @@ import 'package:fyp2/authentication/resetPassword.dart';
 
 class Login extends StatefulWidget {
   final Function toggleScreen;
-  const Login({Key? key, required this.toggleScreen}) : super(key: key);
+  const Login({Key key, this.toggleScreen}) : super(key: key);
 
   @override
   _LoginState createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
-  late TextEditingController _emailController;
-  late TextEditingController _passwordController;
+  TextEditingController _emailController;
+  TextEditingController _passwordController;
   final _formkey = GlobalKey<FormState>();
   bool _isLoading = false;
-  late String _errorMessage;
+  String _errorMessage;
   bool get isLoading => _isLoading;
   String get errorMessage => _errorMessage;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -103,7 +103,7 @@ class _LoginState extends State<Login> {
                 ),
                 TextFormField(
                   validator: (val) {
-                    if (val!.isEmpty) {
+                    if (val.isEmpty) {
                       return 'Please enter a email address';
                     } else {
                       if (!val.contains('@')) {
@@ -126,7 +126,7 @@ class _LoginState extends State<Login> {
                 ),
                 TextFormField(
                   validator: (val) =>
-                      val!.length < 8 ? 'Enter more then 8 character' : null,
+                      val.length < 8 ? 'Enter more then 8 character' : null,
                   decoration: InputDecoration(
                     hintText: 'Password',
                     prefixIcon: Icon(Icons.vpn_key),
@@ -153,7 +153,7 @@ class _LoginState extends State<Login> {
                 ),
                 MaterialButton(
                   onPressed: () async {
-                    if (_formkey.currentState!.validate()) {
+                    if (_formkey.currentState.validate()) {
                       await login(_emailController.text.trim(),
                           _passwordController.text.trim());
                     }

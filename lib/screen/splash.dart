@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fyp2/screen/welcome.dart';
+import 'package:fyp2/screen/wrapper.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -13,9 +14,8 @@ class _splashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(
-      Duration(seconds: 2),
-      () => Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => Welcome())),
+      const Duration(seconds: 2),
+      () => Navigator.pushReplacementNamed(context, Wrapper.routeName)
     );
   }
 
@@ -27,7 +27,7 @@ class _splashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
+            SizedBox(
               height: 400,
               child: Image.asset(
                 'assets/images/logo.png',
