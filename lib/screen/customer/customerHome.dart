@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fyp2/screen/customer/serviceDetail.dart';
 import 'package:fyp2/service/database.dart';
 import 'package:fyp2/service/generateID.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -54,12 +55,12 @@ class CustomerHome extends StatelessWidget {
               actionButton(Icons.shopping_cart, "Order Now", Colors.blueAccent,
                   () {
                 initializeOrder(context);
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => ServiceDetailScreen(
-                //               orderID: orderID,
-                //             )));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ServiceDetailScreen(
+                              orderID: orderID,
+                            )));
               }),
               actionButton(Icons.assignment, "Orders", Colors.orangeAccent, () {
                 // Navigator.pushNamed(context, OrderTabScreen.routeName);
