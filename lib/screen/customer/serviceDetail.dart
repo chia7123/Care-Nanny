@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/service/database.dart';
+import 'package:fyp2/widgets/customer/order/CLList.dart';
+import 'package:fyp2/widgets/customer/order/serviceType.dart';
 import 'package:intl/intl.dart';
 
 class ServiceDetailScreen extends StatefulWidget {
@@ -17,13 +19,8 @@ class ServiceDetailScreen extends StatefulWidget {
 
 class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
   FToast fToast;
-  CollectionReference orderInfo =
-      FirebaseFirestore.instance.collection('orderInfo');
-  CollectionReference orderPending =
-      FirebaseFirestore.instance.collection('onPendingOrder');
   final user = FirebaseAuth.instance.currentUser;
   DateTime _selectedDate;
-  var price;
 
   @override
   void initState() {
@@ -44,7 +41,8 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
       lastDate: DateTime(2101),
     ).then((pickedDate) {
       if (pickedDate == null) {
-        return;
+        Fluttertoast.showToast(msg: 'Date not selected');
+        return null;
       }
       setState(() {
         _selectedDate = pickedDate;
@@ -64,13 +62,12 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
 
   Future<void> checkout(String orderID) {
     if (_selectedDate == null) {
-      Fluttertoast.showToast(msg: 'date not selected');
       return null;
     }
 
     return Database().getOrderData(orderID).then((DocumentSnapshot snapshot) {
       Map<String, dynamic> doc = snapshot.data();
-      orderPending.doc(orderID).set(doc);
+      Database().addPendingOrder(orderID, doc);
     }).whenComplete(() {
       Fluttertoast.showToast(
           msg: 'Order Placed Successfully, Pending for Confirmation Now');
@@ -106,9 +103,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                         ),
                         ElevatedButton(
                             onPressed: () {
-                              // Navigator.of(context).push(MaterialPageRoute(
-                              //     builder: (context) =>
-                              //         ConLadyList(widget.orderID)));
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      ConLadyList(widget.orderID)));
                             },
                             child: const Text('Press here'),
                             style: ElevatedButton.styleFrom(
@@ -126,9 +123,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                         ),
                         ElevatedButton(
                             onPressed: () {
-                              // Navigator.of(context).push(MaterialPageRoute(
-                              //     builder: (context) =>
-                              //         TypeServiceScreen(widget.orderID)));
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      ServiceType(widget.orderID)));
                             },
                             child: const Text('Press here'),
                             style: ElevatedButton.styleFrom(

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'orderHistoryList.dart';
+import 'orderPendingList.dart';
+import 'orderProgressList.dart';
+
 class CLHome extends StatelessWidget {
 
   Widget quickAction(BuildContext context) {
@@ -10,14 +14,14 @@ class CLHome extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           actionButton(Icons.timelapse, "Pending Order", Colors.blueAccent, () {
-            // Navigator.pushNamed(context, PendingOrderList.routeName);
+            Navigator.pushNamed(context, CLPendingOrderList.routeName);
           }),
           actionButton(
               Icons.assignment, "On Progress Order", Colors.orangeAccent, () {
-            // Navigator.pushNamed(context, ProgressOrderList.routeName);
+            Navigator.pushNamed(context, CLProgressOrderList.routeName);
           }),
           actionButton(Icons.history, "Order History", Colors.green, () {
-            // Navigator.pushNamed(context, ConLadyOrderHistory.routeName);
+            Navigator.pushNamed(context, CLOrderHistoryList.routeName);
           })
         ],
       ),

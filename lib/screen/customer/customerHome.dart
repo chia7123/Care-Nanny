@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fyp2/screen/customer/serviceDetail.dart';
 import 'package:fyp2/service/database.dart';
 import 'package:fyp2/service/generateID.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'orderHistoryList.dart';
+import 'orderTab.dart';
+import 'serviceDetail.dart';
 
 class CustomerHome extends StatelessWidget {
 
@@ -16,6 +19,8 @@ class CustomerHome extends StatelessWidget {
   String add;
   String contact;
   String orderID = GenerateID().generateID(20);
+
+  CustomerHome({Key key}) : super(key: key);
 
   Future getCusInfo() async {
     final doc = await Database().getUserData(user.uid);
@@ -63,10 +68,10 @@ class CustomerHome extends StatelessWidget {
                             )));
               }),
               actionButton(Icons.assignment, "Orders", Colors.orangeAccent, () {
-                // Navigator.pushNamed(context, OrderTabScreen.routeName);
+                Navigator.pushNamed(context, OrderTabScreen.routeName);
               }),
               actionButton(Icons.history, "Order History", Colors.green, () {
-                // Navigator.pushNamed(context, CusOrderHistory.routeName);
+                Navigator.pushNamed(context, CusOrderHistoryList.routeName);
               })
             ],
           ),
