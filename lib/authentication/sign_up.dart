@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp2/screen/personalInfo.dart';
+import 'package:fyp2/screen/personal_info.dart';
 
 class SignUp extends StatefulWidget {
   final Function toggleScreen;

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fyp2/screen/confinementLady/orderHistoryList.dart';
-import 'package:fyp2/screen/confinementLady/orderPendingList.dart';
-import 'package:fyp2/screen/confinementLady/orderProgressList.dart';
-import 'package:fyp2/screen/customer/customerHome.dart';
+import 'package:fyp2/screen/confinementLady/order_history_list.dart';
+import 'package:fyp2/screen/confinementLady/order_pending_list.dart';
+import 'package:fyp2/screen/confinementLady/order_progress_list.dart';
+import 'package:fyp2/screen/customer/customer_home.dart';
 import 'package:fyp2/screen/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fyp2/screen/wrapper.dart';
 
-import 'screen/customer/orderHistoryList.dart';
-import 'screen/customer/orderPendingList.dart';
-import 'screen/customer/orderProgressList.dart';
-import 'screen/customer/orderTab.dart';
+import 'screen/customer/order_history_list.dart';
+import 'screen/customer/order_pending_list.dart';
+import 'screen/customer/order_progress_list.dart';
+import 'screen/customer/order_tab.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();

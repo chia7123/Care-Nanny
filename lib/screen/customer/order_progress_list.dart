@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/service/database.dart';
-import 'package:fyp2/widgets/customer/order/orderProgressDetail.dart';
+import 'package:fyp2/widgets/customer/order/order_progress_detail.dart';
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 

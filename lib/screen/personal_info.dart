@@ -4,7 +4,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/service/database.dart';
+import 'package:fyp2/service/get_location.dart';
+import 'package:fyp2/service/google_api.dart';
 import 'package:fyp2/service/image_picker/signup_image_picker.dart';
+import 'package:geolocator/geolocator.dart';
 
 class PersonalInfo extends StatefulWidget {
   static const routeName = '/initialProfile';
@@ -31,14 +34,12 @@ class _PersonalInfoState extends State<PersonalInfo> {
   TextEditingController email = TextEditingController();
   TextEditingController desc = TextEditingController();
 
-
   @override
   void initState() {
     super.initState();
     email.value = TextEditingValue(text: widget.email);
     desc.value = const TextEditingValue(text: 'Briefly introduce yourself');
   }
-
 
   void _pickedImage(File image) {
     _userImageFile = image;
@@ -47,7 +48,6 @@ class _PersonalInfoState extends State<PersonalInfo> {
   void _updateProfile() async {
     final isValid = _formKey.currentState.validate();
     FocusScope.of(context).unfocus();
-    
 
     final imageStorage = FirebaseStorage.instance
         .ref()
@@ -76,8 +76,33 @@ class _PersonalInfoState extends State<PersonalInfo> {
         'id': user.uid,
         'rating': 0,
         'orderSuccess': 0,
-      }).whenComplete(
-          () => {Fluttertoast.showToast(msg: 'Sign up successful'), Navigator.of(context).pop()});
+      }).whenComplete(() => {
+            Fluttertoast.showToast(msg: 'Sign up successful'),
+            Navigator.of(context).pop()
+          });
+    }
+  }
+
+  Future getAddress() async {
+    try {
+      Position position = await GetLocation().getCurrentLocation();
+
+      Map<String, dynamic> map = await GoogleAPI().getAddress(position);
+      List<dynamic> address = map["address_components"];
+      setState(() {
+        add1.text =
+            address[0]['long_name'] + ' ' + address[1]['long_name'] + ',';
+        add2.text =
+            address[5]['long_name'] + ' ' + address[2]['long_name'] + ',';
+        add3.text =
+            address[3]['long_name'] + ', ' + address[4]['long_name'] + '.';
+      });
+      Database().updateUserData(user.uid, {
+        'latitude': position.latitude,
+        'longitude': position.longitude,
+      });
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -110,8 +135,8 @@ class _PersonalInfoState extends State<PersonalInfo> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.8,
                 child: Card(
-                  margin:
-                      const EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 25),
+                  margin: const EdgeInsets.only(
+                      left: 20, top: 20, right: 20, bottom: 25),
                   child: SingleChildScrollView(
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -152,14 +177,30 @@ class _PersonalInfoState extends State<PersonalInfo> {
                                   labelText: '2. Phone number',
                                   hintText: 'Example: 01234567890'),
                               controller: phone,
-                              keyboardType: const TextInputType.numberWithOptions(),
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(),
                             ),
-                            TextFormField(
-                              key: const ValueKey('add1'),
-                              decoration: const InputDecoration(
-                                labelText: '3. Address 1',
-                              ),
-                              controller: add1,
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 5,
+                                  child: TextFormField(
+                                    key: const ValueKey('add1'),
+                                    decoration: const InputDecoration(
+                                      labelText: '3. Address 1',
+                                      hintText: 'Select the GPS to get your address.'
+                                    ),
+                                    controller: add1,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: IconButton(
+                                    onPressed: () => getAddress(),
+                                    iconSize: 20,
+                                    icon: const Icon(Icons.gps_fixed),
+                                  ),
+                                ),
+                              ],
                             ),
                             TextFormField(
                               key: const ValueKey('add2'),

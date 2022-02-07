@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fyp2/authentication/login.dart';
-import 'package:fyp2/authentication/signup.dart';
+import 'package:fyp2/authentication/sign_up.dart';
 
 class Authenticate extends StatefulWidget {
   const Authenticate({ Key key }) : super(key: key);

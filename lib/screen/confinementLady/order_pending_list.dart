@@ -1,29 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp2/widgets/confinementLady/order/orderHistoryDetail.dart';
+import 'package:fyp2/widgets/confinementLady/order/order_pending_detail.dart';
 import 'package:intl/intl.dart';
 
-class CLOrderHistoryList extends StatelessWidget {
+class CLPendingOrderList extends StatelessWidget {
   final user = FirebaseAuth.instance.currentUser;
-  static const routeName = '/clOrderHistory';
+  static const routeName = '/clPendingorder';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Histroy'),
-      ),
+      appBar: AppBar(title: const Text('Pending Order'),),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection('CLOrderHistory')
+            .collection('onPendingOrder')
             .where('clID', isEqualTo: user.uid)
             .snapshots(),
         builder:
             (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
-             if (snapshot.data.docs.isEmpty) {
-              return const Center(child: Text('No Order History Yet'),);
+            if (snapshot.data.docs.isEmpty) {
+              return const Center(
+                child: Text('No Pending Order'),
+              );
             }
             return ListView.builder(
               itemCount: snapshot.data.docs.length,
@@ -33,7 +33,8 @@ class CLOrderHistoryList extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => CLOrderHistoryDetail(doc['orderID']),
+                        builder: (context) =>
+                            CLPendingOrderDetail(doc['orderID']),
                       ),
                     );
                   },
@@ -100,20 +101,11 @@ class CLOrderHistoryList extends StatelessWidget {
                           Divider(
                             color: Colors.grey[800],
                           ),
-                          const SizedBox(
-                            height: 5,
-                          ),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text('Ordered by : ' +
                                 DateFormat('MMMM dd, yyyy')
                                     .format(doc['creationDate'].toDate())),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Divider(
-                            color: Colors.grey[800],
                           ),
                         ],
                       ),
@@ -124,9 +116,9 @@ class CLOrderHistoryList extends StatelessWidget {
             );
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
+          } else {
+            return const Text('no data');
           }
-        
-          return const Text('no data');
         },
       ),
     );

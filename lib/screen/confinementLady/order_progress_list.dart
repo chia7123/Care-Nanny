@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp2/widgets/confinementLady/order/orderProgressDetail.dart';
+import 'package:fyp2/widgets/confinementLady/order/order_progress_detail.dart';
 import 'package:intl/intl.dart';
 
 class CLProgressOrderList extends StatelessWidget {

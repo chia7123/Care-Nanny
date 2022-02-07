@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fyp2/service/database.dart';
-import 'package:fyp2/service/generateID.dart';
+import 'package:fyp2/service/generate_id.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'orderHistoryList.dart';
-import 'orderTab.dart';
-import 'serviceDetail.dart';
+import 'order_history_list.dart';
+import 'order_tab.dart';
+import 'service_detail.dart';
 
 class CustomerHome extends StatelessWidget {
 

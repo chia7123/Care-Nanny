@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'orderPendingList.dart';
-import 'orderProgressList.dart';
+import 'order_pending_list.dart';
+import 'order_progress_list.dart';
 
 class OrderTabScreen extends StatelessWidget {
   

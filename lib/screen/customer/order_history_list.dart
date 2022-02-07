@@ -1,32 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp2/widgets/customer/order/orderPendingDetail.dart';
 import 'package:intl/intl.dart';
 
-class CusPendingOrderList extends StatelessWidget {
-  final user = FirebaseAuth.instance.currentUser;
-  static const routeName = '/pendingorder';
+import '../../widgets/customer/order/order_history_detail.dart';
 
-  CusPendingOrderList({Key key}) : super(key: key);
+class CusOrderHistoryList extends StatelessWidget {
+  final user = FirebaseAuth.instance.currentUser;
+  static const routeName = '/cushistory';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Histroy'),
+      ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection('onPendingOrder')
+            .collection('customerOrderHistory')
             .where('cusID', isEqualTo: user.uid)
             .snapshots(),
         builder:
             (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
-            if (snapshot.data.docs.isEmpty) {
-              return const Center(
-                child: Text('No Pending Order'),
-              );
+             if (snapshot.data.docs.isEmpty) {
+              return const Center(child: Text('No Order History Yet'),);
             }
-
             return ListView.builder(
               itemCount: snapshot.data.docs.length,
               itemBuilder: (context, index) {
@@ -35,8 +34,7 @@ class CusPendingOrderList extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) =>
-                            CusPendingOrderDetail(doc['orderID']),
+                        builder: (context) => CusOrderHistoryDetail(doc['orderID']),
                       ),
                     );
                   },
@@ -103,14 +101,21 @@ class CusPendingOrderList extends StatelessWidget {
                           Divider(
                             color: Colors.grey[800],
                           ),
-                         
+                          const SizedBox(
+                            height: 5,
+                          ),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text('Ordered by : ' +
                                 DateFormat('MMMM dd, yyyy')
                                     .format(doc['creationDate'].toDate())),
                           ),
-                          
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Divider(
+                            color: Colors.grey[800],
+                          ),
                         ],
                       ),
                     ),
@@ -119,10 +124,10 @@ class CusPendingOrderList extends StatelessWidget {
               },
             );
           } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            return const Text('no data');
+            return const Center(child: const CircularProgressIndicator());
           }
+        
+          return const Text('no data');
         },
       ),
     );

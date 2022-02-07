@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fyp2/widgets/customer/order/defaultService.dart';
+import 'package:fyp2/widgets/customer/order/default_service.dart';
 
-import 'customizeService.dart';
+import 'customize_service.dart';
 
 class ServiceType extends StatelessWidget {
   static const routeName = '/typeService';

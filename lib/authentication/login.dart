@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:fyp2/authentication/resetPassword.dart';
+import 'package:fyp2/authentication/reset_password.dart';
 
 class Login extends StatefulWidget {
   final Function toggleScreen;

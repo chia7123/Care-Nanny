@@ -34,7 +34,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
       backgroundColor: Colors.white,
       context: ctx,
       builder: (ctx) {
-        return Container(
+        return SizedBox(
           height: 120,
           child: ListView(
             children: [

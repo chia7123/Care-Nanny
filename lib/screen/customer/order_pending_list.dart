@@ -1,21 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp2/widgets/confinementLady/order/orderPendingDetail.dart';
+import 'package:fyp2/widgets/customer/order/order_pending_detail.dart';
 import 'package:intl/intl.dart';
 
-class CLPendingOrderList extends StatelessWidget {
+class CusPendingOrderList extends StatelessWidget {
   final user = FirebaseAuth.instance.currentUser;
-  static const routeName = '/clPendingorder';
+  static const routeName = '/pendingorder';
+
+  CusPendingOrderList({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Pending Order'),),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('onPendingOrder')
-            .where('clID', isEqualTo: user.uid)
+            .where('cusID', isEqualTo: user.uid)
             .snapshots(),
         builder:
             (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -25,6 +26,7 @@ class CLPendingOrderList extends StatelessWidget {
                 child: Text('No Pending Order'),
               );
             }
+
             return ListView.builder(
               itemCount: snapshot.data.docs.length,
               itemBuilder: (context, index) {
@@ -34,7 +36,7 @@ class CLPendingOrderList extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) =>
-                            CLPendingOrderDetail(doc['orderID']),
+                            CusPendingOrderDetail(doc['orderID']),
                       ),
                     );
                   },
@@ -101,12 +103,14 @@ class CLPendingOrderList extends StatelessWidget {
                           Divider(
                             color: Colors.grey[800],
                           ),
+                         
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text('Ordered by : ' +
                                 DateFormat('MMMM dd, yyyy')
                                     .format(doc['creationDate'].toDate())),
                           ),
+                          
                         ],
                       ),
                     ),
@@ -115,7 +119,7 @@ class CLPendingOrderList extends StatelessWidget {
               },
             );
           } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: const CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else {
             return const Text('no data');
           }

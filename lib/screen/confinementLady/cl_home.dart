@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'orderHistoryList.dart';
-import 'orderPendingList.dart';
-import 'orderProgressList.dart';
+import 'order_history_list.dart';
+import 'order_pending_list.dart';
+import 'order_progress_list.dart';
 
 class CLHome extends StatelessWidget {
 

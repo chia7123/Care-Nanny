@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/service/database.dart';
-import 'package:fyp2/widgets/customer/order/CLList.dart';
-import 'package:fyp2/widgets/customer/order/serviceType.dart';
+import 'package:fyp2/widgets/customer/order/cl_list.dart';
+import 'package:fyp2/widgets/customer/order/service_type.dart';
 import 'package:intl/intl.dart';
 
 class ServiceDetailScreen extends StatefulWidget {

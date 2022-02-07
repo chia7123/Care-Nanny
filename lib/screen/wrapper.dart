@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp2/screen/customer/customerTab.dart';
-import 'package:fyp2/screen/personalInfo.dart';
+import 'package:fyp2/screen/customer/customer_tab.dart';
+import 'package:fyp2/screen/personal_info.dart';
 import 'package:fyp2/screen/welcome.dart';
 
-import 'confinementLady/CLTab.dart';
+import 'confinementLady/cl_tab.dart';
 
 class Wrapper extends StatelessWidget {
   static const routeName = '/welcome';

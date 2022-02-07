@@ -3,7 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/service/database.dart';
+import 'package:fyp2/service/get_location.dart';
+import 'package:fyp2/service/google_api.dart';
 import 'package:fyp2/service/image_picker/user_image_picker.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../wrapper.dart';
 
@@ -28,13 +31,9 @@ class _CLProfileState extends State<CLProfile> {
   TextEditingController email = TextEditingController();
   TextEditingController desc = TextEditingController();
 
-  FToast fToast;
-
   @override
   void initState() {
     super.initState();
-    fToast = FToast();
-    fToast.init(context);
     Database().getUserData(user.uid).then((DocumentSnapshot snapshot) {
       if (snapshot.exists) {
         Map<String, dynamic> data = snapshot.data();
@@ -64,6 +63,29 @@ class _CLProfileState extends State<CLProfile> {
         'address3': add3.text,
         'description': desc.text,
       }).whenComplete(() => {Fluttertoast.showToast(msg: 'Update sucessful')});
+    }
+  }
+
+  Future getAddress() async {
+    try {
+      Position position = await GetLocation().getCurrentLocation();
+
+      Map<String, dynamic> map = await GoogleAPI().getAddress(position);
+      List<dynamic> address = map["address_components"];
+      setState(() {
+        add1.text =
+            address[0]['long_name'] + ' ' + address[1]['long_name'] + ',';
+        add2.text =
+            address[5]['long_name'] + ' ' + address[2]['long_name'] + ',';
+        add3.text =
+            address[3]['long_name'] + ', ' + address[4]['long_name'] + '.';
+      });
+      Database().updateUserData(user.uid, {
+        'latitude': position.latitude,
+        'longitude': position.longitude,
+      });
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -151,12 +173,26 @@ class _CLProfileState extends State<CLProfile> {
                           controller: phone,
                           keyboardType: const TextInputType.numberWithOptions(),
                         ),
-                        TextFormField(
-                          key: const ValueKey('add1'),
-                          decoration: const InputDecoration(
-                            labelText: '3. Address 1',
-                          ),
-                          controller: add1,
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 5,
+                              child: TextFormField(
+                                key: const ValueKey('add1'),
+                                decoration: const InputDecoration(
+                                  labelText: '3. Address 1',
+                                ),
+                                controller: add1,
+                              ),
+                            ),
+                            Expanded(
+                              child: IconButton(
+                                onPressed: () => getAddress(),
+                                iconSize: 20,
+                                icon: const Icon(Icons.gps_fixed),
+                              ),
+                            ),
+                          ],
                         ),
                         TextFormField(
                           key: const ValueKey('add2'),

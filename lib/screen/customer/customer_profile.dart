@@ -3,7 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/service/database.dart';
+import 'package:fyp2/service/get_location.dart';
+import 'package:fyp2/service/google_api.dart';
 import 'package:fyp2/service/image_picker/user_image_picker.dart';
+import 'package:geolocator/geolocator.dart';
 import '../wrapper.dart';
 
 class CustomerProfile extends StatefulWidget {
@@ -46,7 +49,6 @@ class _CustomerProfileState extends State<CustomerProfile> {
       }
     });
   }
- 
 
   void _updateProfile() async {
     final isValid = _formKey.currentState.validate();
@@ -60,6 +62,29 @@ class _CustomerProfileState extends State<CustomerProfile> {
         'address2': add2.text,
         'address3': add3.text,
       }).whenComplete(() => {Fluttertoast.showToast(msg: 'Update sucessful')});
+    }
+  }
+
+  Future getAddress() async {
+    try {
+      Position position = await GetLocation().getCurrentLocation();
+
+      Map<String, dynamic> map = await GoogleAPI().getAddress(position);
+      List<dynamic> address = map["address_components"];
+      setState(() {
+        add1.text =
+            address[0]['long_name'] + ' ' + address[1]['long_name'] + ',';
+        add2.text =
+            address[5]['long_name'] + ' ' + address[2]['long_name'] + ',';
+        add3.text =
+            address[3]['long_name'] + ', ' + address[4]['long_name'] + '.';
+      });
+      Database().updateUserData(user.uid, {
+        'latitude': position.latitude,
+        'longitude': position.longitude,
+      });
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -85,12 +110,13 @@ class _CustomerProfileState extends State<CustomerProfile> {
         ],
       ),
       backgroundColor: Theme.of(context).canvasColor,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Card(
-              margin: const EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 15),
-              child: SingleChildScrollView(
+      body: SizedBox.expand(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Card(
+                margin: const EdgeInsets.only(
+                    left: 20, top: 20, right: 20, bottom: 15),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Form(
@@ -100,7 +126,10 @@ class _CustomerProfileState extends State<CustomerProfile> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         StreamBuilder(
-                            stream: FirebaseFirestore.instance.collection('users').doc(user.uid).snapshots(),
+                            stream: FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(user.uid)
+                                .snapshots(),
                             builder: (context, snapshot) {
                               if (snapshot.data == null) {
                                 return const Center(
@@ -114,7 +143,8 @@ class _CustomerProfileState extends State<CustomerProfile> {
                         ),
                         Text(
                           'User ID: ' + user.uid,
-                          style: const TextStyle(color: Colors.grey, fontSize: 12),
+                          style:
+                              const TextStyle(color: Colors.grey, fontSize: 12),
                         ),
                         TextFormField(
                           key: const ValueKey('name'),
@@ -145,12 +175,26 @@ class _CustomerProfileState extends State<CustomerProfile> {
                           controller: phone,
                           keyboardType: const TextInputType.numberWithOptions(),
                         ),
-                        TextFormField(
-                          key: const ValueKey('add1'),
-                          decoration: const InputDecoration(
-                            labelText: '3. Address 1',
-                          ),
-                          controller: add1,
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 5,
+                              child: TextFormField(
+                                key: const ValueKey('add1'),
+                                decoration: const InputDecoration(
+                                  labelText: '3. Address 1',
+                                ),
+                                controller: add1,
+                              ),
+                            ),
+                            Expanded(
+                              child: IconButton(
+                                onPressed: () => getAddress(),
+                                iconSize: 20,
+                                icon: const Icon(Icons.gps_fixed),
+                              ),
+                            ),
+                          ],
                         ),
                         TextFormField(
                           key: const ValueKey('add2'),
@@ -178,25 +222,25 @@ class _CustomerProfileState extends State<CustomerProfile> {
                   ),
                 ),
               ),
-            ),
-            TextButton.icon(
-              icon: Icon(
-                Icons.logout,
-                color: Colors.red[600],
+              TextButton.icon(
+                icon: Icon(
+                  Icons.logout,
+                  color: Colors.red[600],
+                ),
+                onPressed: () {
+                  FirebaseAuth.instance.signOut();
+                  Navigator.pushReplacementNamed(context, Wrapper.routeName);
+                },
+                label: Text(
+                  'Logout',
+                  style: TextStyle(color: Colors.red[600]),
+                ),
               ),
-              onPressed: () {
-                FirebaseAuth.instance.signOut();
-                Navigator.pushReplacementNamed(context, Wrapper.routeName);
-              },
-              label: Text(
-                'Logout',
-                style: TextStyle(color: Colors.red[600]),
+              const SizedBox(
+                height: 10,
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

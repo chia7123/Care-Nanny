@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp2/widgets/confinementLady/order/order_history_detail.dart';
 import 'package:intl/intl.dart';
 
-import '../../widgets/customer/order/orderHistoryDetail.dart';
-
-class CusOrderHistoryList extends StatelessWidget {
+class CLOrderHistoryList extends StatelessWidget {
   final user = FirebaseAuth.instance.currentUser;
-  static const routeName = '/cushistory';
+  static const routeName = '/clOrderHistory';
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +16,8 @@ class CusOrderHistoryList extends StatelessWidget {
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection('customerOrderHistory')
-            .where('cusID', isEqualTo: user.uid)
+            .collection('CLOrderHistory')
+            .where('clID', isEqualTo: user.uid)
             .snapshots(),
         builder:
             (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -34,7 +33,7 @@ class CusOrderHistoryList extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => CusOrderHistoryDetail(doc['orderID']),
+                        builder: (context) => CLOrderHistoryDetail(doc['orderID']),
                       ),
                     );
                   },
@@ -124,7 +123,7 @@ class CusOrderHistoryList extends StatelessWidget {
               },
             );
           } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: const CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
         
           return const Text('no data');

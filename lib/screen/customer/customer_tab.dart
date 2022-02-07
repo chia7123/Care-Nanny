@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fyp2/screen/customer/customerHome.dart';
+import 'package:fyp2/screen/customer/customer_home.dart';
 
-import 'customerProfile.dart';
+import 'customer_profile.dart';
 
 class CustomerTab extends StatefulWidget {
   const CustomerTab({Key key}) : super(key: key);
