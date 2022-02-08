@@ -4,6 +4,7 @@ import 'package:fyp2/screen/confinementLady/order_history_list.dart';
 import 'package:fyp2/screen/confinementLady/order_pending_list.dart';
 import 'package:fyp2/screen/confinementLady/order_progress_list.dart';
 import 'package:fyp2/screen/customer/customer_home.dart';
+import 'package:fyp2/screen/customer/service_detail.dart';
 import 'package:fyp2/screen/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fyp2/screen/wrapper.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         Wrapper.routeName: (context) => Wrapper(),
         CustomerHome.routeName: (context) => CustomerHome(),
         OrderTabScreen.routeName: (context) => OrderTabScreen(),
+        ServiceDetailScreen.routeName:(context)=> ServiceDetailScreen(),
         CusProgressOrderList.routeName: (context) => CusProgressOrderList(),
         CusPendingOrderList.routeName: (context) => CusPendingOrderList(),
         CusOrderHistoryList.routeName: (context) => CusOrderHistoryList(),

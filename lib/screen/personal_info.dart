@@ -4,7 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/service/database.dart';
-import 'package:fyp2/service/get_location.dart';
+import 'package:fyp2/service/location.dart';
 import 'package:fyp2/service/google_api.dart';
 import 'package:fyp2/service/image_picker/signup_image_picker.dart';
 import 'package:geolocator/geolocator.dart';
@@ -85,7 +85,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
 
   Future getAddress() async {
     try {
-      Position position = await GetLocation().getCurrentLocation();
+      Position position = await LocationService().getCurrentLocation();
 
       Map<String, dynamic> map = await GoogleAPI().getAddress(position);
       List<dynamic> address = map["address_components"];
@@ -93,7 +93,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
         add1.text =
             address[0]['long_name'] + ' ' + address[1]['long_name'] + ',';
         add2.text =
-            address[5]['long_name'] + ' ' + address[2]['long_name'] + ',';
+            address[6]['long_name'] + ' ' + address[2]['long_name'] + ',';
         add3.text =
             address[3]['long_name'] + ', ' + address[4]['long_name'] + '.';
       });

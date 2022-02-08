@@ -3,15 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/service/database.dart';
+import 'package:fyp2/service/generate_id.dart';
 import 'package:fyp2/widgets/customer/order/cl_list.dart';
 import 'package:fyp2/widgets/customer/order/service_type.dart';
 import 'package:intl/intl.dart';
 
 class ServiceDetailScreen extends StatefulWidget {
   static const routeName = '/servicedetail';
-  final String orderID;
 
-  const ServiceDetailScreen({Key key, this.orderID}) : super(key: key);
+  ServiceDetailScreen({Key key}) : super(key: key);
 
   @override
   _ServiceDetailScreenState createState() => _ServiceDetailScreenState();
@@ -21,15 +21,48 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
   FToast fToast;
   final user = FirebaseAuth.instance.currentUser;
   DateTime _selectedDate;
+  String cusName;
+  String address;
+  String contact;
+  String orderID;
+
+  Future getCusInfo() async {
+    final doc = await Database().getUserData(user.uid);
+
+    cusName = doc['name'];
+    address = doc['address1'] + '' + doc['address2'] + '' + doc['address3'];
+    contact = doc['phone'];
+  }
+
+  Future<dynamic> initializeOrder() async {
+    orderID = GenerateID().generateID(20);
+    await getCusInfo();
+
+    return Database().addOrder(orderID, {
+      'orderID': orderID,
+      'cusID': user.uid,
+      'cusName': cusName,
+      'cusContact': contact,
+      'creationDate': DateTime.now(),
+      'cusAdd': address,
+      'clID': '',
+      'clName': null,
+      'price': null,
+      'selectedDate': null,
+      'serviceSelected': null,
+      'typeOfService': 'Not selected yet',
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    initializeOrder();
   }
 
   @override
   void dispose() {
-    Database().deleteOrder(widget.orderID);
+    Database().deleteOrder(orderID);
     super.dispose();
   }
 
@@ -55,7 +88,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     if (_selectedDate == null) {
       return null;
     }
-    return Database().updateOrderData(widget.orderID, {
+    return Database().updateOrderData(orderID, {
       'selectedDate': _selectedDate,
     });
   }
@@ -105,7 +138,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
-                                      ConLadyList(widget.orderID)));
+                                      ConLadyList(orderID)));
                             },
                             child: const Text('Press here'),
                             style: ElevatedButton.styleFrom(
@@ -125,7 +158,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
-                                      ServiceType(widget.orderID)));
+                                      ServiceType(orderID)));
                             },
                             child: const Text('Press here'),
                             style: ElevatedButton.styleFrom(
@@ -158,11 +191,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
               StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('orderInfo')
-                    .doc(widget.orderID)
+                    .doc(orderID)
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<DocumentSnapshot> snapshot) {
-                  if (!snapshot.data.exists) {
+                  if (!snapshot.hasData) {
                     return const CircularProgressIndicator(
                       strokeWidth: 5,
                     );

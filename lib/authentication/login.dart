@@ -65,7 +65,7 @@ class _LoginState extends State<Login> {
   }
 
   void setMessage(message) {
-    _errorMessage = message;
+    _errorMessage = message.toString();
   }
 
   @override

@@ -1,6 +1,8 @@
+import 'dart:math';
+
 import 'package:geolocator/geolocator.dart';
 
-class GetLocation {
+class LocationService {
 
   Future<Position> getCurrentLocation() async {
     bool serviceEnabled;
@@ -37,6 +39,31 @@ class GetLocation {
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
     return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
+  }
+
+  double computeDistance(double startLat,double startLng,double endLat,double endLng){
+    double distanceInMeters = Geolocator.distanceBetween(startLat, startLng, endLat, endLng);
+
+    return distanceInMeters;
+  }
+
+   double degreesToRadians(double degrees){
+    return degrees * pi / 180;
+  }
+
+  //Harvesine algorithm
+  double distance(double startLat,double startLng,double endLat,double endLng){
+    double earthRadiusKm = 6371;
+
+    var dLat = degreesToRadians(endLat  - startLat);
+    var dLon = degreesToRadians(endLng - startLng);
+
+    var a = sin(dLat / 2) * sin(dLat / 2) +
+            sin(dLon / 2) * sin(dLon / 2) * 
+            cos(degreesToRadians(startLat)) * cos(degreesToRadians(endLat));
+
+    var c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    return earthRadiusKm * c;
   }
 
 
