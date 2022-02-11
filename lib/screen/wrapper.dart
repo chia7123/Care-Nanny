@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:fyp2/screen/customer/customer_tab.dart';
 import 'package:fyp2/screen/personal_info.dart';
 import 'package:fyp2/screen/welcome.dart';
-
 import 'confinementLady/cl_tab.dart';
 
 class Wrapper extends StatelessWidget {

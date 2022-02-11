@@ -10,7 +10,6 @@ import 'package:intl/intl.dart';
 
 class ServiceDetailScreen extends StatefulWidget {
   static const routeName = '/servicedetail';
-
   ServiceDetailScreen({Key key}) : super(key: key);
 
   @override
@@ -18,25 +17,40 @@ class ServiceDetailScreen extends StatefulWidget {
 }
 
 class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
-  FToast fToast;
   final user = FirebaseAuth.instance.currentUser;
   DateTime _selectedDate;
   String cusName;
   String address;
   String contact;
   String orderID;
+  String clID;
+  String clName;
 
-  Future getCusInfo() async {
+  Future getInfo() async {
     final doc = await Database().getUserData(user.uid);
 
     cusName = doc['name'];
     address = doc['address1'] + '' + doc['address2'] + '' + doc['address3'];
     contact = doc['phone'];
+
+    await FirebaseFirestore.instance
+        .collection('tempData')
+        .get()
+        .then((QuerySnapshot snapshot) => {
+              if (snapshot.docs.isNotEmpty)
+                {
+                  clID = snapshot.docs[0]['id'],
+                  clName = snapshot.docs[0]['name'],
+                }
+            });
+            print(clID);
+            print(clName);
   }
 
   Future<dynamic> initializeOrder() async {
     orderID = GenerateID().generateID(20);
-    await getCusInfo();
+
+    await getInfo();
 
     return Database().addOrder(orderID, {
       'orderID': orderID,
@@ -45,8 +59,8 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
       'cusContact': contact,
       'creationDate': DateTime.now(),
       'cusAdd': address,
-      'clID': '',
-      'clName': null,
+      'clID': clID,
+      'clName': clName,
       'price': null,
       'selectedDate': null,
       'serviceSelected': null,
@@ -63,6 +77,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
   @override
   void dispose() {
     Database().deleteOrder(orderID);
+    Database().deleteTempData();
     super.dispose();
   }
 
@@ -104,6 +119,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     }).whenComplete(() {
       Fluttertoast.showToast(
           msg: 'Order Placed Successfully, Pending for Confirmation Now');
+      Database().deleteTempData();
       Navigator.pop(context);
     });
   }
@@ -113,7 +129,6 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Confinement Service Detail'),
-        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Container(
         margin: const EdgeInsets.symmetric(vertical: 30, horizontal: 15),
@@ -137,8 +152,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                         ElevatedButton(
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      ConLadyList(orderID)));
+                                  builder: (context) => ConLadyList(orderID)));
                             },
                             child: const Text('Press here'),
                             style: ElevatedButton.styleFrom(
@@ -157,8 +171,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                         ElevatedButton(
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      ServiceType(orderID)));
+                                  builder: (context) => ServiceType(orderID)));
                             },
                             child: const Text('Press here'),
                             style: ElevatedButton.styleFrom(

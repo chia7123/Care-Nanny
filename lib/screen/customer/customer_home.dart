@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fyp2/screen/customer/scan_cl.dart';
+import 'package:fyp2/screen/customer/get_nearest_cl.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'order_history_list.dart';
@@ -82,7 +82,6 @@ class CustomerHome extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text('CareNanny', style: GoogleFonts.allura(fontSize: 35)),
-        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -97,7 +96,7 @@ class CustomerHome extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => ScanCL(),
+                  builder: (_) => GetNearestCL(),
                 ),
               );
             })

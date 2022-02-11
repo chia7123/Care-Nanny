@@ -32,8 +32,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Final Year Project',
       theme: ThemeData(
-        backgroundColor: const Color.fromRGBO(242, 118, 74, 1),
-        primaryColor: const Color.fromRGBO(242, 118, 74, 1),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.orange,
+          iconTheme: IconThemeData(color: Colors.white),
+          actionsIconTheme: IconThemeData(color: Colors.white),
+          titleTextStyle: TextStyle(color: Colors.white,fontSize: 18)
+        ),
+        primaryColor: Colors.orange,
         canvasColor: const Color.fromRGBO(255, 241, 201, 1),
         primarySwatch: Colors.orange,
       ),
@@ -42,7 +47,7 @@ class MyApp extends StatelessWidget {
         Wrapper.routeName: (context) => Wrapper(),
         CustomerHome.routeName: (context) => CustomerHome(),
         OrderTabScreen.routeName: (context) => OrderTabScreen(),
-        ServiceDetailScreen.routeName:(context)=> ServiceDetailScreen(),
+        ServiceDetailScreen.routeName: (context) => ServiceDetailScreen(),
         CusProgressOrderList.routeName: (context) => CusProgressOrderList(),
         CusPendingOrderList.routeName: (context) => CusPendingOrderList(),
         CusOrderHistoryList.routeName: (context) => CusOrderHistoryList(),

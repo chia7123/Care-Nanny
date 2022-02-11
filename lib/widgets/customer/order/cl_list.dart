@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp2/service/database.dart';
+import 'package:fyp2/widgets/profile_card.dart';
 
 class ConLadyList extends StatelessWidget {
   CollectionReference orderInfo =
@@ -12,7 +13,7 @@ class ConLadyList extends StatelessWidget {
 
   ConLadyList(this.orderID, {Key key}) : super(key: key);
 
-  Future pickLady(BuildContext ctx, String id, String name, String phone) {
+  Future hire(BuildContext ctx, String id, String name, String phone) {
     return Database().updateOrderData(orderID, {
       'clID': id,
       'clName': name,
@@ -53,87 +54,80 @@ class ConLadyList extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final user = snapshot.data.docs[index];
                           if (user['userType'] == 'Confinement Lady') {
-                            return InkWell(
-                              onTap: () {},
-                              child: Card(
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 10),
-                                child: ExpansionTile(
-                                  iconColor: Colors.orange,
-                                  leading: CircleAvatar(
-                                    // backgroundColor: Colors.red,
-                                    backgroundImage:
-                                        NetworkImage(user['imageUrl']),
-                                  ),
-                                  title: Column(
-                                    children: [
-                                      Text(
-                                        user['name'],
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            'Rating :',
-                                            style:
-                                                TextStyle(color: Colors.grey),
-                                          ),
-                                          Row(
-                                            children: [
-                                              for (int i = 1;
-                                                  i <= user['rating'].round();
-                                                  i++)
-                                                const Icon(
-                                                  Icons.star,
-                                                  color: Colors.amber,
-                                                )
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Order Taken: ' +
-                                              user['orderSuccess'].toString(),
-                                          style: const TextStyle(color: Colors.grey),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                            return Card(
+                              elevation: 5,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 10),
+                              child: ExpansionTile(
+                                iconColor: Colors.orange,
+                                leading: CircleAvatar(
+                                  // backgroundColor: Colors.red,
+                                  backgroundImage:
+                                      NetworkImage(user['imageUrl']),
+                                ),
+                                title: Column(
                                   children: [
-                                    Container(
-                                      margin: const EdgeInsets.all(10),
-                                      padding: const EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          color: Colors.grey.shade300),
-                                      child: user['description'] ==
-                                              'Briefly introduce yourself'
-                                          ? const Text(
-                                              'The user not yet display any description')
-                                          : Text(user['description']),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          user['name'],
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20),
+                                        ),
+                                        ProfileCard(user['id']),
+                                      ],
                                     ),
-                                    ElevatedButton.icon(
-                                        onPressed: () => pickLady(
-                                              context,
-                                              user['id'],
-                                              user['name'],
-                                              user['phone'],
-                                            ),
-                                        icon: const Icon(Icons.favorite),
-                                        label: const Text('Pick Me'))
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          'Rating :',
+                                          style: TextStyle(color: Colors.grey),
+                                        ),
+                                        user['rating'] == 0
+                                            ? const Text(
+                                                ' No rating yet',
+                                                style: TextStyle(
+                                                    color: Colors.grey),
+                                              )
+                                            : Row(
+                                                children: [
+                                                  for (int i = 1;
+                                                      i <=
+                                                          user['rating']
+                                                              .round();
+                                                      i++)
+                                                    const Icon(
+                                                      Icons.star,
+                                                      color: Colors.amber,
+                                                    )
+                                                ],
+                                              ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    )
                                   ],
                                 ),
+                                children: [
+                                  ElevatedButton.icon(
+                                      onPressed: () => hire(
+                                            context,
+                                            user['id'],
+                                            user['name'],
+                                            user['phone'],
+                                          ),
+                                      icon: const Icon(Icons.favorite),
+                                      label: const Text('Hire Me'))
+                                ],
                               ),
                             );
                           } else {

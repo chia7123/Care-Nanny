@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fyp2/screen/confinementLady/cl_home.dart';
-import 'package:fyp2/screen/confinementLady/cl_profile.dart';
+
+import 'cl_home.dart';
+import 'cl_profile.dart';
 
 class CLTab extends StatefulWidget {
 

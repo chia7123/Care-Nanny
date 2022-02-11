@@ -59,23 +59,26 @@ class Database {
   }
 
   addRating(String name, String id, Map<String, dynamic> data) {
-    return FirebaseFirestore.instance
-        .collection(name)
-        .doc(id)
-        .update(data);
-  }
-  
-  addOrderHistory(String name, String id, Map<String, dynamic> data) {
-    return FirebaseFirestore.instance
-        .collection(name)
-        .doc(id)
-        .set(data);
+    return FirebaseFirestore.instance.collection(name).doc(id).update(data);
   }
 
-  deleteOrderHistory(String name, String id){
-    return FirebaseFirestore.instance
-        .collection(name)
-        .doc(id)
-        .delete();
+  addOrderHistory(String name, String id, Map<String, dynamic> data) {
+    return FirebaseFirestore.instance.collection(name).doc(id).set(data);
+  }
+
+  deleteOrderHistory(String name, String id) {
+    return FirebaseFirestore.instance.collection(name).doc(id).delete();
+  }
+
+  addTempData(String id, Map<String, dynamic> data) {
+    FirebaseFirestore.instance.collection('tempData').doc(id).set(data);
+  }
+
+  deleteTempData() async {
+    var datas = await FirebaseFirestore.instance.collection('tempData').get();
+
+    for (var data in datas.docs) {
+      await data.reference.delete();
+    }
   }
 }
