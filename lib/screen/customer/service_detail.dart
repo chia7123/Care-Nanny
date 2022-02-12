@@ -3,10 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/service/database.dart';
+import 'package:fyp2/service/date_range_picker.dart';
 import 'package:fyp2/service/generate_id.dart';
 import 'package:fyp2/widgets/customer/order/cl_list.dart';
 import 'package:fyp2/widgets/customer/order/service_type.dart';
 import 'package:intl/intl.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class ServiceDetailScreen extends StatefulWidget {
   static const routeName = '/servicedetail';
@@ -18,7 +21,6 @@ class ServiceDetailScreen extends StatefulWidget {
 
 class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
   final user = FirebaseAuth.instance.currentUser;
-  DateTime _selectedDate;
   String cusName;
   String address;
   String contact;
@@ -43,26 +45,25 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                   clName = snapshot.docs[0]['name'],
                 }
             });
-            print(clID);
-            print(clName);
   }
 
-  Future<dynamic> initializeOrder() async {
+  void initializeOrder() async {
     orderID = GenerateID().generateID(20);
 
     await getInfo();
 
-    return Database().addOrder(orderID, {
+    await Database().addOrder(orderID, {
       'orderID': orderID,
       'cusID': user.uid,
       'cusName': cusName,
       'cusContact': contact,
       'creationDate': DateTime.now(),
       'cusAdd': address,
-      'clID': clID,
+      'clID': '',
       'clName': clName,
       'price': null,
-      'selectedDate': null,
+      'startDate': null,
+      'endDate': null,
       'serviceSelected': null,
       'typeOfService': 'Not selected yet',
     });
@@ -70,8 +71,8 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
 
   @override
   void initState() {
-    super.initState();
     initializeOrder();
+    super.initState();
   }
 
   @override
@@ -81,46 +82,20 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     super.dispose();
   }
 
-  void _presentDatePicker() {
-    showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2101),
-    ).then((pickedDate) {
-      if (pickedDate == null) {
-        Fluttertoast.showToast(msg: 'Date not selected');
-        return null;
-      }
-      setState(() {
-        _selectedDate = pickedDate;
-      });
-      addDate();
-    });
-  }
-
-  Future<void> addDate() {
-    if (_selectedDate == null) {
-      return null;
-    }
-    return Database().updateOrderData(orderID, {
-      'selectedDate': _selectedDate,
-    });
-  }
-
-  Future<void> checkout(String orderID) {
-    if (_selectedDate == null) {
-      return null;
-    }
-
-    return Database().getOrderData(orderID).then((DocumentSnapshot snapshot) {
+  Future<void> checkout(String orderID) async {
+    await Database().getOrderData(orderID).then((DocumentSnapshot snapshot) {
       Map<String, dynamic> doc = snapshot.data();
-      Database().addPendingOrder(orderID, doc);
-    }).whenComplete(() {
-      Fluttertoast.showToast(
-          msg: 'Order Placed Successfully, Pending for Confirmation Now');
-      Database().deleteTempData();
-      Navigator.pop(context);
+
+      if (doc['startDate'] == null) {
+        Fluttertoast.showToast(msg: 'Please select the confinement date');
+        return null;
+      } else {
+        Database().addPendingOrder(orderID, doc);
+        Fluttertoast.showToast(
+            msg: 'Order Placed Successfully, Pending for Confirmation Now');
+        Database().deleteTempData();
+        Navigator.pop(context);
+      }
     });
   }
 
@@ -138,7 +113,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
             children: [
               SizedBox(
                 width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.30,
+                height: MediaQuery.of(context).size.height * 0.20,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -189,7 +164,22 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                         ),
                         ElevatedButton(
                             onPressed: () {
-                              _presentDatePicker();
+                              Database()
+                                  .getOrderData(orderID)
+                                  .then((DocumentSnapshot snapshot) {
+                                Map<String, dynamic> doc = snapshot.data();
+                                if (doc['clID'] == '') {
+                                  Fluttertoast.showToast(
+                                      msg:
+                                          'Please choose Confinement Lady first !');
+                                } else {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (_) => DateRangePicker(
+                                            orderID: orderID,
+                                            clId: doc['ID'],
+                                          )));
+                                }
+                              });
                             },
                             child: const Text('Press here'),
                             style: ElevatedButton.styleFrom(
@@ -200,6 +190,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     ),
                   ],
                 ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.05,
               ),
               StreamBuilder(
                 stream: FirebaseFirestore.instance
@@ -267,10 +260,21 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Text('Confinement Date:'),
-                                  doc['selectedDate'] == null
+                                  doc['startDate'] == null
                                       ? const Text('Not selected yet')
-                                      : Text(DateFormat.yMMMMd().format(
-                                          doc['selectedDate'].toDate())),
+                                      : Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              '${DateFormat.yMMMMd().format(doc['startDate'].toDate())} - ',
+                                            ),
+                                            Text(
+                                              DateFormat.yMMMMd().format(
+                                                  doc['endDate'].toDate()),
+                                            ),
+                                          ],
+                                        ),
                                 ],
                               ),
                             ),
@@ -318,7 +322,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                       ],
                     );
                   } else {
-                    return const Text('no data');
+                    return const CircularProgressIndicator();
                   }
                 },
               ),
