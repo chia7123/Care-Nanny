@@ -30,6 +30,13 @@ class Database {
         .update(data);
   }
 
+  updateProgressOrder(String orderID, Map<String, dynamic> data) {
+    return FirebaseFirestore.instance
+        .collection('onProgressOrder')
+        .doc(orderID)
+        .update(data);
+  }
+
   deleteOrder(String orderID) {
     return FirebaseFirestore.instance
         .collection('orderInfo')

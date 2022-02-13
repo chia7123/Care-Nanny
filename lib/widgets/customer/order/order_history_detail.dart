@@ -118,8 +118,14 @@ class CusOrderHistoryDetail extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text('Confinement Date : '),
-                                    Text(DateFormat.yMMMMd()
-                                        .format(doc['selectedDate'].toDate())),
+                                    SizedBox(
+                                      width: 120,
+                                      child: Text(
+                                        '${DateFormat.yMMMMd().format(doc['startDate'].toDate())} - ${DateFormat.yMMMMd().format(doc['endDate'].toDate())}',
+                                        textAlign: TextAlign.right,
+                                        softWrap: true,
+                                      ),
+                                    ),
                                   ],
                                 ),
                                 Divider(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/service/database.dart';
+import 'package:fyp2/widgets/confinementLady/order/order_buttons.dart';
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -40,142 +41,6 @@ class _CusProgressOrderDetailState extends State<CusProgressOrderDetail> {
           )
           .toList(),
     );
-  }
-
-  Future<void> deleteOrder(String id) {
-    return Database()
-        .deleteProgressOrder(id)
-        .then((value) => Fluttertoast.showToast(msg: "Order Completed"))
-        .catchError((error) =>
-            Fluttertoast.showToast(msg: "Failed to complete order: $error"));
-  }
-
-  Future<void> completeOrder(String id, double ratingGiven) {
-    return Database().getProgressOrder(id).then((doc) {
-      Database().addOrderHistory(
-        'customerOrderHistory',
-        id,
-        doc.data(),
-      );
-      Database().addRating(
-        'customerOrderHistory',
-        id,
-        {
-          'ratingGiven': ratingGiven,
-          'comment': comment.text,
-        },
-      );
-      Database().addOrderHistory(
-        'CLOrderHistory',
-        id,
-        doc.data(),
-      );
-      Database().addRating(
-        'CLOrderHistory',
-        id,
-        {
-          'ratingGiven': ratingGiven,
-          'comment': comment.text,
-        },
-      );
-      
-
-      Future.delayed(const Duration(seconds: 1), () {
-        deleteOrder(id);
-      });
-    });
-  }
-
-  void showDialog(BuildContext context, String clName, String clID,
-      String orderID, String cusName, String cusContact) {
-    Alert(
-        context: context,
-        title: 'Give ' + clName + ' a rating',
-        content: Column(
-          children: <Widget>[
-            RatingBar.builder(
-              initialRating: 3,
-              minRating: 1,
-              direction: Axis.horizontal,
-              itemCount: 5,
-              itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-              itemBuilder: (context, _) => const Icon(
-                Icons.star,
-                color: Colors.amber,
-              ),
-              onRatingUpdate: (rating) {
-                ratings = rating;
-              },
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(20)),
-              padding: const EdgeInsets.only(left: 10),
-              child: TextFormField(
-                minLines: 6,
-                keyboardType: TextInputType.multiline,
-                maxLines: 8,
-                decoration: const InputDecoration(
-                  hintText: 'Comment...',
-                  border: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  errorBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
-                ),
-                controller: comment,
-              ),
-            )
-          ],
-        ),
-        buttons: [
-          DialogButton(
-            onPressed: () {
-              calculateRating(clID, ratings, orderID, cusName, cusContact);
-              completeOrder(orderID, ratings);
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Fluttertoast.showToast(msg: 'Completed');
-            },
-            child: const Text(
-              "Submit",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          )
-        ]).show();
-  }
-
-  void calculateRating(String clID, double rating, String orderID,
-      String cusName, String cusContact) async {
-    double oriRating;
-    int noOfOrder;
-    double latestRating;
-
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(clID)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        Map<String, dynamic> doc = documentSnapshot.data();
-        oriRating = doc['rating'].toDouble();
-        noOfOrder = doc['orderSuccess'];
-      } else {
-        return null;
-      }
-    });
-
-    latestRating = (oriRating * noOfOrder + rating) / ++noOfOrder;
-    FirebaseFirestore.instance.collection('users').doc(clID).update({
-      'orderSuccess': noOfOrder,
-      'rating': latestRating,
-    });
-
-    print(latestRating);
   }
 
   @override
@@ -257,8 +122,14 @@ class _CusProgressOrderDetailState extends State<CusProgressOrderDetail> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text('Confinement Date : '),
-                                    Text(DateFormat.yMMMMd()
-                                        .format(doc['selectedDate'].toDate())),
+                                    SizedBox(
+                                      width: 120,
+                                      child: Text(
+                                        '${DateFormat.yMMMMd().format(doc['startDate'].toDate())} - ${DateFormat.yMMMMd().format(doc['endDate'].toDate())}',
+                                        textAlign: TextAlign.right,
+                                        softWrap: true,
+                                      ),
+                                    ),
                                   ],
                                 ),
                                 Divider(
@@ -349,38 +220,13 @@ class _CusProgressOrderDetailState extends State<CusProgressOrderDetail> {
                   ),
                 ),
                 const Divider(
-                  thickness: 3,
+                  color: Colors.black,
+                  thickness: 1,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextButton.icon(
-                      icon: Icon(Icons.cancel, color: Colors.red[600]),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        Future.delayed(const Duration(seconds: 1), () {
-                          deleteOrder(doc['orderID']);
-                        });
-                        Fluttertoast.showToast(msg: 'Deleted');
-                      },
-                      label: Text(
-                        'Cancel Order',
-                        style: TextStyle(color: Colors.red[600]),
-                      ),
-                    ),
-                    TextButton.icon(
-                      icon: Icon(Icons.check, color: Colors.red[600]),
-                      onPressed: () {
-                        showDialog(context, doc['clName'], doc['clID'],
-                            doc['orderID'], doc['cusName'], doc['cusContact']);
-                      },
-                      label: Text(
-                        'Order Complete',
-                        style: TextStyle(color: Colors.red[600]),
-                      ),
-                    ),
-                  ],
-                )
+                OrderButtons(
+                  comment: comment,
+                  doc: doc,
+                ),
               ],
             );
           } else {

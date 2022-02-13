@@ -70,32 +70,47 @@ class CusPendingOrderList extends StatelessWidget {
                                 horizontal: 10, vertical: 5),
                             color: Colors.grey[200],
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const SizedBox(
-                                  height: 5,
+                                  height: 8,
                                 ),
                                 Row(
                                   children: [
                                     const Text('Confinement Lady: '),
-                                    Text(doc['clName']),
+                                    Text(
+                                      doc['clName'],
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                   ],
                                 ),
                                 const SizedBox(
-                                  height: 5,
+                                  height: 8,
+                                ),
+                                const Text(
+                                  'Confinement Date: ',
+                                ),
+                                Text(
+                                  '${DateFormat.yMMMMd().format(doc['startDate'].toDate())} - ${DateFormat.yMMMMd().format(doc['endDate'].toDate())}',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(
+                                  height: 8,
                                 ),
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text('Confinement Date: ' +
-                                        DateFormat('dd-MM-yyyy').format(
-                                            doc['selectedDate'].toDate())),
-                                    Text('Price: RM ' +
-                                        doc['price'].toStringAsFixed(2)),
+                                    const Text('Price: RM '),
+                                    Text(
+                                      'RM ${doc['price'].toStringAsFixed(2)}',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    )
                                   ],
                                 ),
                                 const SizedBox(
-                                  height: 5,
+                                  height: 8,
                                 ),
                               ],
                             ),

@@ -38,7 +38,7 @@ var defaultPackage = [
       '1x Postnantal Massage',
       '1x Day-Time Confinement',
       '5x Confinement Food Catering',
-      '\u2022 1x Baby Care',
+      '1x Baby Care',
     ],
     colors: Colors.lightBlue,
   ),

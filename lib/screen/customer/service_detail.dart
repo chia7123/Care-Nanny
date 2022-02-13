@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/service/database.dart';
-import 'package:fyp2/service/date_range_picker.dart';
+import 'package:fyp2/service/date_range_picker_service.dart';
 import 'package:fyp2/service/generate_id.dart';
 import 'package:fyp2/widgets/customer/order/cl_list.dart';
 import 'package:fyp2/widgets/customer/order/service_type.dart';
@@ -174,9 +174,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                           'Please choose Confinement Lady first !');
                                 } else {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (_) => DateRangePicker(
+                                      builder: (_) => DateRangePickerService(
                                             orderID: orderID,
-                                            clId: doc['ID'],
+                                            clId: doc['clID'],
                                           )));
                                 }
                               });

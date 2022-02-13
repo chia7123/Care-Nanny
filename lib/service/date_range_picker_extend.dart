@@ -1,29 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/service/database.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
-class DateRangePicker extends StatefulWidget {
-  DateRangePicker({Key key, this.orderID, this.clId}) : super(key: key);
+class DateRangePickerExtend extends StatefulWidget {
+  DateRangePickerExtend({Key key, this.orderID}) : super(key: key);
   final String orderID;
-  final String clId;
 
   @override
-  State<DateRangePicker> createState() => _DateRangePickerState();
+  State<DateRangePickerExtend> createState() => _DateRangePickerExtendState();
 }
 
-class _DateRangePickerState extends State<DateRangePicker> {
-  DateTime _startDate;
+class _DateRangePickerExtendState extends State<DateRangePickerExtend> {
+  // DateTime _startDate;
   DateTime _endDate;
   DateRangePickerController _dateController = DateRangePickerController();
-  List<DateTime> occupiedStartDate = [];
-  List<DateTime> occupiedEndDate = [];
+  DateTime occupiedStartDate;
+  DateTime occupiedEndDate;
   List<DateTime> _blackOutDates = [];
 
-  Future _updateOrderDate() {
+  void _updateOrderDate() {
     Navigator.of(context).pop();
-    return Database().updateOrderData(widget.orderID, {
-      'startDate': _startDate,
+    Fluttertoast.showToast(msg: 'Date Updated');
+    Database().updateProgressOrder(widget.orderID, {
       'endDate': _endDate,
     });
   }
@@ -34,30 +34,28 @@ class _DateRangePickerState extends State<DateRangePicker> {
     super.initState();
   }
 
-  void getBookedDate() async {
-    await FirebaseFirestore.instance
-        .collection('onProgressOrder')
-        .where('clID', isEqualTo: widget.clId)
-        .get()
-        .then((QuerySnapshot snapshot) {
-      for (var doc in snapshot.docs) {
-        occupiedStartDate.add(doc['startDate'].toDate());
-        occupiedEndDate.add(doc['endDate'].toDate());
-      }
-    });
-    for (var i = 0; i < occupiedStartDate.length; i++) {
-      for (var date = occupiedStartDate[i];
-          date.isBefore(occupiedEndDate[i]) || date == occupiedEndDate[i];
-          date = date.add(const Duration(days: 1))) {
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
-        _blackOutDates.add(date);
-      }
-      print(_blackOutDates);
+  void getBookedDate() async {
+    await Database()
+        .getProgressOrder(widget.orderID)
+        .then((DocumentSnapshot snapshot) {
+      Map<String, dynamic> doc = snapshot.data();
+      occupiedStartDate = doc['startDate'].toDate();
+      occupiedEndDate = doc['endDate'].toDate();
+    });
+
+    for (var date = occupiedStartDate;
+        date.isBefore(occupiedEndDate) || date == occupiedEndDate;
+        date = date.add(const Duration(days: 1))) {
+      _blackOutDates.add(date);
     }
   }
 
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
-    _startDate = args.value.startDate;
     _endDate = args.value.endDate;
   }
 
@@ -66,7 +64,19 @@ class _DateRangePickerState extends State<DateRangePicker> {
     return SafeArea(
       child: Scaffold(
         body: SfDateRangePicker(
+          enableMultiView: true,
+          navigationDirection: DateRangePickerNavigationDirection.vertical,
+          initialSelectedRange: PickerDateRange(occupiedStartDate, occupiedEndDate),
+          extendableRangeSelectionDirection:
+              ExtendableRangeSelectionDirection.forward,
+          headerHeight: 60,
+          headerStyle: DateRangePickerHeaderStyle(
+            textAlign: TextAlign.center,
+            backgroundColor: Theme.of(context).primaryColor,
+            textStyle: const TextStyle(color: Colors.white, fontSize: 20),
+          ),
           monthViewSettings: DateRangePickerMonthViewSettings(
+
             blackoutDates: _blackOutDates,
           ),
           monthCellStyle: const DateRangePickerMonthCellStyle(
@@ -78,8 +88,6 @@ class _DateRangePickerState extends State<DateRangePicker> {
           showActionButtons: true,
           controller: _dateController,
           selectionMode: DateRangePickerSelectionMode.range,
-          initialSelectedRange: PickerDateRange(
-              DateTime.now(), DateTime.now().add(const Duration(days: 3))),
           onSubmit: (value) {
             _updateOrderDate();
           },
