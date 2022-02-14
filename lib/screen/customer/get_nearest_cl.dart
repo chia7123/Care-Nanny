@@ -227,69 +227,69 @@ class _GetNearestCLState extends State<GetNearestCL> {
                         ),
                         title: Column(
                           children: [
-                            Text(
-                              doc['name'],
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  doc['name'],
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
+                                ),
+                                ProfileCard(doc['id']),
+                              ],
                             ),
                             const SizedBox(
                               height: 10,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                Row(
                                   children: [
-                                    Row(
-                                      children: [
-                                        const Text(
-                                          'Rating :',
-                                          style: TextStyle(color: Colors.grey),
-                                        ),
-                                        doc['rating'] == 0
-                                            ? const Text(
-                                                ' No rating yet',
-                                                style: TextStyle(
-                                                    color: Colors.grey),
-                                              )
-                                            : Row(
-                                                children: [
-                                                  for (int i = 1;
-                                                      i <=
-                                                          doc['rating'].round();
-                                                      i++)
-                                                    const Icon(
-                                                      Icons.star,
-                                                      color: Colors.amber,
-                                                    )
-                                                ],
-                                              ),
-                                      ],
+                                    const Text(
+                                      'Rating :',
+                                      style: TextStyle(color: Colors.grey),
                                     ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    doc['tempDistance'] > 1
-                                        ? Text(
-                                            'Within ' +
-                                                doc['tempDistance'].toString() +
-                                                ' km',
-                                            style: const TextStyle(
-                                                color: Colors.grey),
+                                    doc['rating'] == 0
+                                        ? const Text(
+                                            ' No rating yet',
+                                            style:
+                                                TextStyle(color: Colors.grey),
                                           )
-                                        : Text(
-                                            'Within ' +
-                                                (doc['tempDistance'] * 1000)
-                                                    .toString() +
-                                                ' m',
-                                            style: const TextStyle(
-                                              color: Colors.grey,
-                                            ),
+                                        : Row(
+                                            children: [
+                                              for (int i = 1;
+                                                  i <= doc['rating'].round();
+                                                  i++)
+                                                const Icon(
+                                                  Icons.star,
+                                                  color: Colors.amber,
+                                                )
+                                            ],
                                           ),
                                   ],
                                 ),
-                                ProfileCard(doc['id']),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                doc['tempDistance'] > 1
+                                    ? Text(
+                                        'Within ' +
+                                            doc['tempDistance'].toString() +
+                                            ' km',
+                                        style:
+                                            const TextStyle(color: Colors.grey),
+                                      )
+                                    : Text(
+                                        'Within ' +
+                                            (doc['tempDistance'] * 1000)
+                                                .toString() +
+                                            ' m',
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
                               ],
                             ),
                           ],

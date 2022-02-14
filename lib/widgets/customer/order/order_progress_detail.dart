@@ -188,7 +188,7 @@ class _CusProgressOrderDetailState extends State<CusProgressOrderDetail> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text('Ordered by : '),
+                                    const Text('Ordered on : '),
                                     Text(DateFormat.yMMMMd()
                                         .add_jms()
                                         .format(doc['creationDate'].toDate())),

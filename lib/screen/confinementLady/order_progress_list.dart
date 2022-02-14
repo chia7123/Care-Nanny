@@ -123,7 +123,7 @@ class CLProgressOrderList extends StatelessWidget {
                           ),
                           Align(
                             alignment: Alignment.centerLeft,
-                            child: Text('Ordered by : ' +
+                            child: Text('Ordered on : ' +
                                 DateFormat('MMMM dd, yyyy')
                                     .format(doc['creationDate'].toDate())),
                           ),

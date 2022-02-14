@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp2/service/database.dart';
+import 'package:fyp2/widgets/full_screen_image.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class ProfileCard extends StatelessWidget {
@@ -38,9 +39,17 @@ class ProfileCard extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              CircleAvatar(
-                radius: 70,
-                backgroundImage: NetworkImage(doc['imageUrl']),
+              GestureDetector(
+                child: CircleAvatar(
+                  radius: 70,
+                  backgroundImage: NetworkImage(doc['imageUrl']),
+                ),
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => FullScreenImage(
+                              imageUrl: doc['imageUrl'],
+                            ))),
               ),
               const SizedBox(
                 height: 10,

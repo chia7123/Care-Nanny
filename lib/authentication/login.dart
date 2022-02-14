@@ -43,8 +43,6 @@ class _LoginState extends State<Login> {
           email: email, password: password);
       Fluttertoast.showToast(msg:'Sign in successful');
       Navigator.pop(context);
-      // Navigator.pushReplacement(
-      //     context, MaterialPageRoute(builder: (context) => Wrapper()));
 
       setLoading(false);
     } on SocketException {

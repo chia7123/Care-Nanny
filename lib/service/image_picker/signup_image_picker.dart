@@ -62,24 +62,31 @@ class _SignUpImagePickerState extends State<SignUpImagePicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
         CircleAvatar(
-          radius: 50,
-          // ignore: unnecessary_null_comparison
+          radius: 60,
           backgroundImage: _pickedImage != null
               ? FileImage(_pickedImage) 
               : const AssetImage('assets/images/profile-icon.png'),
         ),
-        TextButton.icon(
-          onPressed: () => _showdialog(context),
-          icon: Icon(
-            Icons.image,
-            color: Theme.of(context).primaryColor,
-          ),
-          label: Text(
-            "Upload Image",
-            style: TextStyle(color: Theme.of(context).primaryColor),
+        Positioned(
+          bottom: 0,
+          right: 0,
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Theme.of(context).primaryColor,
+            ),
+            child: IconButton(
+              onPressed: () {
+                _showdialog(context);
+              },
+              icon: const Icon(
+                Icons.add_a_photo,
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
       ],

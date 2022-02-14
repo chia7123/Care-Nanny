@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'order_pending_list.dart';
@@ -18,9 +19,10 @@ class OrderTabScreen extends StatelessWidget {
           appBar: AppBar(
             title: const Text('Orders'),
             bottom: const TabBar(
+              labelColor: Colors.white,
               tabs: [
                 Tab(
-                  icon: Icon(Icons.pending),
+                  icon: Icon(Icons.pending,),
                   text: 'Pending Order',
                 ),
                 Tab(

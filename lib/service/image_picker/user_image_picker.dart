@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fyp2/widgets/full_screen_image.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserImagePicker extends StatefulWidget {
@@ -39,19 +40,19 @@ class _UserImagePickerState extends State<UserImagePicker> {
           child: ListView(
             children: [
               TextButton.icon(
-                    onPressed: () {
-                      _pickImage(ImageSource.camera);
-                    },
-                    icon: const Icon(Icons.camera),
-                    label: const Text('Camera')),
-                const Divider(),
-                TextButton.icon(
-                    onPressed: () {
-                      _pickImage(ImageSource.gallery);
-                    },
-                    icon: const Icon(Icons.album),
-                    label: const Text('Gallery')),
-              ],
+                  onPressed: () {
+                    _pickImage(ImageSource.camera);
+                  },
+                  icon: const Icon(Icons.camera),
+                  label: const Text('Camera')),
+              const Divider(),
+              TextButton.icon(
+                  onPressed: () {
+                    _pickImage(ImageSource.gallery);
+                  },
+                  icon: const Icon(Icons.album),
+                  label: const Text('Gallery')),
+            ],
           ),
         );
       },
@@ -92,27 +93,37 @@ class _UserImagePickerState extends State<UserImagePicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
-        CircleAvatar(
-          radius: 50,
-          backgroundImage: _pickedImage != null
-              ? FileImage(_pickedImage)
-              : imageUrl != null
-                  ? NetworkImage(imageUrl)
-                  : const AssetImage('assets/images/profile-icon.png'),
-        ),
-        TextButton.icon(
-          onPressed: () {
-            _showdialog(context);
-          },
-          icon: Icon(
-            Icons.image,
-            color: Theme.of(context).primaryColor,
+        GestureDetector(
+          child: CircleAvatar(
+            radius: 60,
+            backgroundImage: _pickedImage != null
+                ? FileImage(_pickedImage)
+                : imageUrl != null
+                    ? NetworkImage(imageUrl)
+                    : const AssetImage('assets/images/profile-icon.png'),
           ),
-          label: Text(
-            "Upload Image",
-            style: TextStyle(color: Theme.of(context).primaryColor),
+          onTap: () => Navigator.push(context,
+              MaterialPageRoute(builder: (context) => FullScreenImage(imageUrl: imageUrl,))),
+        ),
+        Positioned(
+          bottom: 0,
+          right: 0,
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Theme.of(context).primaryColor,
+            ),
+            child: IconButton(
+              onPressed: () {
+                _showdialog(context);
+              },
+              icon: const Icon(
+                Icons.add_a_photo,
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
       ],

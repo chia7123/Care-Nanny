@@ -44,6 +44,8 @@ dependencies:
   dio: ^4.0.4
   # ^^ use to send http request
   syncfusion_flutter_datepicker: ^19.4.50
+  url_launcher: ^6.0.20
+  cached_network_image: ^3.2.0
 
 
 

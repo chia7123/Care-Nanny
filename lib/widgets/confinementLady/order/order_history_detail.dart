@@ -179,7 +179,7 @@ class CLOrderHistoryDetail extends StatelessWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text('Ordered by : '),
+                                    const Text('Ordered on : '),
                                     Text(DateFormat.yMMMMd()
                                         .add_jms()
                                         .format(doc['creationDate'].toDate())),

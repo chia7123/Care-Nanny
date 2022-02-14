@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp2/widgets/open_google_map.dart';
 import 'package:intl/intl.dart';
 
 class CLProgressOrderDetail extends StatelessWidget {
@@ -27,7 +28,9 @@ class CLProgressOrderDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Progress Order'),),
+      appBar: AppBar(
+        title: const Text('Progress Order'),
+      ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('onProgressOrder')
@@ -101,7 +104,7 @@ class CLProgressOrderDetail extends StatelessWidget {
                                   children: [
                                     const Text('Customer Address : '),
                                     SizedBox(
-                                      width: 180,
+                                      width: 150,
                                       child: Text(
                                         doc['cusAdd'],
                                         textAlign: TextAlign.right,
@@ -112,7 +115,7 @@ class CLProgressOrderDetail extends StatelessWidget {
                                 Divider(
                                   color: Colors.grey[500],
                                 ),
-                                 Row(
+                                Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
@@ -167,7 +170,7 @@ class CLProgressOrderDetail extends StatelessWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text('Ordered by : '),
+                                    const Text('Ordered on : '),
                                     Text(DateFormat.yMMMMd()
                                         .add_jms()
                                         .format(doc['creationDate'].toDate())),
@@ -200,6 +203,9 @@ class CLProgressOrderDetail extends StatelessWidget {
                 ),
                 const Divider(
                   thickness: 3,
+                ),
+                openMap(
+                  address: doc['cusAdd'],
                 ),
               ],
             );
