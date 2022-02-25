@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -96,16 +97,27 @@ class _UserImagePickerState extends State<UserImagePicker> {
     return Stack(
       children: [
         GestureDetector(
-          child: CircleAvatar(
-            radius: 60,
-            backgroundImage: _pickedImage != null
-                ? FileImage(_pickedImage)
-                : imageUrl != null
-                    ? NetworkImage(imageUrl)
-                    : const AssetImage('assets/images/profile-icon.png'),
-          ),
-          onTap: () => Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FullScreenImage(imageUrl: imageUrl,))),
+          child: _pickedImage != null
+              ? CircleAvatar(
+                  radius: 60,
+                  backgroundImage: FileImage(_pickedImage),
+                )
+              : CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  imageBuilder: (context, imageProvider) => CircleAvatar(
+                    radius: 60,
+                    backgroundImage: imageProvider,
+                  ),
+                  placeholder: (context, url) =>
+                      const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                ),
+          onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FullScreenImage(
+                        imageUrl: imageUrl,
+                      ))),
         ),
         Positioned(
           bottom: 0,

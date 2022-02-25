@@ -108,7 +108,7 @@ class CLOrderHistoryDetail extends StatelessWidget {
                                 Divider(
                                   color: Colors.grey[500],
                                 ),
-                                 Row(
+                                Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
@@ -250,10 +250,15 @@ class CLOrderHistoryDetail extends StatelessWidget {
                   ),
                 ),
                 const Divider(
-                  thickness: 3,
+                  thickness: 1,
+                  color: Colors.black,
                 ),
-                TextButton.icon(
-                  icon: Icon(Icons.cancel, color: Colors.red[600]),
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.red[600],
+                    minimumSize: const Size.fromHeight(40),
+                  ),
+                  icon: const Icon(Icons.cancel, color: Colors.white),
                   onPressed: () {
                     Future.delayed(const Duration(seconds: 1), () {
                       deleteOrder(doc['orderID']);
@@ -261,9 +266,9 @@ class CLOrderHistoryDetail extends StatelessWidget {
                     Navigator.of(context).pop();
                     Fluttertoast.showToast(msg: 'Deleted');
                   },
-                  label: Text(
+                  label: const Text(
                     'Delete',
-                    style: TextStyle(color: Colors.red[600]),
+                    style: TextStyle(color: Colors.white),
                   ),
                 )
               ],

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -222,9 +223,17 @@ class _GetNearestCLState extends State<GetNearestCL> {
                           horizontal: 15, vertical: 10),
                       child: ExpansionTile(
                         iconColor: Colors.orange,
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(doc['imageUrl']),
-                        ),
+                        leading: CachedNetworkImage(
+                              placeholder: (context, url) =>
+                                  const CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                              imageUrl: doc['imageUrl'],
+                              imageBuilder: (context, imageProvider) =>
+                                  CircleAvatar(
+                                backgroundImage: imageProvider,
+                              ),
+                            ),
                         title: Column(
                           children: [
                             Row(

@@ -6,7 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SignUpImagePicker extends StatefulWidget {
-  SignUpImagePicker(this.imagePickFn);
+  SignUpImagePicker(this.imagePickFn, {Key key}) : super(key: key);
   final Function(File pickedImage) imagePickFn;
   @override
   _SignUpImagePickerState createState() => _SignUpImagePickerState();

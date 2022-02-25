@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,9 @@ class ConLadyList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Confinement Lady List'),),
+      appBar: AppBar(
+        title: const Text('Confinement Lady List'),
+      ),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
         height: MediaQuery.of(context).size.height * 0.9,
@@ -50,15 +53,21 @@ class ConLadyList extends StatelessWidget {
                               horizontal: 15, vertical: 10),
                           child: ExpansionTile(
                             iconColor: Colors.orange,
-                            leading: CircleAvatar(
-                              backgroundImage:
-                                  NetworkImage(user['imageUrl']),
+                            leading: CachedNetworkImage(
+                              placeholder: (context, url) =>
+                                  const CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                              imageUrl: user['imageUrl'],
+                              imageBuilder: (context, imageProvider) =>
+                                  CircleAvatar(
+                                backgroundImage: imageProvider,
+                              ),
                             ),
                             title: Column(
                               children: [
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
                                       user['name'],
@@ -81,15 +90,13 @@ class ConLadyList extends StatelessWidget {
                                     user['rating'] == 0
                                         ? const Text(
                                             ' No rating yet',
-                                            style: TextStyle(
-                                                color: Colors.grey),
+                                            style:
+                                                TextStyle(color: Colors.grey),
                                           )
                                         : Row(
                                             children: [
                                               for (int i = 1;
-                                                  i <=
-                                                      user['rating']
-                                                          .round();
+                                                  i <= user['rating'].round();
                                                   i++)
                                                 const Icon(
                                                   Icons.star,

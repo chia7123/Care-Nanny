@@ -9,7 +9,6 @@ class CusOrderHistoryDetail extends StatelessWidget {
 
   CusOrderHistoryDetail(this.id, {Key key}) : super(key: key);
 
-
   Widget getTextWidgets(List<dynamic> strings) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -255,21 +254,29 @@ class CusOrderHistoryDetail extends StatelessWidget {
                   ),
                 ),
                 const Divider(
-                  thickness: 3,
+                  thickness: 1,
+                  color: Colors.black,
                 ),
-                TextButton.icon(
-                  icon: Icon(Icons.cancel, color: Colors.red[600]),
-                  onPressed: () {
-                    Future.delayed(const Duration(seconds: 1), () {
-                      deleteOrder(doc['orderID']);
-                    });
-                    Navigator.of(context).pop();
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.red[600],
+                      minimumSize: const Size.fromHeight(40),
+                    ),
+                    icon: const Icon(Icons.cancel, color: Colors.white),
+                    onPressed: () {
+                      Future.delayed(const Duration(seconds: 1), () {
+                        deleteOrder(doc['orderID']);
+                      });
+                      Navigator.of(context).pop();
 
-                    Fluttertoast.showToast(msg: 'Deleted');
-                  },
-                  label: Text(
-                    'Delete',
-                    style: TextStyle(color: Colors.red[600]),
+                      Fluttertoast.showToast(msg: 'Deleted');
+                    },
+                    label: const Text(
+                      'Delete',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 )
               ],

@@ -4,12 +4,13 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/service/database.dart';
 import 'package:fyp2/service/date_range_picker_extend.dart';
+import 'package:fyp2/service/media_picker/video_picker.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-class OrderButtons extends StatelessWidget {
+class ProgressOrderButtons extends StatelessWidget {
   final dynamic doc;
   final TextEditingController comment;
-  OrderButtons({Key key, this.doc, this.comment}) : super(key: key);
+  ProgressOrderButtons({Key key, this.doc, this.comment}) : super(key: key);
 
   double ratings = 0;
 
@@ -43,7 +44,8 @@ class OrderButtons extends StatelessWidget {
       );
 
       Future.delayed(const Duration(seconds: 1), () {
-        deleteOrder(id);
+        deleteOrder(id)
+            .then((value) => Fluttertoast.showToast(msg: 'Order Completed'));
       });
     });
   }
@@ -78,15 +80,18 @@ class OrderButtons extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
+            VideoPicker(),
+            const SizedBox(
+              height: 10,
+            ),
             Container(
               decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(20)),
               padding: const EdgeInsets.only(left: 10),
               child: TextFormField(
-                minLines: 6,
                 keyboardType: TextInputType.multiline,
-                maxLines: 8,
+                maxLines: 4,
                 decoration: const InputDecoration(
                   hintText: 'Comment...',
                   border: InputBorder.none,
@@ -97,15 +102,17 @@ class OrderButtons extends StatelessWidget {
                 ),
                 controller: comment,
               ),
-            )
+            ),
+            
           ],
         ),
         buttons: [
           DialogButton(
             onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
               calculateRating(clID, ratings, orderID, cusName, cusContact);
               completeOrder(orderID, ratings);
-              Navigator.pop(context);
               Fluttertoast.showToast(msg: 'Completed');
             },
             child: const Text(
@@ -149,36 +156,22 @@ class OrderButtons extends StatelessWidget {
   }
 
   Future<void> deleteOrder(String id) {
-    return Database()
-        .deleteProgressOrder(id)
-        .then((value) => Fluttertoast.showToast(msg: "Order Completed"))
-        .catchError((error) =>
-            Fluttertoast.showToast(msg: "Failed to complete order: $error"));
+    return Database().deleteProgressOrder(id).catchError((error) =>
+        Fluttertoast.showToast(msg: "Failed to delete order: $error"));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return Column(
       children: [
-        TextButton.icon(
-          icon: Icon(Icons.cancel, color: Colors.red[600],size: 20,),
-          onPressed: () {
-            Future.delayed(const Duration(seconds: 1), () {
-              deleteOrder(doc['orderID']);
-            });
-
-            Fluttertoast.showToast(msg: 'Deleted');
-          },
-          label: Text(
-            'Cancel',
-            style: TextStyle(color: Colors.red[600],fontSize: 15),
+        ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            primary: Colors.blue,
+            minimumSize: const Size.fromHeight(40),
           ),
-        ),
-        TextButton.icon(
           icon: const Icon(
             Icons.date_range,
-            color: Colors.blue,
+            color: Colors.white,
           ),
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
@@ -188,13 +181,17 @@ class OrderButtons extends StatelessWidget {
           },
           label: const Text(
             'Extend',
-            style: TextStyle(color: Colors.blue),
+            style: TextStyle(color: Colors.white),
           ),
         ),
-        TextButton.icon(
+        ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            primary: Colors.green,
+            minimumSize: const Size.fromHeight(40),
+          ),
           icon: const Icon(
             Icons.check,
-            color: Colors.green,
+            color: Colors.white,
           ),
           onPressed: () {
             showDialog(
@@ -208,7 +205,7 @@ class OrderButtons extends StatelessWidget {
           },
           label: const Text(
             'Complete',
-            style: TextStyle(color: Colors.green),
+            style: TextStyle(color: Colors.white),
           ),
         ),
       ],

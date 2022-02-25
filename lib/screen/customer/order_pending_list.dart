@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fyp2/service/database.dart';
 import 'package:fyp2/widgets/customer/order/order_pending_detail.dart';
+import 'package:fyp2/widgets/customer/order/pending_order_buttons.dart';
 import 'package:intl/intl.dart';
 
 class CusPendingOrderList extends StatelessWidget {
@@ -18,8 +21,7 @@ class CusPendingOrderList extends StatelessWidget {
             .collection('onPendingOrder')
             .where('cusID', isEqualTo: user.uid)
             .snapshots(),
-        builder:
-            (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data.docs.isEmpty) {
               return const Center(
@@ -41,7 +43,8 @@ class CusPendingOrderList extends StatelessWidget {
                     );
                   },
                   child: Card(
-                    margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     child: Container(
                       padding: const EdgeInsets.all(10),
                       child: Column(
@@ -118,14 +121,18 @@ class CusPendingOrderList extends StatelessWidget {
                           Divider(
                             color: Colors.grey[800],
                           ),
-                         
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text('Ordered on : ' +
                                 DateFormat('MMMM dd, yyyy')
                                     .format(doc['creationDate'].toDate())),
                           ),
-                          
+                          Divider(
+                            color: Colors.grey[800],
+                          ),
+                          PendingOrderButtons(
+                            doc: doc,
+                          ),
                         ],
                       ),
                     ),

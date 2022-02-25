@@ -5,7 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/service/database.dart';
 import 'package:fyp2/service/location.dart';
 import 'package:fyp2/service/google_api.dart';
-import 'package:fyp2/service/image_picker/user_image_picker.dart';
+import 'package:fyp2/service/media_picker/user_image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import '../wrapper.dart';
 
@@ -211,6 +211,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                       ),
                       TextFormField(
                         key: const ValueKey('Email'),
+                        readOnly: true,
                         decoration: const InputDecoration(
                           labelText: '6. Email',
                         ),

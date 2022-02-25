@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp2/service/database.dart';
@@ -40,10 +41,18 @@ class ProfileCard extends StatelessWidget {
           child: Column(
             children: [
               GestureDetector(
-                child: CircleAvatar(
-                  radius: 70,
-                  backgroundImage: NetworkImage(doc['imageUrl']),
-                ),
+                child: CachedNetworkImage(
+                              placeholder: (context, url) =>
+                                  const CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                              imageUrl: doc['imageUrl'],
+                              imageBuilder: (context, imageProvider) =>
+                                  CircleAvatar(
+                                    radius: 70,
+                                backgroundImage: imageProvider,
+                              ),
+                            ),
                 onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -150,6 +159,45 @@ class ProfileCard extends StatelessWidget {
                   ),
                 ),
               ),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Certificates Obtained',
+                  style: TextStyle(decoration: TextDecoration.underline),
+                ),
+              ),
+              (doc['certUrl'] == null || doc['certUrl'][0] == "")
+                  ? const Text(
+                      'The user did not update any photo yet.',
+                      style: TextStyle(fontSize: 15),
+                    )
+                  : SizedBox(
+                      height: 120,
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: doc['certUrl'].length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FullScreenImage(
+                                      imageUrl: doc['certUrl'][index],
+                                    ),
+                                  )),
+                              child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: CachedNetworkImage(
+                                    fit: BoxFit.fill,
+                                    imageUrl: doc['certUrl'][index],
+                                    placeholder: (context, url) =>
+                                        const CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  )),
+                            );
+                          }),
+                    ),
             ],
           ),
         ),

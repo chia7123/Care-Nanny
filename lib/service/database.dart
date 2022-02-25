@@ -9,6 +9,13 @@ class Database {
     return FirebaseFirestore.instance.collection('users').doc(id).update(data);
   }
 
+  deleteUserData(String id, String fieldValue, String valueRemove) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(id)
+        .update({fieldValue: FieldValue.arrayRemove([valueRemove])});
+  }
+
   addOrder(String orderID, Map<String, dynamic> data) {
     return FirebaseFirestore.instance
         .collection('orderInfo')
@@ -61,6 +68,13 @@ class Database {
   deleteProgressOrder(String id) {
     return FirebaseFirestore.instance
         .collection('onProgressOrder')
+        .doc(id)
+        .delete();
+  }
+
+  deletePendingOrder(String id) {
+    return FirebaseFirestore.instance
+        .collection('onPendingOrder')
         .doc(id)
         .delete();
   }

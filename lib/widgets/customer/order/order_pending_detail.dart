@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp2/widgets/customer/order/pending_order_buttons.dart';
 import 'package:intl/intl.dart';
 
 class CusPendingOrderDetail extends StatelessWidget {
@@ -199,9 +200,11 @@ class CusPendingOrderDetail extends StatelessWidget {
                     ),
                   ),
                 ),
-                const Divider(
-                  thickness: 3,
-                ),
+                
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: PendingOrderButtons(doc: doc,),
+                )
               ],
             );
           } else {

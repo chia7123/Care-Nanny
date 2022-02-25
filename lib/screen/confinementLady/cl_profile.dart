@@ -1,11 +1,18 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/service/database.dart';
+import 'package:fyp2/service/files_picker.dart';
 import 'package:fyp2/service/location.dart';
 import 'package:fyp2/service/google_api.dart';
-import 'package:fyp2/service/image_picker/user_image_picker.dart';
+import 'package:fyp2/service/media_picker/user_image_picker.dart';
+import 'package:fyp2/widgets/full_screen_image.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../wrapper.dart';
@@ -22,6 +29,8 @@ class _CLProfileState extends State<CLProfile> {
   final _formKey = GlobalKey<FormState>();
   String usertype;
   String imageUrl;
+  List<PlatformFile> _userFiles;
+  List<String> certUrl = [];
 
   TextEditingController name = TextEditingController();
   TextEditingController phone = TextEditingController();
@@ -50,9 +59,25 @@ class _CLProfileState extends State<CLProfile> {
     });
   }
 
+  void _selectFile(List<PlatformFile> files) {
+    _userFiles = files;
+  }
+
   void _updateProfile() async {
     final isValid = _formKey.currentState.validate();
     FocusScope.of(context).unfocus();
+
+    for (var file in _userFiles) {
+      final fileStorage = FirebaseStorage.instance
+          .ref()
+          .child('CLCertificate')
+          .child(user.uid)
+          .child(file.name);
+
+      await fileStorage.putFile(File(file.path));
+      var url = await fileStorage.getDownloadURL();
+      certUrl.add(url);
+    }
 
     if (isValid) {
       Database().updateUserData(user.uid, {
@@ -62,8 +87,16 @@ class _CLProfileState extends State<CLProfile> {
         'address2': add2.text,
         'address3': add3.text,
         'description': desc.text,
+        'certUrl': FieldValue.arrayUnion(certUrl),
       }).whenComplete(() => {Fluttertoast.showToast(msg: 'Update sucessful')});
     }
+  }
+
+  void _deleteFile(String url) {
+    FirebaseStorage.instance.refFromURL(url).delete().whenComplete(() {
+      Database().deleteUserData(user.uid, 'certUrl', url);
+      Fluttertoast.showToast(msg: 'Delete Completed!');
+    });
   }
 
   Future getAddress() async {
@@ -127,7 +160,10 @@ class _CLProfileState extends State<CLProfile> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         StreamBuilder(
-                            stream: FirebaseFirestore.instance.collection('users').doc(user.uid).snapshots(),
+                            stream: FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(user.uid)
+                                .snapshots(),
                             builder: (context, snapshot) {
                               if (snapshot.data == null) {
                                 return const Center(
@@ -228,6 +264,69 @@ class _CLProfileState extends State<CLProfile> {
                             labelText: '7. Description',
                           ),
                           controller: desc,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            '8. Certification',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ),
+                        StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(user.uid)
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.data == null) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              return SizedBox(
+                                height: 100,
+                                child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: snapshot.data['certUrl'].length,
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  FullScreenImage(
+                                                imageUrl: snapshot
+                                                    .data['certUrl'][index],
+                                              ),
+                                            )),
+                                        onLongPress: () => _deleteFile(
+                                            snapshot.data['certUrl'][index]),
+                                        child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: CachedNetworkImage(
+                                              fit: BoxFit.fill,
+                                              imageUrl: snapshot.data['certUrl']
+                                                  [index],
+                                              placeholder: (context, url) =>
+                                                  const CircularProgressIndicator(),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(Icons.error),
+                                            )),
+                                      );
+                                    }),
+                              );
+                            }),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: FilesPicker(
+                            fileSelectFn: _selectFile,
+                          ),
                         ),
                       ],
                     ),

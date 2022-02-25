@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp2/widgets/confinementLady/order/order_buttons.dart';
+import 'package:fyp2/widgets/customer/order/progress_order_buttons.dart';
 import 'package:fyp2/widgets/customer/order/order_progress_detail.dart';
 import 'package:intl/intl.dart';
 
@@ -133,7 +133,7 @@ class CusProgressOrderList extends StatelessWidget {
                           Divider(
                             color: Colors.grey[800],
                           ),
-                          OrderButtons(comment: comment,doc: doc,)
+                          ProgressOrderButtons(comment: comment,doc: doc,)
                         ],
                       ),
                     ),

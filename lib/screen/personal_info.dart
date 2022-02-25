@@ -1,12 +1,14 @@
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/service/database.dart';
+import 'package:fyp2/service/files_picker.dart';
 import 'package:fyp2/service/location.dart';
 import 'package:fyp2/service/google_api.dart';
-import 'package:fyp2/service/image_picker/signup_image_picker.dart';
+import 'package:fyp2/service/media_picker/signup_image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 
 class PersonalInfo extends StatefulWidget {
@@ -25,6 +27,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
   final List<String> _users = ['Customer', 'Confinement Lady'];
   String _selectedUser;
   File _userImageFile;
+  List<PlatformFile> _userFiles;
 
   TextEditingController name = TextEditingController();
   TextEditingController phone = TextEditingController();
@@ -41,25 +44,47 @@ class _PersonalInfoState extends State<PersonalInfo> {
     desc.value = const TextEditingValue(text: 'Briefly introduce yourself');
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void _pickedImage(File image) {
     _userImageFile = image;
+  }
+
+  void _selectFile(List<PlatformFile> files) {
+    _userFiles = files;
   }
 
   void _updateProfile() async {
     final isValid = _formKey.currentState.validate();
     FocusScope.of(context).unfocus();
+    List<String> certUrl = [];
 
     final imageStorage = FirebaseStorage.instance
         .ref()
         .child('user_profile_image')
         .child(user.uid + '.jpg');
-
     await imageStorage.putFile(_userImageFile);
+
     final url = await imageStorage.getDownloadURL();
 
     if (_selectedUser == null) {
       Fluttertoast.showToast(msg: 'Please select a user type');
       return;
+    }
+
+    for (var file in _userFiles) {
+      final fileStorage = FirebaseStorage.instance
+          .ref()
+          .child('CLCertificate')
+          .child(user.uid)
+          .child(file.name);
+
+      await fileStorage.putFile(File(file.path));
+      var url = await fileStorage.getDownloadURL();
+      certUrl.add(url);
     }
 
     if (isValid) {
@@ -76,6 +101,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
         'id': user.uid,
         'rating': 0,
         'orderSuccess': 0,
+        'certUrl': certUrl
       }).whenComplete(() => {
             Fluttertoast.showToast(msg: 'Sign up successful'),
             Navigator.of(context).pop()
@@ -108,16 +134,15 @@ class _PersonalInfoState extends State<PersonalInfo> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).canvasColor,
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height * 1,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).canvasColor,
+        body: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               const Padding(
-                padding: EdgeInsets.only(left: 22, top: 40),
+                padding: EdgeInsets.only(left: 22, top: 30),
                 child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -133,7 +158,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
                     child: Text('Please fill in the following information.')),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.8,
+                height: MediaQuery.of(context).size.height * 0.75,
                 child: Card(
                   margin: const EdgeInsets.only(
                       left: 20, top: 20, right: 20, bottom: 25),
@@ -146,12 +171,30 @@ class _PersonalInfoState extends State<PersonalInfo> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            SignUpImagePicker(_pickedImage),
+                            SignUpImagePicker(
+                              _pickedImage,
+                            ),
                             const SizedBox(
                               height: 10,
                             ),
+                            DropdownButton(
+                              key: const ValueKey('user'),
+                              hint: const Text('Please Choose Your Roles'),
+                              value: _selectedUser,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _selectedUser = newValue as String;
+                                });
+                              },
+                              items: _users.map((user) {
+                                return DropdownMenuItem(
+                                  child: Text(user),
+                                  value: user,
+                                );
+                              }).toList(),
+                            ),
                             TextFormField(
-                              key: ValueKey('name'),
+                              key: const ValueKey('name'),
                               validator: (value) {
                                 if (value.isEmpty) {
                                   return 'Please enter your name';
@@ -187,9 +230,9 @@ class _PersonalInfoState extends State<PersonalInfo> {
                                   child: TextFormField(
                                     key: const ValueKey('add1'),
                                     decoration: const InputDecoration(
-                                      labelText: '3. Address 1',
-                                      hintText: 'Select the GPS to get your address.'
-                                    ),
+                                        labelText: '3. Address 1',
+                                        hintText:
+                                            'Select the GPS to get your address.'),
                                     controller: add1,
                                   ),
                                 ),
@@ -234,45 +277,28 @@ class _PersonalInfoState extends State<PersonalInfo> {
                             const SizedBox(
                               height: 20,
                             ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                '8. Please Select a User Type',
-                                style: TextStyle(color: Colors.grey.shade700),
-                                softWrap: true,
-                              ),
-                            ),
-                            Align(
-                              key: const ValueKey('user'),
-                              alignment: Alignment.centerLeft,
-                              child: DropdownButton(
-                                value: _selectedUser,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    _selectedUser = newValue as String;
-                                  });
-                                },
-                                items: _users.map((user) {
-                                  return DropdownMenuItem(
-                                    child: Text(user),
-                                    value: user,
-                                  );
-                                }).toList(),
-                              ),
-                            ),
+                            _selectedUser == 'Confinement Lady'
+                                ? TextFormField(
+                                    key: const ValueKey('desc'),
+                                    minLines: 5,
+                                    maxLines: null,
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: '8. Description',
+                                    ),
+                                    controller: desc,
+                                  )
+                                : const SizedBox(),
                             const SizedBox(
-                              height: 15,
+                              height: 20,
                             ),
-                            TextFormField(
-                              key: const ValueKey('desc'),
-                              minLines: 5,
-                              maxLines: null,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: '9. Description',
-                              ),
-                              controller: desc,
-                            ),
+                            _selectedUser == 'Confinement Lady'
+                                ? Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: FilesPicker(
+                                      fileSelectFn: _selectFile,
+                                    ))
+                                : const SizedBox(),
                           ],
                         ),
                       ),
@@ -280,19 +306,14 @@ class _PersonalInfoState extends State<PersonalInfo> {
                   ),
                 ),
               ),
-              Expanded(
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _updateProfile,
-                    child: const Text(
-                      'Save',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                        primary: Theme.of(context).primaryColor),
-                  ),
+              ElevatedButton(
+                onPressed: _updateProfile,
+                child: const Text(
+                  'Register',
+                  style: TextStyle(color: Colors.white),
                 ),
+                style: ElevatedButton.styleFrom(
+                    primary: Theme.of(context).primaryColor),
               )
             ],
           ),
