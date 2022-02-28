@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class FilesPicker extends StatefulWidget {
@@ -45,6 +42,7 @@ class _FilesPickerState extends State<FilesPicker> {
             ? SizedBox(
                 height: 100,
                 child: ListView.builder(
+                  
                     itemCount: files.length,
                     itemBuilder: (context, index) {
                       var kb = files[index].size / 1024;
@@ -81,7 +79,7 @@ class _FilesPickerState extends State<FilesPicker> {
       widget.fileSelectFn(files);
     }
     }
-    on PlatformException catch(e){
+     catch(e){
       Fluttertoast.showToast(msg: 'Failed to select the file :$e');
     }
   }

@@ -8,7 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/service/database.dart';
-import 'package:fyp2/service/files_picker.dart';
+import 'package:fyp2/service/media_picker/files_picker.dart';
 import 'package:fyp2/service/location.dart';
 import 'package:fyp2/service/google_api.dart';
 import 'package:fyp2/service/media_picker/user_image_picker.dart';

@@ -41,7 +41,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
         .then((QuerySnapshot snapshot) => {
               if (snapshot.docs.isNotEmpty)
                 {
-                  clID = snapshot.docs[0]['id'],
+                  clID = snapshot.docs[0]['name'],
                   clName = snapshot.docs[0]['name'],
                 }
             });
@@ -59,7 +59,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
       'cusContact': contact,
       'creationDate': DateTime.now(),
       'cusAdd': address,
-      'clID': '',
+      'clID': clID,
       'clName': clName,
       'price': null,
       'startDate': null,
@@ -168,7 +168,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                   .getOrderData(orderID)
                                   .then((DocumentSnapshot snapshot) {
                                 Map<String, dynamic> doc = snapshot.data();
-                                if (doc['clID'] == '') {
+                                if (doc['clID'] == null) {
                                   Fluttertoast.showToast(
                                       msg:
                                           'Please choose Confinement Lady first !');

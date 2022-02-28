@@ -72,7 +72,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
         _pickedImage = File(pickedImage.path);
       });
       uploadPhoto();
-    } on PlatformException catch (e) {
+    } catch (e) {
       Fluttertoast.showToast(msg: 'Failed to pick image :$e');
     }
   }
@@ -108,8 +108,10 @@ class _UserImagePickerState extends State<UserImagePicker> {
                     radius: 60,
                     backgroundImage: imageProvider,
                   ),
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
+                  placeholder: (context, url) => const CircleAvatar(
+                    radius: 60,
+                    backgroundColor: Colors.grey,
+                  ),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
           onTap: () => Navigator.push(

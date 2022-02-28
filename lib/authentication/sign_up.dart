@@ -6,7 +6,7 @@ import 'package:fyp2/screen/personal_info.dart';
 
 class SignUp extends StatefulWidget {
   final Function toggleScreen;
-  const SignUp({Key key,this.toggleScreen}) : super(key: key);
+  const SignUp({Key key, this.toggleScreen}) : super(key: key);
 
   @override
   _SignUpState createState() => _SignUpState();
@@ -45,8 +45,7 @@ class _SignUpState extends State<SignUp> {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  PersonalInfo(_emailController.text)));
+              builder: (context) => PersonalInfo(_emailController.text)));
       setLoading(false);
       await FirebaseFirestore.instance
           .collection('users')
@@ -55,6 +54,10 @@ class _SignUpState extends State<SignUp> {
         'email': email,
         'name': null,
       });
+      await FirebaseFirestore.instance
+          .collection('rating')
+          .doc(authResult.user.uid)
+          .set({});
     } on SocketException {
       setLoading(false);
       setMessage('No internet, Please connect to internet');
