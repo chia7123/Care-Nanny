@@ -5,9 +5,6 @@ import 'customer_profile.dart';
 
 class CustomerTab extends StatefulWidget {
   const CustomerTab({Key key}) : super(key: key);
-
-
-  
   @override
   _CustomerTabState createState() => _CustomerTabState();
 }

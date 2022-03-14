@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp2/screen/customer/service_detail.dart';
+import 'package:fyp2/screen/order_process.dart';
 import 'package:fyp2/service/database.dart';
 import 'package:fyp2/service/location.dart';
 import 'package:fyp2/widgets/profile_card.dart';
@@ -170,15 +170,15 @@ class _GetNearestCLState extends State<GetNearestCL> {
     );
   }
 
-  void hire(String id, String name) {
-    Database().addTempData(id, {
-      'id': id,
-      'name': name,
-    });
+  void hire(String id, String name, String imageUrl) {
+    // Database().addTempData(id, {
+    //   'id': id,
+    //   'name': name,
+    // });
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ServiceDetailScreen(),
+          builder: (context) => OrderProcess(clID: id, clName: name, imageUrl: imageUrl),
         ));
   }
 
@@ -306,7 +306,7 @@ class _GetNearestCLState extends State<GetNearestCL> {
                         children: [
                           ElevatedButton.icon(
                               onPressed: () {
-                                hire(doc['id'], doc['name']);
+                                hire(doc['id'], doc['name'],doc['imageUrl']);
                               },
                               icon: const Icon(Icons.favorite),
                               label: const Text('Hire Me'))

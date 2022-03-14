@@ -12,9 +12,6 @@ class CusOrderHistoryList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Histroy'),
-      ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('customerOrderHistory')

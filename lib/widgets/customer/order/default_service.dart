@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/data/services_data.dart';
 import 'package:fyp2/models/service.dart';
-import 'package:fyp2/service/database.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class DefaultPackage extends StatelessWidget {
   static const routeName = '/defaultpackage';
-  final String orderID;
-  DefaultPackage(this.orderID, {Key key}) : super(key: key);
+  final Function(Map<String, dynamic> package) selectPackage;
+  DefaultPackage({Key key,this.selectPackage}) : super(key: key);
   final user = FirebaseAuth.instance.currentUser;
   CollectionReference order =
       FirebaseFirestore.instance.collection('orderInfo');
@@ -32,7 +31,7 @@ class DefaultPackage extends StatelessWidget {
       BuildContext context, String packageName, List detail, double price) {
     Alert(
         context: context,
-        desc: 'ONLY RM' + price.toString(),
+        desc: 'RM' + price.toString(),
         title: packageName,
         content: Container(
           margin: const EdgeInsets.only(top: 20),
@@ -56,129 +55,86 @@ class DefaultPackage extends StatelessWidget {
         ]).show();
   }
 
-  Future<void> addPackage(
+  void addPackage(
       BuildContext context, String packageName, List detail, double price) {
-    return Database().updateOrderData(orderID, {
+    selectPackage({
       'typeOfService': 'Default ' + packageName,
       'serviceSelected': detail,
       'price': price,
-    }).then((value) {
-      Fluttertoast.showToast(msg: 'Service added');
-      Navigator.of(context).pop();
-      Navigator.of(context).pop();
-      Navigator.of(context).pop();
-    }).catchError((error) =>
-        Fluttertoast.showToast(msg: "Failed to add service: $error"));
+    });
+    Fluttertoast.showToast(msg: 'Service added');
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: (const Text('Select Your Default Package')),
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.75,
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+        border: Border.all(
+          style: BorderStyle.none,
+        ),
       ),
-      body: Column(
-        children: <Widget>[
-          Container(
-            child: const Text(
-              'Select The Packages',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 25,
-                color: Colors.black,
+      child: ListView.builder(
+          itemCount: _defaultPackage.length,
+          itemBuilder: (context, index) {
+            return InkWell(
+              onTap: () => _checkDetail(
+                context,
+                _defaultPackage[index].packageName,
+                _defaultPackage[index].details,
+                _defaultPackage[index].price,
               ),
-            ),
-            margin: const EdgeInsets.only(top: 15, bottom: 10),
-          ),
-          const Divider(
-            color: Colors.black,
-            thickness: 3,
-            indent: 30,
-            endIndent: 30,
-          ),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.71,
-            margin: const EdgeInsets.only(
-              // top: 10,
-              left: 20,
-              right: 20,
-            ),
-            padding: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              border: Border.all(
-                // color: Colors.grey,
-                style: BorderStyle.none,
-              ),
-            ),
-            child: ListView.builder(
-                itemCount: _defaultPackage.length,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () => _checkDetail(
-                      context,
-                      _defaultPackage[index].packageName,
-                      _defaultPackage[index].details,
-                      _defaultPackage[index].price,
-                    ),
-                    highlightColor: _defaultPackage[index].colors,
-                    borderRadius: BorderRadius.circular(38),
-                    child: Container(
-                      // margin: EdgeInsets.only(left:20, top: 30,right: 20,bottom: 20),
-                      margin: const EdgeInsets.symmetric(vertical: 20),
-
-                      padding: const EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            _defaultPackage[index].colors.withOpacity(0.5),
-                            _defaultPackage[index].colors,
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
+              borderRadius: BorderRadius.circular(38),
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: 20),
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      _defaultPackage[index].colors.withOpacity(0.5),
+                      _defaultPackage[index].colors,
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(38),
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(
+                        left: 30,
+                        top: 30,
+                        right: 30,
+                        bottom: 20,
+                      ),
+                      child: Text(
+                        _defaultPackage[index].packageName,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
-                        borderRadius: BorderRadius.circular(38),
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(
-                              left: 30,
-                              top: 30,
-                              right: 30,
-                              bottom: 20,
-                            ),
-                            child: Text(
-                              _defaultPackage[index].packageName,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const Text('RM '),
-                              Text(
-                                _defaultPackage[index].price.toString(),
-                                style: const TextStyle(fontSize: 25),
-                              ),
-                            ],
-                          )
-                        ],
                       ),
                     ),
-                  );
-                }),
-          ),
-          const Divider(
-            color: Colors.black,
-            thickness: 3,
-            indent: 10,
-            endIndent: 10,
-          ),
-        ],
-      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        const Text('RM '),
+                        Text(
+                          _defaultPackage[index].price.toString(),
+                          style: const TextStyle(fontSize: 25),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            );
+          }),
     );
   }
 }

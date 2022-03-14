@@ -5,9 +5,10 @@ import 'package:fyp2/service/database.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DateRangePickerService extends StatefulWidget {
-  DateRangePickerService({Key key, this.orderID, this.clId}) : super(key: key);
-  final String orderID;
+  DateRangePickerService({Key key, this.clId, this.selectDateTime}) : super(key: key);
+
   final String clId;
+  final Function(DateTime, DateTime) selectDateTime;
 
   @override
   State<DateRangePickerService> createState() => _DateRangePickerServiceState();
@@ -21,13 +22,11 @@ class _DateRangePickerServiceState extends State<DateRangePickerService> {
   List<DateTime> occupiedEndDate = [];
   List<DateTime> _blackOutDates = [];
 
-  Future _updateOrderDate() {
+  void _updateOrderDate() {
+    widget.selectDateTime(_startDate,_endDate);
     Navigator.of(context).pop();
     Fluttertoast.showToast(msg: 'Date Selected');
-    return Database().updateOrderData(widget.orderID, {
-      'startDate': _startDate,
-      'endDate': _endDate,
-    });
+    
   }
 
   @override

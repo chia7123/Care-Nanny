@@ -1,9 +1,5 @@
 import 'dart:io';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:fyp2/service/videos/video_player.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoWidget extends StatefulWidget {

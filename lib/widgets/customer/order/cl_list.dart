@@ -9,19 +9,13 @@ class ConLadyList extends StatelessWidget {
   CollectionReference orderInfo =
       FirebaseFirestore.instance.collection('orderInfo');
   final user = FirebaseAuth.instance.currentUser;
+  Function(String id) selectCL;
 
-  final String orderID;
+  ConLadyList({Key key, this.selectCL}) : super(key: key);
 
-  ConLadyList(this.orderID, {Key key}) : super(key: key);
-
-  Future hire(BuildContext ctx, String id, String name, String phone) {
-    return Database().updateOrderData(orderID, {
-      'clID': id,
-      'clName': name,
-      'clContact': phone,
-    }).whenComplete(() {
-      Navigator.of(ctx).pop();
-    });
+  void _selectCL(BuildContext context, String id) {
+    selectCL(id);
+    Navigator.pop(context);
   }
 
   @override
@@ -113,12 +107,9 @@ class ConLadyList extends StatelessWidget {
                             ),
                             children: [
                               ElevatedButton.icon(
-                                  onPressed: () => hire(
-                                        context,
-                                        user['id'],
-                                        user['name'],
-                                        user['phone'],
-                                      ),
+                                  onPressed: () {
+                                    _selectCL(context, user['id']);
+                                  },
                                   icon: const Icon(Icons.favorite),
                                   label: const Text('Hire Me'))
                             ],
