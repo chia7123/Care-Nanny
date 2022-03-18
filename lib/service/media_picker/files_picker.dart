@@ -42,7 +42,6 @@ class _FilesPickerState extends State<FilesPicker> {
             ? SizedBox(
                 height: 100,
                 child: ListView.builder(
-                  
                     itemCount: files.length,
                     itemBuilder: (context, index) {
                       var kb = files[index].size / 1024;
@@ -54,7 +53,13 @@ class _FilesPickerState extends State<FilesPicker> {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(files[index].name),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width*0.6,
+                            child: Text(
+                              files[index].name,
+                              softWrap: true,
+                            ),
+                          ),
                           Text(size),
                         ],
                       );
@@ -66,20 +71,19 @@ class _FilesPickerState extends State<FilesPicker> {
   }
 
   Future _selectFile() async {
-    try{
-    final results = await FilePicker.platform.pickFiles(allowMultiple: true);
+    try {
+      final results = await FilePicker.platform.pickFiles(allowMultiple: true);
 
-    if (results == null) {
-      return;
-    } else {
-      final paths = results.files;
-      setState(() {
-        files = paths;
-      });
-      widget.fileSelectFn(files);
-    }
-    }
-     catch(e){
+      if (results == null) {
+        return;
+      } else {
+        final paths = results.files;
+        setState(() {
+          files = paths;
+        });
+        widget.fileSelectFn(files);
+      }
+    } catch (e) {
       Fluttertoast.showToast(msg: 'Failed to select the file :$e');
     }
   }

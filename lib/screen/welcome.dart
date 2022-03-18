@@ -5,7 +5,7 @@ class Welcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,  
+      backgroundColor: Colors.blue[200],  
       body: Padding(
         padding: EdgeInsets.all(30),
         child: Column(

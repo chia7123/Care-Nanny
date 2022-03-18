@@ -78,7 +78,7 @@ class _CustomizePackageState extends State<CustomizePackage> {
               style: BorderStyle.solid,
             ),
           ),
-          height: MediaQuery.of(context).size.height * 0.56,
+          height: MediaQuery.of(context).size.height * 0.50,
           child: Scrollbar(
             thickness: 5,
             radius: const Radius.circular(10),
@@ -104,9 +104,6 @@ class _CustomizePackageState extends State<CustomizePackage> {
                   );
                 }),
           ),
-        ),
-        const SizedBox(
-          height: 5,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

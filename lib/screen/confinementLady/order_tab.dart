@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fyp2/screen/customer/order_history_list.dart';
+import 'package:fyp2/screen/confinementLady/order_history_list.dart';
 import 'package:fyp2/widgets/menu_widget.dart';
 
 import 'order_pending_list.dart';
@@ -7,9 +7,6 @@ import 'order_progress_list.dart';
 
 class OrderTabScreen extends StatelessWidget {
   OrderTabScreen({Key key}) : super(key: key);
-  
- 
-  static const routeName = '/orderTabScreen';
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +20,7 @@ class OrderTabScreen extends StatelessWidget {
           bottom: const TabBar(
             labelColor: Colors.white,
             isScrollable: true,
+
             tabs: [
               Tab(
                 icon: Icon(
@@ -43,9 +41,9 @@ class OrderTabScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            CusPendingOrderList(),
-            CusProgressOrderList(),
-            CusOrderHistoryList(),
+            CLPendingOrderList(),
+            CLProgressOrderList(),
+            CLOrderHistoryList(),
           ],
         ),
       ),

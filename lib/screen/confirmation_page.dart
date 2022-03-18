@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fyp2/screen/customer/customer_tab.dart';
+import 'package:fyp2/screen/customer/customer_home.dart';
+import 'package:fyp2/screen/wrapper.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ConfirmationPage extends StatelessWidget {
@@ -44,7 +45,7 @@ class ConfirmationPage extends StatelessWidget {
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const CustomerTab(),
+                      builder: (context) => Wrapper(),
                     ));
               },
               child: const Text(

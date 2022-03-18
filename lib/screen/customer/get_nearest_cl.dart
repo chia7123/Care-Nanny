@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp2/screen/order_process.dart';
+import 'package:fyp2/screen/customer/order_process.dart';
 import 'package:fyp2/service/database.dart';
 import 'package:fyp2/service/location.dart';
 import 'package:fyp2/widgets/profile_card.dart';
@@ -80,6 +80,7 @@ class _GetNearestCLState extends State<GetNearestCL> {
                               .orderBy('tempDistance')
                               .snapshots();
                         });
+                        Navigator.of(context).pop();
                       },
                       icon: const Icon(Icons.restore),
                       label: const Text('Reset'),
@@ -105,6 +106,7 @@ class _GetNearestCLState extends State<GetNearestCL> {
                               .orderBy('tempDistance')
                               .snapshots();
                         });
+                          Navigator.pop(context);
                       },
                     ),
                     const Divider(),
@@ -118,6 +120,7 @@ class _GetNearestCLState extends State<GetNearestCL> {
                               .orderBy('tempDistance')
                               .snapshots();
                         });
+                          Navigator.pop(context);
                       },
                     ),
                     const Divider(),
@@ -131,6 +134,7 @@ class _GetNearestCLState extends State<GetNearestCL> {
                               .orderBy('tempDistance')
                               .snapshots();
                         });
+                          Navigator.pop(context);
                       },
                     ),
                     const Divider(),
@@ -144,6 +148,7 @@ class _GetNearestCLState extends State<GetNearestCL> {
                               .orderBy('tempDistance')
                               .snapshots();
                         });
+                          Navigator.pop(context);
                       },
                     ),
                     const Divider(),
@@ -158,6 +163,7 @@ class _GetNearestCLState extends State<GetNearestCL> {
                               .orderBy('tempDistance')
                               .snapshots();
                         });
+                          Navigator.pop(context);
                       },
                     ),
                   ],
@@ -171,14 +177,11 @@ class _GetNearestCLState extends State<GetNearestCL> {
   }
 
   void hire(String id, String name, String imageUrl) {
-    // Database().addTempData(id, {
-    //   'id': id,
-    //   'name': name,
-    // });
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => OrderProcess(clID: id, clName: name, imageUrl: imageUrl),
+          builder: (context) =>
+              OrderProcess(clID: id, clName: name, imageUrl: imageUrl),
         ));
   }
 
@@ -224,16 +227,16 @@ class _GetNearestCLState extends State<GetNearestCL> {
                       child: ExpansionTile(
                         iconColor: Colors.orange,
                         leading: CachedNetworkImage(
-                              placeholder: (context, url) =>
-                                  const CircularProgressIndicator(),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
-                              imageUrl: doc['imageUrl'],
-                              imageBuilder: (context, imageProvider) =>
-                                  CircleAvatar(
-                                backgroundImage: imageProvider,
-                              ),
-                            ),
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                          imageUrl: doc['imageUrl'],
+                          imageBuilder: (context, imageProvider) =>
+                              CircleAvatar(
+                            backgroundImage: imageProvider,
+                          ),
+                        ),
                         title: Column(
                           children: [
                             Row(
@@ -306,7 +309,7 @@ class _GetNearestCLState extends State<GetNearestCL> {
                         children: [
                           ElevatedButton.icon(
                               onPressed: () {
-                                hire(doc['id'], doc['name'],doc['imageUrl']);
+                                hire(doc['id'], doc['name'], doc['imageUrl']);
                               },
                               icon: const Icon(Icons.favorite),
                               label: const Text('Hire Me'))

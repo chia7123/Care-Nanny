@@ -15,6 +15,7 @@ import 'package:fyp2/service/media_picker/user_image_picker.dart';
 import 'package:fyp2/widgets/full_screen_image.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../widgets/menu_widget.dart';
 import '../wrapper.dart';
 
 class CLProfile extends StatefulWidget {
@@ -127,13 +128,9 @@ class _CLProfileState extends State<CLProfile> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Edit Profile',
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          'Profile',
         ),
+        leading: const MenuWidget(),
         actions: [
           TextButton(
               onPressed: () => _updateProfile(),

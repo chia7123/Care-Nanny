@@ -11,9 +11,6 @@ class CLProgressOrderList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Progress Order'),
-      ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('onProgressOrder')

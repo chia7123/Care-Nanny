@@ -243,7 +243,7 @@ class CLPendingOrderDetail extends StatelessWidget {
                     TextButton.icon(
                       icon: Icon(Icons.cancel, color: Colors.red[600]),
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        Navigator.pop(context);
                         Future.delayed(const Duration(seconds: 1), () {
                           declineOrder(doc['orderID']);
                         });
@@ -256,7 +256,6 @@ class CLPendingOrderDetail extends StatelessWidget {
                     TextButton.icon(
                       icon: Icon(Icons.check, color: Colors.red[600]),
                       onPressed: () {
-                        Navigator.pop(context);
                         acceptOrder(doc['orderID'], context);
                       },
                       label: Text(

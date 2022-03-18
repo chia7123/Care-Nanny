@@ -10,11 +10,11 @@ import 'package:fyp2/widgets/profile_card.dart';
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-import '../service/database.dart';
-import '../service/date_range_picker_service.dart';
-import '../service/generate_id.dart';
-import '../service/payment.dart';
-import '../widgets/customer/order/cl_list.dart';
+import '../../service/database.dart';
+import '../../service/date_range_picker_service.dart';
+import '../../service/generate_id.dart';
+import '../../service/payment.dart';
+import '../../widgets/customer/order/cl_list.dart';
 
 class OrderProcess extends StatefulWidget {
   String clID;
@@ -58,10 +58,13 @@ class _OrderProcessState extends State<OrderProcess> {
     });
   }
 
-  void _selectPackage(Map<String, dynamic> package) {
+  void _selectPackage(Map<String, dynamic> package) async{
     setState(() {
       _package = package;
     });
+    if(clID!=null){
+      clData = await Database().getUserData(clID);
+    }
   }
 
   void _selectDate(DateTime startDate, DateTime endDate) {
@@ -119,6 +122,7 @@ class _OrderProcessState extends State<OrderProcess> {
             cusData['address3'],
         'clID': clID,
         'clName': clData['name'],
+        'clContact': clData['phone'],
         'price': _package['price'],
         'startDate': _startDate,
         'endDate': _endDate,
@@ -236,9 +240,9 @@ class _OrderProcessState extends State<OrderProcess> {
                             ),
                             title: Text(
                               clName,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            trailing: ProfileCard(widget.clID),
+                            trailing: ProfileCard(clID),
                           ),
                         )
                       : const Text(

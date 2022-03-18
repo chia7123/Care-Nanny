@@ -11,9 +11,6 @@ class CLOrderHistoryList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Histroy'),
-      ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('CLOrderHistory')
@@ -121,9 +118,11 @@ class CLOrderHistoryList extends StatelessWidget {
                           const SizedBox(
                             height: 8,
                           ),
-                          Text(
-                            '${DateFormat.yMMMMd().format(doc['startDate'].toDate())} - ${DateFormat.yMMMMd().format(doc['endDate'].toDate())}',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('Ordered on : ' +
+                                DateFormat('MMMM dd, yyyy')
+                                    .format(doc['creationDate'].toDate())),
                           ),
                           const SizedBox(
                             height: 8,

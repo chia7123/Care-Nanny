@@ -75,16 +75,23 @@ class _PersonalInfoState extends State<PersonalInfo> {
       return;
     }
 
-    for (var file in _userFiles) {
-      final fileStorage = FirebaseStorage.instance
-          .ref()
-          .child('CLCertificate')
-          .child(user.uid)
-          .child(file.name);
+    if (_selectedUser == 'Confinement Lady' && _userFiles == null) {
+      Fluttertoast.showToast(msg: 'Please upload the professional certificate');
+      return;
+    }
 
-      await fileStorage.putFile(File(file.path));
-      var url = await fileStorage.getDownloadURL();
-      certUrl.add(url);
+    if (_userFiles != null) {
+      for (var file in _userFiles) {
+        final fileStorage = FirebaseStorage.instance
+            .ref()
+            .child('CLCertificate')
+            .child(user.uid)
+            .child(file.name);
+
+        await fileStorage.putFile(File(file.path));
+        var url = await fileStorage.getDownloadURL();
+        certUrl.add(url);
+      }
     }
 
     if (isValid) {
@@ -290,14 +297,22 @@ class _PersonalInfoState extends State<PersonalInfo> {
                                   )
                                 : const SizedBox(),
                             const SizedBox(
-                              height: 20,
+                              height: 10,
                             ),
                             _selectedUser == 'Confinement Lady'
                                 ? Align(
                                     alignment: Alignment.centerLeft,
-                                    child: FilesPicker(
-                                      fileSelectFn: _selectFile,
-                                    ))
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text('8. Certificates'),
+                                        FilesPicker(
+                                          fileSelectFn: _selectFile,
+                                        ),
+                                      ],
+                                    ),
+                                  )
                                 : const SizedBox(),
                           ],
                         ),

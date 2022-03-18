@@ -28,7 +28,6 @@ class PendingOrderButtons extends StatelessWidget {
         size: 20,
       ),
       onPressed: () {
-        Navigator.of(context).pop();
         Future.delayed(const Duration(seconds: 1), () {
           
           deleteOrder(doc['orderID']);

@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/widgets/customer/order/pending_order_buttons.dart';
 import 'package:intl/intl.dart';
+
+import '../../../service/database.dart';
 
 class CusPendingOrderDetail extends StatelessWidget {
   final String id;
@@ -29,7 +32,9 @@ class CusPendingOrderDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Pending Order'),),
+      appBar: AppBar(
+        title: const Text('Pending Order'),
+      ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('onPendingOrder')
@@ -103,7 +108,7 @@ class CusPendingOrderDetail extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text('Confinement Date : '),
-                                   SizedBox(
+                                    SizedBox(
                                       width: 120,
                                       child: Text(
                                         '${DateFormat.yMMMMd().format(doc['startDate'].toDate())} - ${DateFormat.yMMMMd().format(doc['endDate'].toDate())}',
@@ -200,10 +205,30 @@ class CusPendingOrderDetail extends StatelessWidget {
                     ),
                   ),
                 ),
-                
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: PendingOrderButtons(doc: doc,),
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.red[600],
+                      minimumSize: const Size.fromHeight(40),
+                    ),
+                    icon: const Icon(
+                      Icons.cancel,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Future.delayed(const Duration(seconds: 1), () {
+                        deleteOrder(doc['orderID']);
+                        Navigator.pop(context);
+                      });
+                    },
+                    label: const Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                  ),
                 )
               ],
             );
@@ -213,5 +238,14 @@ class CusPendingOrderDetail extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Future<void> deleteOrder(String id) {
+    return Database()
+        .deletePendingOrder(id)
+        .then((val) { 
+          Fluttertoast.showToast(msg: 'Order Cancelled !');})
+        .catchError((error) =>
+            Fluttertoast.showToast(msg: "Failed to cancel order: $error"));
   }
 }

@@ -42,17 +42,15 @@ class ProfileCard extends StatelessWidget {
             children: [
               GestureDetector(
                 child: CachedNetworkImage(
-                              placeholder: (context, url) =>
-                                  const CircularProgressIndicator(),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
-                              imageUrl: doc['imageUrl'],
-                              imageBuilder: (context, imageProvider) =>
-                                  CircleAvatar(
-                                    radius: 70,
-                                backgroundImage: imageProvider,
-                              ),
-                            ),
+                  placeholder: (context, url) =>
+                      const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                  imageUrl: doc['imageUrl'],
+                  imageBuilder: (context, imageProvider) => CircleAvatar(
+                    radius: 70,
+                    backgroundImage: imageProvider,
+                  ),
+                ),
                 onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -166,7 +164,7 @@ class ProfileCard extends StatelessWidget {
                   style: TextStyle(decoration: TextDecoration.underline),
                 ),
               ),
-              (doc['certUrl'] == null || doc['certUrl'][0] == "")
+              doc['certUrl'].length == 0
                   ? const Text(
                       'The user did not update any photo yet.',
                       style: TextStyle(fontSize: 15),

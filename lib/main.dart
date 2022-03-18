@@ -4,7 +4,6 @@ import 'package:fyp2/screen/confinementLady/order_history_list.dart';
 import 'package:fyp2/screen/confinementLady/order_pending_list.dart';
 import 'package:fyp2/screen/confinementLady/order_progress_list.dart';
 import 'package:fyp2/screen/customer/customer_home.dart';
-import 'package:fyp2/screen/customer/service_detail.dart';
 import 'package:fyp2/screen/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fyp2/screen/wrapper.dart';
@@ -33,17 +32,18 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Final Year Project',
       theme: ThemeData(
-        appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.orange,
-            iconTheme: IconThemeData(color: Colors.white),
-            actionsIconTheme: IconThemeData(color: Colors.white),
-            titleTextStyle: TextStyle(color: Colors.white, fontSize: 18)),
+        appBarTheme: AppBarTheme(
+            toolbarHeight: 80,
+            backgroundColor: Colors.blue[200],
+            iconTheme: const IconThemeData(color: Colors.white),
+            actionsIconTheme: const IconThemeData(color: Colors.white),
+            titleTextStyle: const TextStyle(color: Colors.white, fontSize: 18)),
         textTheme: TextTheme(
           bodyText1: GoogleFonts.raleway(fontWeight: FontWeight.bold),
           bodyText2: GoogleFonts.raleway(),
         ),
-        primaryColor: Colors.orange,
-        canvasColor: const Color.fromRGBO(255, 241, 201, 1),
+        primaryColor: Colors.blue[200],
+        canvasColor: Colors.white,
         primaryTextTheme: const TextTheme(
           bodyText1: TextStyle(color: Colors.white),
           bodyText2: TextStyle(color: Colors.white),

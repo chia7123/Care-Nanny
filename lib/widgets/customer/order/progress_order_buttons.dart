@@ -157,7 +157,6 @@ class ProgressOrderButtons extends StatelessWidget {
                 return;
               } else {
                 Navigator.pop(context);
-                Navigator.pop(context);
                 calculateRating(clID, ratings, orderID, cusName, cusContact);
                 completeOrder(orderID, ratings, clID);
               }

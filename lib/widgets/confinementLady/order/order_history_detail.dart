@@ -100,7 +100,7 @@ class CLOrderHistoryDetail extends StatelessWidget {
                                       width: 180,
                                       child: Text(
                                         doc['cusAdd'],
-                                        textAlign: TextAlign.right,
+                                        textAlign: TextAlign.right,softWrap: true,
                                       ),
                                     ),
                                   ],

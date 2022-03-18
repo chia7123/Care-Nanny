@@ -6,8 +6,8 @@ import 'package:fyp2/service/database.dart';
 import 'package:fyp2/service/location.dart';
 import 'package:fyp2/service/google_api.dart';
 import 'package:fyp2/service/media_picker/user_image_picker.dart';
+import 'package:fyp2/widgets/menu_widget.dart';
 import 'package:geolocator/geolocator.dart';
-import '../wrapper.dart';
 
 class CustomerProfile extends StatefulWidget {
   static const routeName = '/Profile';
@@ -93,13 +93,9 @@ class _CustomerProfileState extends State<CustomerProfile> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Edit Profile',
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          'Profile',
         ),
+        leading: const MenuWidget(),
         actions: [
           TextButton(
               onPressed: () => _updateProfile(),
@@ -110,135 +106,116 @@ class _CustomerProfileState extends State<CustomerProfile> {
         ],
       ),
       backgroundColor: Theme.of(context).canvasColor,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Card(
-              margin: const EdgeInsets.only(
-                  left: 20, top: 20, right: 20, bottom: 15),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      StreamBuilder(
-                          stream: FirebaseFirestore.instance
-                              .collection('users')
-                              .doc(user.uid)
-                              .snapshots(),
-                          builder: (context, snapshot) {
-                            if (snapshot.data == null) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }
-                            return UserImagePicker(snapshot.data['imageUrl']);
-                          }),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'User ID: ' + user.uid,
-                        style:
-                            const TextStyle(color: Colors.grey, fontSize: 12),
-                      ),
-                      TextFormField(
-                        key: const ValueKey('name'),
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter your name';
+      body: Center(
+        child: Card(
+          margin:
+              const EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 15),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(user.uid)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.data == null) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
                           }
-                          return null;
-                        },
-                        decoration: const InputDecoration(
-                          labelText: '1. Name',
-                        ),
-                        controller: name,
+                          return UserImagePicker(snapshot.data['imageUrl']);
+                        }),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'User ID: ' + user.uid,
+                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
+                    TextFormField(
+                      key: const ValueKey('name'),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter your name';
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        labelText: '1. Name',
                       ),
-                      TextFormField(
-                        key: const ValueKey('phone'),
-                        validator: (value) {
-                          if (value.isEmpty ||
-                              value.length > 11 ||
-                              value.length < 10) {
-                            return 'Please enter a valid phone number';
-                          }
-                          return null;
-                        },
-                        decoration: const InputDecoration(
-                            labelText: '2. Phone number',
-                            hintText: 'Example: 01234567890'),
-                        controller: phone,
-                        keyboardType: const TextInputType.numberWithOptions(),
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 5,
-                            child: TextFormField(
-                              key: const ValueKey('add1'),
-                              decoration: const InputDecoration(
-                                labelText: '3. Address 1',
-                              ),
-                              controller: add1,
+                      controller: name,
+                    ),
+                    TextFormField(
+                      key: const ValueKey('phone'),
+                      validator: (value) {
+                        if (value.isEmpty ||
+                            value.length > 11 ||
+                            value.length < 10) {
+                          return 'Please enter a valid phone number';
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                          labelText: '2. Phone number',
+                          hintText: 'Example: 01234567890'),
+                      controller: phone,
+                      keyboardType: const TextInputType.numberWithOptions(),
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: TextFormField(
+                            key: const ValueKey('add1'),
+                            decoration: const InputDecoration(
+                              labelText: '3. Address 1',
                             ),
+                            controller: add1,
                           ),
-                          Expanded(
-                            child: IconButton(
-                              onPressed: () => getAddress(),
-                              iconSize: 20,
-                              icon: const Icon(Icons.gps_fixed),
-                            ),
+                        ),
+                        Expanded(
+                          child: IconButton(
+                            onPressed: () => getAddress(),
+                            iconSize: 20,
+                            icon: const Icon(Icons.gps_fixed),
                           ),
-                        ],
-                      ),
-                      TextFormField(
-                        key: const ValueKey('add2'),
-                        decoration: const InputDecoration(
-                          labelText: '4. Address 2',
                         ),
-                        controller: add2,
+                      ],
+                    ),
+                    TextFormField(
+                      key: const ValueKey('add2'),
+                      decoration: const InputDecoration(
+                        labelText: '4. Address 2',
                       ),
-                      TextFormField(
-                        key: const ValueKey('add3'),
-                        decoration: const InputDecoration(
-                          labelText: '5. Address 3',
-                        ),
-                        controller: add3,
+                      controller: add2,
+                    ),
+                    TextFormField(
+                      key: const ValueKey('add3'),
+                      decoration: const InputDecoration(
+                        labelText: '5. Address 3',
                       ),
-                      TextFormField(
-                        key: const ValueKey('Email'),
-                        readOnly: true,
-                        decoration: const InputDecoration(
-                          labelText: '6. Email',
-                        ),
-                        controller: email,
+                      controller: add3,
+                    ),
+                    TextFormField(
+                      key: const ValueKey('Email'),
+                      readOnly: true,
+                      decoration: const InputDecoration(
+                        labelText: '6. Email',
                       ),
-                      
-                    ],
-                  ),
+                      controller: email,
+                    ),
+                  ],
                 ),
               ),
             ),
-            TextButton.icon(
-              icon: Icon(
-                Icons.logout,
-                color: Colors.red[600],
-              ),
-              onPressed: () {
-                FirebaseAuth.instance.signOut();
-                Navigator.pushReplacementNamed(context, Wrapper.routeName);
-              },
-              label: Text(
-                'Logout',
-                style: TextStyle(color: Colors.red[600]),
-              ),
-            ),
-            
-          ],
+          ),
         ),
       ),
     );

@@ -11,9 +11,6 @@ class CLPendingOrderList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pending Order'),
-      ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('onPendingOrder')

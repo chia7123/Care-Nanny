@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../widgets/menu_widget.dart';
 import 'order_history_list.dart';
 import 'order_pending_list.dart';
 import 'order_progress_list.dart';
@@ -68,6 +69,8 @@ class CLHome extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        leading: const MenuWidget(),
+        toolbarHeight: 80,
         title: Text('CareNanny', style: GoogleFonts.allura(fontSize: 35)),
         backgroundColor: Theme.of(context).primaryColor,
       ),

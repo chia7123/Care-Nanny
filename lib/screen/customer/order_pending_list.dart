@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:fyp2/service/database.dart';
 import 'package:fyp2/widgets/customer/order/order_pending_detail.dart';
 import 'package:fyp2/widgets/customer/order/pending_order_buttons.dart';
 import 'package:intl/intl.dart';

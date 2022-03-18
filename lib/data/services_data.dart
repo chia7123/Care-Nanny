@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fyp2/models/service.dart';
 
 
-var serviceType = [
+List<Service> serviceType = [
   Service(
     name: '1x Prenanatal Massage',
     price: 200.00,
@@ -29,7 +29,7 @@ var serviceType = [
   ),
 ];
 
-var defaultPackage = [
+List<ServicePackage> defaultPackage = [
   ServicePackage(
     packageName: 'Basic Package',
     price: 2099.99,
