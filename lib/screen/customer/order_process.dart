@@ -12,7 +12,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../../service/database.dart';
 import '../../service/date_range_picker_service.dart';
-import '../../service/generate_id.dart';
+import '../../service/side_services.dart';
 import '../../service/payment.dart';
 import '../../widgets/customer/order/cl_list.dart';
 
@@ -42,7 +42,7 @@ class _OrderProcessState extends State<OrderProcess> {
 
   @override
   void initState() {
-    orderID = GenerateID().generateID(20);
+    orderID = SideServices().generateID(20);
     clID = widget.clID;
     clName = widget.clName;
     imageUrl = widget.imageUrl;
@@ -58,11 +58,11 @@ class _OrderProcessState extends State<OrderProcess> {
     });
   }
 
-  void _selectPackage(Map<String, dynamic> package) async{
+  void _selectPackage(Map<String, dynamic> package) async {
     setState(() {
       _package = package;
     });
-    if(clID!=null){
+    if (clID != null) {
       clData = await Database().getUserData(clID);
     }
   }
@@ -148,239 +148,237 @@ class _OrderProcessState extends State<OrderProcess> {
       appBar: AppBar(
         title: const Text('Place Your Order'),
       ),
-      body: Center(
-        child: Stepper(
-          steps: [
-            Step(
-                title: const Text(
-                  'Select Confinement Package',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                content: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    _package != null
-                        ? Card(
-                            elevation: 15,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0)),
-                            child: ListTile(
-                              title: Text(
-                                _package['typeOfService'],
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              onTap: () => _checkDetail(),
+      body: Stepper(
+        steps: [
+          Step(
+            title: const Text(
+              'Select Confinement Lady',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                clID != null
+                    ? Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25.0),
+                        ),
+                        elevation: 10,
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(10),
+                          leading: CachedNetworkImage(
+                            placeholder: (context, url) =>
+                                const CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                            imageUrl: imageUrl,
+                            imageBuilder: (context, imageProvider) =>
+                                CircleAvatar(
+                              radius: 70,
+                              backgroundImage: imageProvider,
                             ),
-                          )
-                        : const Text(
-                            'No Confinement Service Selected Yet! \n Please Select One',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                            ),
-                            textAlign: TextAlign.center,
                           ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) => ServicesTab(
-                                    orderID: orderID,
-                                    selectPackage: _selectPackage,
-                                  )),
-                        );
-                      },
-                      child: const Text('Press here'),
-                      style: ElevatedButton.styleFrom(
-                        primary: Theme.of(context).primaryColor,
-                        onPrimary: Colors.white,
+                          title: Text(
+                            clName,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          trailing: ProfileCard(clID),
+                        ),
+                      )
+                    : const Text(
+                        'No Confinement Lady Selected \nPlease Select One',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                        textAlign: TextAlign.start,
                       ),
-                    ),
-                  ],
-                )),
-            Step(
+                const SizedBox(
+                  height: 10,
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ConLadyList(
+                            selectCL: _selectCL,
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Text('Press here'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blue,
+                      onPrimary: Colors.white,
+                    )),
+              ],
+            ),
+          ),
+          Step(
+            title: const Text(
+              'Select Date of Confinement',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                _startDate != null
+                    ? Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Date selected : \n${DateFormat('yyyy-MM-dd').format(_startDate)} - ${DateFormat('yyyy-MM-dd').format(_endDate)}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                      )
+                    : const Text(
+                        'No Confinement Date Selected \nPlease Select Now',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      print(clID);
+                      if (clID == null) {
+                        Fluttertoast.showToast(
+                            msg: 'Please choose Confinement Lady first !');
+                      } else {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => DateRangePickerService(
+                                  clId: clID,
+                                  selectDateTime: _selectDate,
+                                )));
+                      }
+                    },
+                    child: const Text('Press here'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blue,
+                      onPrimary: Colors.white,
+                    )),
+              ],
+            ),
+          ),
+          Step(
               title: const Text(
-                'Select Confinement Lady',
+                'Select Confinement Package',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.w800,
                 ),
               ),
               content: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  clID != null
+                  _package != null
                       ? Card(
+                          elevation: 15,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                          ),
-                          elevation: 10,
+                              borderRadius: BorderRadius.circular(15.0)),
                           child: ListTile(
-                            contentPadding: EdgeInsets.all(10),
-                            leading: CachedNetworkImage(
-                              placeholder: (context, url) =>
-                                  const CircularProgressIndicator(),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
-                              imageUrl: imageUrl,
-                              imageBuilder: (context, imageProvider) =>
-                                  CircleAvatar(
-                                radius: 70,
-                                backgroundImage: imageProvider,
+                            title: Text(
+                              _package['typeOfService'],
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
                               ),
                             ),
-                            title: Text(
-                              clName,
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            trailing: ProfileCard(clID),
+                            onTap: () => _checkDetail(),
                           ),
                         )
                       : const Text(
-                          'No Confinement Lady Selected \n Please Select One',
+                          'No Confinement Service Selected Yet \nPlease Select One',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
                           ),
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.start,
                         ),
                   const SizedBox(
                     height: 10,
                   ),
                   ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ConLadyList(
-                              selectCL: _selectCL,
-                            ),
-                          ),
-                        );
-                      },
-                      child: const Text('Press here'),
-                      style: ElevatedButton.styleFrom(
-                        primary: Theme.of(context).primaryColor,
-                        onPrimary: Colors.white,
-                      )),
-                ],
-              ),
-            ),
-            Step(
-              title: const Text(
-                'Select Date of Confinement',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  _startDate != null
-                      ? Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Date selected : \n${DateFormat('yyyy-MM-dd').format(_startDate)} - ${DateFormat('yyyy-MM-dd').format(_endDate)}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17,
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                        )
-                      : const Text(
-                          'No Confinement Date Selected \n Please Select Now',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                  const SizedBox(
-                    height: 10,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => ServicesTab(
+                                  orderID: orderID,
+                                  selectPackage: _selectPackage,
+                                )),
+                      );
+                    },
+                    child: const Text('Press here'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blue,
+                      onPrimary: Colors.white,
+                    ),
                   ),
-                  ElevatedButton(
-                      onPressed: () {
-                        print(clID);
-                        if (clID == null) {
-                          Fluttertoast.showToast(
-                              msg: 'Please choose Confinement Lady first !');
-                        } else {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) => DateRangePickerService(
-                                    clId: clID,
-                                    selectDateTime: _selectDate,
-                                  )));
-                        }
-                      },
-                      child: const Text('Press here'),
-                      style: ElevatedButton.styleFrom(
-                        primary: Theme.of(context).primaryColor,
-                        onPrimary: Colors.white,
-                      )),
                 ],
-              ),
-            ),
-          ],
-          currentStep: _currentStep,
-          onStepTapped: (int index) {
+              )),
+        ],
+        currentStep: _currentStep,
+        onStepTapped: (int index) {
+          setState(() {
+            _currentStep = index;
+          });
+        },
+        onStepContinue: () {
+          if (_currentStep == 2 &&
+              clID != null &&
+              _package != null &&
+              _startDate != null) {
+            checkout();
+          } else if (_currentStep == 2 &&
+              (clID == null || _package == null || _startDate == null)) {
+            Fluttertoast.showToast(
+                msg: 'Please select all the required field first!');
+          }
+          if (_currentStep < 2) {
             setState(() {
-              _currentStep = index;
+              ++_currentStep;
             });
-          },
-          onStepContinue: () {
-            if (_currentStep == 2 &&
-                clID != null &&
-                _package != null &&
-                _startDate != null) {
-              checkout();
-            } else if (_currentStep == 2 &&
-                (clID == null || _package == null || _startDate == null)) {
-              Fluttertoast.showToast(
-                  msg: 'Please select all the required field first!');
-            }
-            if (_currentStep < 2) {
+          }
+        },
+        onStepCancel: () {
+          switch (_currentStep) {
+            case 0:
               setState(() {
-                ++_currentStep;
+                _currentStep--;
+                clID = null;
+                clName = null;
+                imageUrl = null;
               });
-            }
-          },
-          onStepCancel: () {
-            switch (_currentStep) {
-              case 0:
-                setState(() {
-                  _package = null;
-                });
-                break;
-              case 1:
-                setState(() {
-                  _currentStep--;
-                  clID = null;
-                  clName = null;
-                  imageUrl = null;
-                });
-                break;
-              case 2:
-                setState(() {
-                  _currentStep--;
-                  _startDate = null;
-                  _endDate = null;
-                });
-                break;
-              default:
-            }
-          },
-          elevation: 3,
-        ),
+              break;
+            case 1:
+              setState(() {
+                _currentStep--;
+                _startDate = null;
+                _endDate = null;
+              });
+              break;
+            case 2:
+              setState(() {
+                _package = null;
+              });
+              break;
+            default:
+          }
+        },
+        elevation: 3,
       ),
     );
   }

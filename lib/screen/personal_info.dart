@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:age_calculator/age_calculator.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,6 +11,7 @@ import 'package:fyp2/service/location.dart';
 import 'package:fyp2/service/google_api.dart';
 import 'package:fyp2/service/media_picker/signup_image_picker.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 
 class PersonalInfo extends StatefulWidget {
   static const routeName = '/initialProfile';
@@ -24,24 +26,325 @@ class PersonalInfo extends StatefulWidget {
 class _PersonalInfoState extends State<PersonalInfo> {
   final user = FirebaseAuth.instance.currentUser;
   final _formKey = GlobalKey<FormState>();
-  final List<String> _users = ['Customer', 'Confinement Lady'];
+  final List<String> _users = ['New Mother', 'Confinement Lady'];
+  final List<String> _vegans = ['Yes', 'No'];
   String _selectedUser;
   File _userImageFile;
   List<PlatformFile> _userFiles;
+  String _selectedVegan;
+  bool _isVegan;
+  DateTime dateOfBirth;
 
   TextEditingController name = TextEditingController();
   TextEditingController phone = TextEditingController();
-  TextEditingController add1 = TextEditingController();
-  TextEditingController add2 = TextEditingController();
-  TextEditingController add3 = TextEditingController();
+  TextEditingController detailedAddress = TextEditingController();
+  TextEditingController postalCode = TextEditingController();
+  TextEditingController stateArea = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController desc = TextEditingController();
+  TextEditingController dob = TextEditingController();
+  TextEditingController race = TextEditingController();
+  TextEditingController religon = TextEditingController();
+  TextEditingController nationality = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Profile Detail'),
+          actions: [
+            IconButton(
+              onPressed: _updateProfile,
+              icon: const Icon(Icons.check),
+            ),
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 22, top: 20),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Please fill in the following information.',
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      SignUpImagePicker(
+                        _pickedImage,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      DropdownButton(
+                        key: const ValueKey('user'),
+                        hint: const Text('Please Choose Your Roles'),
+                        value: _selectedUser,
+                        onChanged: (newValue) {
+                          setState(() {
+                            _selectedUser = newValue as String;
+                          });
+                        },
+                        items: _users.map((user) {
+                          return DropdownMenuItem(
+                            child: Text(user),
+                            value: user,
+                          );
+                        }).toList(),
+                      ),
+                      TextFormField(
+                        key: const ValueKey('name'),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter your name';
+                          }
+                          return null;
+                        },
+                        decoration: const InputDecoration(
+                          hintText: 'Name',
+                        ),
+                        controller: name,
+                      ),
+                      TextFormField(
+                        key: const ValueKey('phone'),
+                        validator: (value) {
+                          if (value.isEmpty ||
+                              value.length > 11 ||
+                              value.length < 10) {
+                            return 'Please enter a valid phone number';
+                          }
+                          return null;
+                        },
+                        decoration:
+                            const InputDecoration(hintText: 'Phone Number'),
+                        controller: phone,
+                        keyboardType: const TextInputType.numberWithOptions(),
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Row(
+                              children: [
+                                const Text('Races : '),
+                                Expanded(
+                                  child: TextFormField(
+                                    key: const ValueKey('religion'),
+                                    controller: race,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Row(
+                              children: [
+                                const Text('Religion : '),
+                                Expanded(
+                                  child: TextFormField(
+                                    key: const ValueKey('religion'),
+                                    controller: religon,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            
+                            child: Row(
+                              children: [
+                                const Text('Nationality : '),
+                                Expanded(
+                                  child: TextFormField(
+                                    key: const ValueKey('nationality'),
+                                    controller: nationality,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Row(
+                              children: [
+                                const Text('Vegetarian : '),
+                                Expanded(
+                                  child: DropdownButton(
+                                    key: const ValueKey('vegan'),
+                                    icon: const Visibility(
+                                      visible: false,
+                                      child: Icon(Icons.arrow_downward),
+                                    ),
+                                    value: _selectedVegan,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _selectedVegan = value as String;
+                                      });
+                                      if (_selectedVegan == 'Yes') {
+                                        _isVegan = true;
+                                      } else {
+                                        _isVegan = false;
+                                      }
+                                    },
+                                    items: _vegans.map((vegan) {
+                                      return DropdownMenuItem(
+                                        child: Text(vegan),
+                                        value: vegan,
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Text('Date of Birth: '),
+                          Expanded(
+                            child: TextFormField(
+                              readOnly: true,
+                              key: const ValueKey('dob'),
+                              controller: dob,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () async {
+                              final date = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(1950),
+                                lastDate: DateTime.now(),
+                              );
+                              if (date == null) {
+                                return;
+                              } else {
+                                setState(() {
+                                  dateOfBirth= date;
+                                  dob.text =
+                                      DateFormat('yyyy-MM-dd').format(date);
+                                });
+                              }
+                            },
+                            icon: const Icon(Icons.calendar_month),
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 7,
+                            child: TextFormField(
+                              key: const ValueKey('detailAddress'),
+                              minLines: 1,
+                              maxLines: 2,
+                              decoration: const InputDecoration(
+                                  hintText: 'Detail Address'),
+                              controller: detailedAddress,
+                            ),
+                          ),
+                          Expanded(
+                            child: IconButton(
+                              onPressed: () => getAddress(),
+                              icon: const Icon(
+                                Icons.gps_fixed,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      TextFormField(
+                        key: const ValueKey('postalCode'),
+                        decoration: const InputDecoration(
+                          hintText: 'Postal Code',
+                        ),
+                        controller: postalCode,
+                      ),
+                      TextFormField(
+                        key: const ValueKey('stateArea'),
+                        decoration: const InputDecoration(
+                          hintText: 'State, Area',
+                        ),
+                        controller: stateArea,
+                      ),
+                      TextFormField(
+                        key: const ValueKey('Email'),
+                        readOnly: true,
+                        decoration:
+                            InputDecoration(hintText: 'Email: ${email.text}'),
+                      ),
+                      TextFormField(
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          hintMaxLines: 2,
+                          hintText: 'ID : ${user.uid}',
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      _selectedUser == 'Confinement Lady'
+                          ? TextFormField(
+                              key: const ValueKey('desc'),
+                              minLines: 5,
+                              maxLines: 5,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: 'Describe yourself',
+                              ),
+                              controller: desc,
+                            )
+                          : const SizedBox(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      _selectedUser == 'Confinement Lady'
+                          ? Align(
+                              alignment: Alignment.centerLeft,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('Certificates'),
+                                  FilesPicker(
+                                    fileSelectFn: _selectFile,
+                                  ),
+                                ],
+                              ),
+                            )
+                          : const SizedBox(),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   void initState() {
     super.initState();
     email.value = TextEditingValue(text: widget.email);
-    desc.value = const TextEditingValue(text: 'Briefly introduce yourself');
+    // desc.value = const TextEditingValue(text: 'Briefly introduce yourself');
   }
 
   @override
@@ -61,6 +364,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
     final isValid = _formKey.currentState.validate();
     FocusScope.of(context).unfocus();
     List<String> certUrl = [];
+    var age = AgeCalculator.age(dateOfBirth).years;
 
     final imageStorage = FirebaseStorage.instance
         .ref()
@@ -98,9 +402,9 @@ class _PersonalInfoState extends State<PersonalInfo> {
       Database().updateUserData(user.uid, {
         'name': name.text,
         'phone': phone.text,
-        'address1': add1.text,
-        'address2': add2.text,
-        'address3': add3.text,
+        'detailAddress': detailedAddress.text,
+        'postalCode': postalCode.text,
+        'stateArea': stateArea.text,
         'userType': _selectedUser,
         'imageUrl': url,
         'email': email.text,
@@ -108,7 +412,13 @@ class _PersonalInfoState extends State<PersonalInfo> {
         'id': user.uid,
         'rating': 0,
         'orderSuccess': 0,
-        'certUrl': certUrl
+        'certUrl': certUrl,
+        'vegan': _isVegan,
+        'dob': dateOfBirth,
+        'age': age,
+        'race': race.text,
+        'religion': religon.text,
+        'nationality': nationality.text,
       }).whenComplete(() => {
             Fluttertoast.showToast(msg: 'Sign up successful'),
             Navigator.of(context).pop()
@@ -123,11 +433,14 @@ class _PersonalInfoState extends State<PersonalInfo> {
       Map<String, dynamic> map = await GoogleAPI().getAddress(position);
       List<dynamic> address = map["address_components"];
       setState(() {
-        add1.text =
-            address[0]['long_name'] + ' ' + address[1]['long_name'] + ',';
-        add2.text =
-            address[6]['long_name'] + ' ' + address[2]['long_name'] + ',';
-        add3.text =
+        detailedAddress.text = address[0]['long_name'] +
+            ' ' +
+            address[1]['long_name'] +
+            ', ' +
+            address[2]['long_name'] +
+            ',';
+        postalCode.text = address[6]['long_name'];
+        stateArea.text =
             address[3]['long_name'] + ', ' + address[4]['long_name'] + '.';
       });
       Database().updateUserData(user.uid, {
@@ -137,203 +450,5 @@ class _PersonalInfoState extends State<PersonalInfo> {
     } catch (e) {
       print(e);
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).canvasColor,
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 22, top: 30),
-                child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Profile Detail',
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                    )),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(left: 22),
-                child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('Please fill in the following information.')),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.75,
-                child: Card(
-                  margin: const EdgeInsets.only(
-                      left: 20, top: 20, right: 20, bottom: 25),
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SignUpImagePicker(
-                              _pickedImage,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            DropdownButton(
-                              key: const ValueKey('user'),
-                              hint: const Text('Please Choose Your Roles'),
-                              value: _selectedUser,
-                              onChanged: (newValue) {
-                                setState(() {
-                                  _selectedUser = newValue as String;
-                                });
-                              },
-                              items: _users.map((user) {
-                                return DropdownMenuItem(
-                                  child: Text(user),
-                                  value: user,
-                                );
-                              }).toList(),
-                            ),
-                            TextFormField(
-                              key: const ValueKey('name'),
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Please enter your name';
-                                }
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                labelText: '1. Name',
-                              ),
-                              controller: name,
-                            ),
-                            TextFormField(
-                              key: const ValueKey('phone'),
-                              validator: (value) {
-                                if (value.isEmpty ||
-                                    value.length > 11 ||
-                                    value.length < 10) {
-                                  return 'Please enter a valid phone number';
-                                }
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                  labelText: '2. Phone number',
-                                  hintText: 'Example: 01234567890'),
-                              controller: phone,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(),
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 5,
-                                  child: TextFormField(
-                                    key: const ValueKey('add1'),
-                                    decoration: const InputDecoration(
-                                        labelText: '3. Address 1',
-                                        hintText:
-                                            'Select the GPS to get your address.'),
-                                    controller: add1,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: IconButton(
-                                    onPressed: () => getAddress(),
-                                    iconSize: 20,
-                                    icon: const Icon(Icons.gps_fixed),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            TextFormField(
-                              key: const ValueKey('add2'),
-                              decoration: const InputDecoration(
-                                labelText: '4. Address 2',
-                              ),
-                              controller: add2,
-                            ),
-                            TextFormField(
-                              key: const ValueKey('add3'),
-                              decoration: const InputDecoration(
-                                labelText: '5. Address 3',
-                              ),
-                              controller: add3,
-                            ),
-                            TextFormField(
-                              key: const ValueKey('Email'),
-                              readOnly: true,
-                              decoration: const InputDecoration(
-                                labelText: '6. Email',
-                              ),
-                              controller: email,
-                            ),
-                            TextFormField(
-                              readOnly: true,
-                              decoration: InputDecoration(
-                                hintMaxLines: 2,
-                                hintText: '7. User ID: ' + user.uid,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            _selectedUser == 'Confinement Lady'
-                                ? TextFormField(
-                                    key: const ValueKey('desc'),
-                                    minLines: 5,
-                                    maxLines: null,
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: '8. Description',
-                                    ),
-                                    controller: desc,
-                                  )
-                                : const SizedBox(),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            _selectedUser == 'Confinement Lady'
-                                ? Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text('8. Certificates'),
-                                        FilesPicker(
-                                          fileSelectFn: _selectFile,
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : const SizedBox(),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: _updateProfile,
-                child: const Text(
-                  'Register',
-                  style: TextStyle(color: Colors.white),
-                ),
-                style: ElevatedButton.styleFrom(
-                    primary: Theme.of(context).primaryColor),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

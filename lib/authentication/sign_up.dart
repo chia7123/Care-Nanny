@@ -140,7 +140,7 @@ class _SignUpState extends State<SignUp> {
                       val.length < 8 ? 'Enter more then 8 character' : null,
                   decoration: InputDecoration(
                     hintText: 'Password',
-                    prefixIcon: Icon(Icons.vpn_key),
+                    prefixIcon: const Icon(Icons.vpn_key),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
@@ -186,7 +186,7 @@ class _SignUpState extends State<SignUp> {
                       onPressed: () {
                         widget.toggleScreen();
                       },
-                      child: Text('Login'),
+                      child: const Text('Login'),
                     ),
                   ],
                 )

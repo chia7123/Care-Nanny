@@ -23,7 +23,7 @@ List<Info> infos = [
         'https://www.healthxchange.sg/women/post-pregnancy/confinement-dos-donts',
   ),
   Info(
-    title: 'CHINESE CONFINEMENT (ZUO YUE ZI – SITTING THE MOON)',
+    title: 'Chinese Confinement (Zuo Yue Zi – Sitting The Moon)',
     imageUrl:
         'https://whattocooktoday.com/wp-content/uploads/2013/10/confinement-683x1024.jpg',
     url: 'https://whattocooktoday.com/chinese-confinement.html',

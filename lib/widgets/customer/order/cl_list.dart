@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp2/service/database.dart';
 import 'package:fyp2/widgets/profile_card.dart';
 
 class ConLadyList extends StatelessWidget {

@@ -33,22 +33,20 @@ class MyApp extends StatelessWidget {
       title: 'Final Year Project',
       theme: ThemeData(
         appBarTheme: AppBarTheme(
-            toolbarHeight: 80,
+            toolbarHeight: 65,
             backgroundColor: Colors.blue[200],
             iconTheme: const IconThemeData(color: Colors.white),
             actionsIconTheme: const IconThemeData(color: Colors.white),
-            titleTextStyle: const TextStyle(color: Colors.white, fontSize: 18)),
+            titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20)),
         textTheme: TextTheme(
           bodyText1: GoogleFonts.raleway(fontWeight: FontWeight.bold),
-          bodyText2: GoogleFonts.raleway(),
+          bodyText2: GoogleFonts.raleway(fontSize: 16),
+          
         ),
         primaryColor: Colors.blue[200],
         canvasColor: Colors.white,
-        primaryTextTheme: const TextTheme(
-          bodyText1: TextStyle(color: Colors.white),
-          bodyText2: TextStyle(color: Colors.white),
-        ),
-        primarySwatch: Colors.orange,
+       
+        primarySwatch: Colors.blue,
       ),
       home: SplashScreen(),
       routes: {

@@ -5,85 +5,27 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/data/info_data.dart';
 import 'package:fyp2/models/info.dart';
+import 'package:fyp2/screen/customer/cl_detail.dart';
 import 'package:fyp2/screen/customer/get_nearest_cl.dart';
 import 'package:fyp2/screen/customer/order_process.dart';
 import 'package:fyp2/widgets/menu_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'order_history_list.dart';
-import 'order_tab.dart';
+import '../../service/database.dart';
+import '../../service/location.dart';
 
-class CustomerHome extends StatelessWidget {
+class CustomerHome extends StatefulWidget {
   static const routeName = '/customerHomeScreen';
+
+  @override
+  State<CustomerHome> createState() => _CustomerHomeState();
+}
+
+class _CustomerHomeState extends State<CustomerHome> {
   final user = FirebaseAuth.instance.currentUser;
 
   final List<Info> _infos = infos;
-
-  Widget actionButton(
-      IconData icon, String label, Color color, void Function() callback) {
-    return Column(
-      children: <Widget>[
-        ElevatedButton(
-            onPressed: callback,
-            style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.zero,
-                shape: const CircleBorder(),
-                primary: color),
-            child: Container(
-              width: 70.0,
-              height: 70.0,
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(shape: BoxShape.circle),
-              child: Icon(
-                icon,
-                size: 28.0,
-                color: Colors.white,
-              ),
-            )),
-        Container(
-          margin: const EdgeInsets.only(top: 8.0),
-          child: Text(label,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  color: Colors.black,
-                  fontFamily: "MazzardH-SemiBold",
-                  fontSize: 12.0,
-                  height: 1.2)),
-        )
-      ],
-    );
-  }
-
-  Widget quickAction(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(25.0, 15.0, 25.0, 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          actionButton(Icons.shopping_cart, "Order Now", Colors.blueAccent, () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => OrderProcess(),
-              ),
-            );
-          }),
-          actionButton(Icons.assignment, "Orders", Colors.orangeAccent, () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => OrderTabScreen(),
-              ),
-            );
-          }),
-          actionButton(Icons.history, "Order History", Colors.green, () {
-            Navigator.pushNamed(context, CusOrderHistoryList.routeName);
-          })
-        ],
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +45,6 @@ class CustomerHome extends StatelessWidget {
           ),
         ),
       ),
-      
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('users')
@@ -119,7 +60,7 @@ class CustomerHome extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Hello, \n${data['name']}',
+                        'Hello, ${data['name']}',
                         style: GoogleFonts.roboto(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
@@ -142,17 +83,7 @@ class CustomerHome extends StatelessWidget {
                       const SizedBox(
                         height: 10,
                       ),
-                      Text(
-                        'FIND NEARBY CONFINEMENT LADY',
-                        style: GoogleFonts.mukta(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: nearbyOrder(context),
-                      ),
+                      nearMe(context),
                       exploreMore(context),
                     ],
                   ),
@@ -165,6 +96,12 @@ class CustomerHome extends StatelessWidget {
             }
           }),
     );
+  }
+
+  @override
+  void initState() {
+    _computeDistance();
+    super.initState();
   }
 
   Widget orderNow(BuildContext context) {
@@ -195,30 +132,123 @@ class CustomerHome extends StatelessWidget {
     );
   }
 
-  Widget nearbyOrder(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      height: MediaQuery.of(context).size.height * 0.15,
-      width: MediaQuery.of(context).size.width * 0.8,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        color: const Color.fromARGB(255, 219, 217, 217),
-      ),
-      child: TextButton.icon(
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => GetNearestCL(),
+  Widget nearMe(BuildContext context) {
+    return SizedBox(
+      height: 260,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                'NEAR ME',
+                style: GoogleFonts.mukta(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(
+                width: 2,
+              ),
+              const Icon(Icons.location_on),
+            ],
           ),
-        ),
-        icon: const Icon(
-          Icons.location_on,
-          color: Colors.black,
-        ),
-        label: const Text(
-          'Nearby Confinement Lady',
-          style: TextStyle(color: Colors.black),
-        ),
+          FutureBuilder<QuerySnapshot>(
+            future: FirebaseFirestore.instance
+                .collection('users')
+                .orderBy('tempDistance')
+                .get(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return const Center(
+                  child: Text("Something went wrong"),
+                );
+              }
+
+              if (snapshot.connectionState == ConnectionState.done) {
+                final data = snapshot.data.docs;
+                return SizedBox(
+                  height: 210,
+                  width: double.infinity,
+                  child: ListView.builder(
+                    itemCount: data.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) => Container(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Card(
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15)),
+                        margin: const EdgeInsets.only(right: 25),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CLProfileDetail(id: data[index]['id']),
+                              ),
+                            );
+                          },
+                          child: Column(
+                            children: [
+                              CachedNetworkImage(
+                                imageUrl: data[index]['imageUrl'],
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(15),
+                                      topRight: Radius.circular(15),
+                                    ),
+                                    image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover),
+                                  ),
+                                ),
+                                placeholder: (context, url) => const Center(
+                                  child: CircularProgressIndicator.adaptive(),
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  color: Colors.grey,
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.error,
+                                      color: Colors.grey[800],
+                                    ),
+                                  ),
+                                ),
+                                height: 150,
+                                width: MediaQuery.of(context).size.width * 0.4,
+                              ),
+                              Text(
+                                data[index]['name'],
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              const Spacer(),
+                              Text(
+                                'Within ${data[index]['tempDistance'].toString()}km',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              const Spacer(),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              return const CircularProgressIndicator.adaptive();
+            },
+          )
+        ],
       ),
     );
   }
@@ -239,14 +269,14 @@ class CustomerHome extends StatelessWidget {
             ),
           ),
           Container(
-            margin: const EdgeInsets.only(top: 10),
+            margin: const EdgeInsets.only(top: 1),
             height: 200,
             width: double.infinity,
             child: ListView.builder(
               itemCount: _infos.length,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) => Container(
-                margin: const EdgeInsets.only(right: 20),
+                margin: const EdgeInsets.only(right: 25),
                 child: InkWell(
                     borderRadius: BorderRadius.circular(15),
                     onTap: () async {
@@ -272,10 +302,8 @@ class CustomerHome extends StatelessWidget {
                               ),
                             );
                           },
-                          placeholder: (context, url) => Container(
-                            child: const Center(
-                              child: CircularProgressIndicator.adaptive(),
-                            ),
+                          placeholder: (context, url) => const Center(
+                            child: CircularProgressIndicator.adaptive(),
                           ),
                           errorWidget: (context, url, error) => Container(
                             color: Colors.grey,
@@ -286,12 +314,12 @@ class CustomerHome extends StatelessWidget {
                             )),
                           ),
                           height: 150,
-                          width: 200,
+                          width: MediaQuery.of(context).size.width * 0.4,
                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 5),
                           height: 45,
-                          width: 200,
+                          width: MediaQuery.of(context).size.width * 0.4,
                           child: Text(
                             _infos[index].title,
                             overflow: TextOverflow.ellipsis,
@@ -310,5 +338,32 @@ class CustomerHome extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _computeDistance() async {
+    double startLat;
+    double startLng;
+
+    await Database().getUserData(user.uid).then((DocumentSnapshot snapshot) {
+      if (snapshot.exists) {
+        Map<String, dynamic> userData = snapshot.data();
+        startLat = userData['latitude'];
+        startLng = userData['longitude'];
+      }
+    });
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .where('userType', isEqualTo: 'Confinement Lady')
+        .get()
+        .then((QuerySnapshot snapshot) {
+      for (var doc in snapshot.docs) {
+        double distance = double.parse(LocationService()
+            .distance(startLat, startLng, doc['latitude'], doc['longitude'])
+            .toStringAsFixed(2));
+
+        Database().updateUserData(doc['id'], {'tempDistance': distance});
+      }
+    });
   }
 }

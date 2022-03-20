@@ -7,7 +7,7 @@ class Welcome extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.blue[200],  
       body: Padding(
-        padding: EdgeInsets.all(30),
+        padding: const EdgeInsets.all(30),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
