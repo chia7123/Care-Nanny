@@ -39,8 +39,8 @@ class MyApp extends StatelessWidget {
             actionsIconTheme: const IconThemeData(color: Colors.white),
             titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20)),
         textTheme: TextTheme(
-          bodyText1: GoogleFonts.raleway(fontWeight: FontWeight.bold),
-          bodyText2: GoogleFonts.raleway(fontSize: 16),
+          bodyText1: GoogleFonts.roboto(fontWeight: FontWeight.bold),
+          bodyText2: GoogleFonts.roboto(fontSize: 15),
           
         ),
         primaryColor: Colors.blue[200],

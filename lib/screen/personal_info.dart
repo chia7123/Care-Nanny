@@ -134,87 +134,90 @@ class _PersonalInfoState extends State<PersonalInfo> {
                         controller: phone,
                         keyboardType: const TextInputType.numberWithOptions(),
                       ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Row(
+                      _selectedUser == 'Confinement Lady'
+                          ? Row(
                               children: [
-                                const Text('Races : '),
                                 Expanded(
-                                  child: TextFormField(
-                                    key: const ValueKey('religion'),
-                                    controller: race,
+                                  child: Row(
+                                    children: [
+                                      const Text('Races : '),
+                                      Expanded(
+                                        child: TextFormField(
+                                          key: const ValueKey('religion'),
+                                          controller: race,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      const Text('Religion : '),
+                                      Expanded(
+                                        child: TextFormField(
+                                          key: const ValueKey('religion'),
+                                          controller: religon,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Row(
+                            )
+                          : const SizedBox(),
+                      _selectedUser == 'Confinement Lady'
+                          ? Row(
                               children: [
-                                const Text('Religion : '),
                                 Expanded(
-                                  child: TextFormField(
-                                    key: const ValueKey('religion'),
-                                    controller: religon,
+                                  child: Row(
+                                    children: [
+                                      const Text('Nationality : '),
+                                      Expanded(
+                                        child: TextFormField(
+                                          key: const ValueKey('nationality'),
+                                          controller: nationality,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      const Text('Vegetarian : '),
+                                      Expanded(
+                                        child: DropdownButton(
+                                          key: const ValueKey('vegan'),
+                                          icon: const Visibility(
+                                            visible: false,
+                                            child: Icon(Icons.arrow_downward),
+                                          ),
+                                          value: _selectedVegan,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _selectedVegan = value as String;
+                                            });
+                                            if (_selectedVegan == 'Yes') {
+                                              _isVegan = true;
+                                            } else {
+                                              _isVegan = false;
+                                            }
+                                          },
+                                          items: _vegans.map((vegan) {
+                                            return DropdownMenuItem(
+                                              child: Text(vegan),
+                                              value: vegan,
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            
-                            child: Row(
-                              children: [
-                                const Text('Nationality : '),
-                                Expanded(
-                                  child: TextFormField(
-                                    key: const ValueKey('nationality'),
-                                    controller: nationality,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Row(
-                              children: [
-                                const Text('Vegetarian : '),
-                                Expanded(
-                                  child: DropdownButton(
-                                    key: const ValueKey('vegan'),
-                                    icon: const Visibility(
-                                      visible: false,
-                                      child: Icon(Icons.arrow_downward),
-                                    ),
-                                    value: _selectedVegan,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _selectedVegan = value as String;
-                                      });
-                                      if (_selectedVegan == 'Yes') {
-                                        _isVegan = true;
-                                      } else {
-                                        _isVegan = false;
-                                      }
-                                    },
-                                    items: _vegans.map((vegan) {
-                                      return DropdownMenuItem(
-                                        child: Text(vegan),
-                                        value: vegan,
-                                      );
-                                    }).toList(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                            )
+                          : const SizedBox(),
                       Row(
                         children: [
                           const Text('Date of Birth: '),
@@ -237,7 +240,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
                                 return;
                               } else {
                                 setState(() {
-                                  dateOfBirth= date;
+                                  dateOfBirth = date;
                                   dob.text =
                                       DateFormat('yyyy-MM-dd').format(date);
                                 });

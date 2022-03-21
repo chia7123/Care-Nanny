@@ -26,33 +26,6 @@ class ProgressOrderButtons extends StatelessWidget {
 
   void completeOrder(String id, double ratingGiven, String clID) {
     Database().getProgressOrder(id).then((doc) async {
-      Database().addOrderHistory(
-        'customerOrderHistory',
-        id,
-        doc.data(),
-      );
-      Database().addRating(
-        'customerOrderHistory',
-        id,
-        {
-          'ratingGiven': ratingGiven,
-          'comment': comment.text,
-        },
-      );
-      Database().addOrderHistory(
-        'CLOrderHistory',
-        id,
-        doc.data(),
-      );
-      Database().addRating(
-        'CLOrderHistory',
-        id,
-        {
-          'ratingGiven': ratingGiven,
-          'comment': comment.text,
-        },
-      );
-
       if (_userFiles != null) {
         for (var file in _userFiles) {
           final fileStorage = FirebaseStorage.instance
@@ -68,12 +41,45 @@ class ProgressOrderButtons extends StatelessWidget {
         }
       }
 
-      FirebaseFirestore.instance
+      await Database().addOrderHistory(
+        'customerOrderHistory',
+        id,
+        doc.data(),
+      );
+      await Database().addRating(
+        'customerOrderHistory',
+        id,
+        {
+          'ratingGiven': ratingGiven,
+          'comment': comment.text,
+        },
+      );
+      await Database().addOrderHistory(
+        'CLOrderHistory',
+        id,
+        doc.data(),
+      );
+      await Database().addRating(
+        'CLOrderHistory',
+        id,
+        {
+          'ratingGiven': ratingGiven,
+          'comment': comment.text,
+        },
+      );
+
+      await FirebaseFirestore.instance
           .collection('rating')
-          .doc("clID_" + clID)
+          .doc(clID)
           .collection('rating')
           .doc('orderID_' + id)
-          .set({
+          .set(doc.data());
+      await FirebaseFirestore.instance
+          .collection('rating')
+          .doc(clID)
+          .collection('rating')
+          .doc('orderID_' + id)
+          .update({
         'files': fileUrls,
         'ratingGiven': ratingGiven,
         'comment': comment.text,
