@@ -117,7 +117,7 @@ class _CustomerHomeState extends State<CustomerHome> {
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => OrderProcess(),
+            builder: (context) => GetNearestCL(),
           ),
         ),
         icon: const Icon(
@@ -153,101 +153,7 @@ class _CustomerHomeState extends State<CustomerHome> {
               const Icon(Icons.location_on),
             ],
           ),
-          FutureBuilder<QuerySnapshot>(
-            future: FirebaseFirestore.instance
-                .collection('users')
-                .orderBy('tempDistance')
-                .get(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasError) {
-                return const Center(
-                  child: Text("Something went wrong"),
-                );
-              }
-
-              if (snapshot.connectionState == ConnectionState.done) {
-                final data = snapshot.data.docs;
-                return SizedBox(
-                  height: 210,
-                  width: double.infinity,
-                  child: ListView.builder(
-                    itemCount: data.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) => Container(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Card(
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        margin: const EdgeInsets.only(right: 25),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    CLProfileDetail(id: data[index]['id']),
-                              ),
-                            );
-                          },
-                          child: Column(
-                            children: [
-                              CachedNetworkImage(
-                                imageUrl: data[index]['imageUrl'],
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(15),
-                                      topRight: Radius.circular(15),
-                                    ),
-                                    image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover),
-                                  ),
-                                ),
-                                placeholder: (context, url) => const Center(
-                                  child: CircularProgressIndicator.adaptive(),
-                                ),
-                                errorWidget: (context, url, error) => Container(
-                                  color: Colors.grey,
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.error,
-                                      color: Colors.grey[800],
-                                    ),
-                                  ),
-                                ),
-                                height: 150,
-                                width: MediaQuery.of(context).size.width * 0.4,
-                              ),
-                              Text(
-                                data[index]['name'],
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              const Spacer(),
-                              Text(
-                                'Within ${data[index]['tempDistance'].toString()}km',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              const Spacer(),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              }
-
-              return const CircularProgressIndicator.adaptive();
-            },
-          )
+          clList(),
         ],
       ),
     );
@@ -340,11 +246,11 @@ class _CustomerHomeState extends State<CustomerHome> {
     );
   }
 
-  void _computeDistance() async {
+  _computeDistance() {
     double startLat;
     double startLng;
 
-    await Database().getUserData(user.uid).then((DocumentSnapshot snapshot) {
+    Database().getUserData(user.uid).then((DocumentSnapshot snapshot) {
       if (snapshot.exists) {
         Map<String, dynamic> userData = snapshot.data();
         startLat = userData['latitude'];
@@ -352,9 +258,10 @@ class _CustomerHomeState extends State<CustomerHome> {
       }
     });
 
-    await FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection('users')
         .where('userType', isEqualTo: 'Confinement Lady')
+        .orderBy('latitude')
         .get()
         .then((QuerySnapshot snapshot) {
       for (var doc in snapshot.docs) {
@@ -366,4 +273,97 @@ class _CustomerHomeState extends State<CustomerHome> {
       }
     });
   }
+
+  Widget clList() {
+    return FutureBuilder(
+      future: FirebaseFirestore.instance
+          .collection('users')
+          .orderBy('tempDistance')
+          .get(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+        final data = snapshot.data.docs;
+          return SizedBox(
+            height: 210,
+            width: double.infinity,
+            child: ListView.builder(
+              itemCount: data.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) => Container(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                  margin: const EdgeInsets.only(right: 25),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              CLProfileDetail(id: data[index]['id']),
+                        ),
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        CachedNetworkImage(
+                          imageUrl: data[index]['imageUrl'],
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(15),
+                                topRight: Radius.circular(15),
+                              ),
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.cover),
+                            ),
+                          ),
+                          placeholder: (context, url) => const Center(
+                            child: CircularProgressIndicator.adaptive(),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            color: Colors.grey,
+                            child: Center(
+                              child: Icon(
+                                Icons.error,
+                                color: Colors.grey[800],
+                              ),
+                            ),
+                          ),
+                          height: 150,
+                          width: MediaQuery.of(context).size.width * 0.4,
+                        ),
+                        Text(
+                          data[index]['name'],
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        const Spacer(),
+                        Text(
+                          'Within ${data[index]['tempDistance'].toString()}km',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const Spacer(),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+
+        return const Center(
+          child: CircularProgressIndicator.adaptive()
+        );
+      },
+    );
+  }
+
+  
 }

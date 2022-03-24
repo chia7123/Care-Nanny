@@ -2,6 +2,7 @@ import 'package:age_calculator/age_calculator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp2/screen/confinementLady/services_tab.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../service/database.dart';
@@ -41,7 +42,16 @@ class CLHome extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                     
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ServicesTab(),
+                              ),
+                            );
+                          },
+                          child: const Text('Set Up Service Package'))
                     ],
                   ),
                 ),

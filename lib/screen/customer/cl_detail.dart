@@ -3,33 +3,13 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp2/screen/customer/order_process.dart';
 import 'package:fyp2/widgets/full_screen_image.dart';
 import 'package:intl/intl.dart';
 
 class CLProfileDetail extends StatelessWidget {
   CLProfileDetail({Key key, this.id}) : super(key: key);
   final String id;
-
-  Stream<QuerySnapshot<Object>> stream(dynamic doc) {
-    List<Stream> list = [
-      FirebaseFirestore.instance
-          .collection('users')
-          .where('vegan', isEqualTo: doc['vegan'])
-          .snapshots(),
-      FirebaseFirestore.instance
-          .collection('users')
-          .where('race', isEqualTo: doc['race'])
-          .snapshots(),
-      FirebaseFirestore.instance
-          .collection('users')
-          .where('religion', isEqualTo: doc['religion'])
-          .snapshots(),
-    ];
-
-    Stream element = list[Random().nextInt(list.length)];
-
-    return (element);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,22 +31,33 @@ class CLProfileDetail extends StatelessWidget {
             body: SafeArea(
               child: Column(
                 children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.78,
-                    child: content(context, doc),
-                  ),
                   Expanded(
                     child: SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0),
-                          ),
+                      child: content(context, doc),
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.06,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0),
                         ),
-                        onPressed: () {},
-                        child: const Text('Hire Me'),
                       ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OrderProcess(
+                              clID: doc['id'],
+                              clName: doc['name'],
+                              imageUrl: doc['imageUrl'],
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text('Hire Me'),
                     ),
                   ),
                 ],
@@ -186,13 +177,19 @@ class CLProfileDetail extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             color: Colors.grey[300],
           ),
+          descInfo(context, doc),
+          Container(
+            height: 8,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.grey[300],
+          ),
           certInfo(context, doc),
           Container(
             height: 8,
             width: MediaQuery.of(context).size.width,
             color: Colors.grey[300],
           ),
-          serviceInfo(context, doc),
+          serviceInfo(context),
           Container(
             height: 8,
             width: MediaQuery.of(context).size.width,
@@ -368,7 +365,90 @@ class CLProfileDetail extends StatelessWidget {
     );
   }
 
-  Widget serviceInfo(BuildContext context, dynamic doc) {
+  Widget certInfo(BuildContext context, dynamic doc) {
+    return Column(
+      children: [
+        Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.fromLTRB(8, 8, 0, 0),
+          child: const Text(
+            'Certificate Obtained',
+            style: TextStyle(fontSize: 17),
+          ),
+        ),
+        const Divider(
+          thickness: 0.5,
+        ),
+        Container(
+          height: 150,
+          width: double.infinity,
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.fromLTRB(8, 8, 0, 0),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: doc['certUrl'].length,
+            itemBuilder: (context, index) => Container(
+              padding: const EdgeInsets.fromLTRB(5, 0, 5, 10),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          FullScreenImage(imageUrl: doc['certUrl'][index]),
+                    ),
+                  );
+                },
+                child: CachedNetworkImage(
+                  imageUrl: doc['certUrl'][index],
+                  placeholder: (context, url) => const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: Colors.grey,
+                    child: Center(
+                      child: Icon(
+                        Icons.error,
+                        color: Colors.grey[800],
+                      ),
+                    ),
+                  ),
+                  fit: BoxFit.cover,
+                  width: MediaQuery.of(context).size.width * 0.3,
+                ),
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget descInfo(BuildContext context, dynamic doc) {
+    return Column(
+      children: [
+        Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.fromLTRB(8, 8, 0, 0),
+          child: const Text(
+            'Description',
+            style: TextStyle(fontSize: 17),
+          ),
+        ),
+        const Divider(
+          thickness: 0.5,
+        ),
+        Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+            child: Text(
+              doc['description'],
+            ))
+      ],
+    );
+  }
+
+  Widget serviceInfo(BuildContext context) {
     return Column(
       children: [
         Container(
@@ -382,43 +462,68 @@ class CLProfileDetail extends StatelessWidget {
         const Divider(
           thickness: 0.5,
         ),
-        Container(
-          padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-          child: Table(
-            children: const [
-              TableRow(children: [
-                Text('Basic'),
-                SizedBox(),
-              ]),
-              TableRow(children: [
-                SizedBox(
-                  height: 5,
-                ),
-                SizedBox(),
-              ]),
-              TableRow(children: [
-                Text('Premium'),
-                SizedBox(),
-              ]),
-              TableRow(children: [
-                SizedBox(
-                  height: 5,
-                ),
-                SizedBox(),
-              ]),
-              TableRow(children: [
-                Text('Deluxe'),
-                SizedBox(),
-              ]),
-              TableRow(children: [
-                SizedBox(
-                  height: 5,
-                ),
-                SizedBox(),
-              ]),
-            ],
-          ),
-        )
+        StreamBuilder<DocumentSnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('service')
+                .doc(id)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return const Text('something error');
+              }
+              if (snapshot.connectionState == ConnectionState.active) {
+                final data = snapshot.data;
+                return Container(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                  child: Table(
+                    children: [
+                      // TableRow(children: [
+                      //   const Text('Basic'),
+                      //   data['basic'].isEmpty
+                      //       ? const Text('Does not provide basic package.')
+                      //       : Container(
+                      //         child: ListView.builder(
+                      //           itemCount: data['basic'].length,
+                      //             itemBuilder: (context, index) {
+                      //               return Text(data['basic'][index]['title']);
+                      //             },
+                      //           ),
+                      //       )
+                      // ]),
+                      TableRow(children: [
+                        SizedBox(
+                          height: 5,
+                        ),
+                        SizedBox(),
+                      ]),
+                      TableRow(children: [
+                        Text('Premium'),
+                        SizedBox(),
+                      ]),
+                      TableRow(children: [
+                        SizedBox(
+                          height: 5,
+                        ),
+                        SizedBox(),
+                      ]),
+                      TableRow(children: [
+                        Text('Deluxe'),
+                        SizedBox(),
+                      ]),
+                      TableRow(children: [
+                        SizedBox(
+                          height: 5,
+                        ),
+                        SizedBox(),
+                      ]),
+                    ],
+                  ),
+                );
+              }
+              return const Center(
+                child: CircularProgressIndicator.adaptive(),
+              );
+            }),
       ],
     );
   }
@@ -473,26 +578,28 @@ class CLProfileDetail extends StatelessWidget {
     );
   }
 
-  Widget certInfo(BuildContext context, dynamic doc) {
-    return Column(
-      children: [
-        Container(
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.fromLTRB(8, 8, 0, 0),
-          child: const Text(
-            'Certificate Obtain',
-            style: TextStyle(fontSize: 17),
-          ),
-        ),
-        const Divider(
-          thickness: 0.5,
-        ),
-        Container(
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.fromLTRB(8, 8, 0, 0),
-        )
-      ],
-    );
+  Stream<QuerySnapshot<Object>> stream(dynamic doc) {
+    List<Stream> list = [
+      FirebaseFirestore.instance
+          .collection('users')
+          .where('vegan', isEqualTo: doc['vegan'])
+          .where('userType', isEqualTo: 'Confinement Lady')
+          .snapshots(),
+      FirebaseFirestore.instance
+          .collection('users')
+          .where('race', isEqualTo: doc['race'])
+          .where('userType', isEqualTo: 'Confinement Lady')
+          .snapshots(),
+      FirebaseFirestore.instance
+          .collection('users')
+          .where('religion', isEqualTo: doc['religion'])
+          .where('userType', isEqualTo: 'Confinement Lady')
+          .snapshots(),
+    ];
+
+    Stream element = list[Random().nextInt(list.length)];
+
+    return (element);
   }
 
   Widget suggestedCl(BuildContext context, dynamic doc) {

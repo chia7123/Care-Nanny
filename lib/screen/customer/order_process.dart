@@ -357,7 +357,6 @@ class _OrderProcessState extends State<OrderProcess> {
           switch (_currentStep) {
             case 0:
               setState(() {
-                _currentStep--;
                 clID = null;
                 clName = null;
                 imageUrl = null;

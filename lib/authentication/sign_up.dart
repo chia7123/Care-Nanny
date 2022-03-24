@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp2/screen/personal_info.dart';
 
 class SignUp extends StatefulWidget {
   final Function toggleScreen;
@@ -42,10 +41,7 @@ class _SignUpState extends State<SignUp> {
       UserCredential authResult;
       authResult = await firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => PersonalInfo(_emailController.text)));
+      Navigator.pop(context);
       setLoading(false);
       await FirebaseFirestore.instance
           .collection('users')
@@ -58,6 +54,14 @@ class _SignUpState extends State<SignUp> {
           .collection('rating')
           .doc(authResult.user.uid)
           .set({});
+      await FirebaseFirestore.instance
+          .collection('service')
+          .doc(authResult.user.uid)
+          .set({
+            'basic':[],
+            'premium':[],
+            'deluxe':[],
+          });
     } on SocketException {
       setLoading(false);
       setMessage('No internet, Please connect to internet');
@@ -76,7 +80,7 @@ class _SignUpState extends State<SignUp> {
   }
 
   void setMessage(message) {
-    _errorMessage = message;
+    _errorMessage = message.toString();
   }
 
   @override

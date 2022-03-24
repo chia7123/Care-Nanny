@@ -28,10 +28,20 @@ class _PersonalInfoState extends State<PersonalInfo> {
   final _formKey = GlobalKey<FormState>();
   final List<String> _users = ['New Mother', 'Confinement Lady'];
   final List<String> _vegans = ['Yes', 'No'];
+  final List<String> _races = ['Chinese', 'Malay', 'India', 'Others...'];
+  final List<String> _religions = [
+    'Buddha',
+    'Muslim',
+    'Hindu',
+    'Christian',
+    'Others...'
+  ];
   String _selectedUser;
   File _userImageFile;
   List<PlatformFile> _userFiles;
   String _selectedVegan;
+  String _selectedRace;
+  String _selectedReligion;
   bool _isVegan;
   DateTime dateOfBirth;
 
@@ -43,19 +53,20 @@ class _PersonalInfoState extends State<PersonalInfo> {
   TextEditingController email = TextEditingController();
   TextEditingController desc = TextEditingController();
   TextEditingController dob = TextEditingController();
-  TextEditingController race = TextEditingController();
-  TextEditingController religon = TextEditingController();
   TextEditingController nationality = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    _getLocation();
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Profile Detail'),
           actions: [
             IconButton(
-              onPressed: _updateProfile,
+              onPressed: () {
+                _updateProfile();
+              },
               icon: const Icon(Icons.check),
             ),
           ],
@@ -134,90 +145,104 @@ class _PersonalInfoState extends State<PersonalInfo> {
                         controller: phone,
                         keyboardType: const TextInputType.numberWithOptions(),
                       ),
-                      _selectedUser == 'Confinement Lady'
-                          ? Row(
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Row(
                               children: [
-                                Expanded(
-                                  child: Row(
-                                    children: [
-                                      const Text('Races : '),
-                                      Expanded(
-                                        child: TextFormField(
-                                          key: const ValueKey('religion'),
-                                          controller: race,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                const Text('Race : '),
+                                DropdownButton(
+                                  key: const ValueKey('race'),
+                                  value: _selectedRace,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      _selectedRace = newValue as String;
+                                    });
+                                  },
+                                  items: _races.map((race) {
+                                    return DropdownMenuItem(
+                                      child: Text(race),
+                                      value: race,
+                                    );
+                                  }).toList(),
                                 ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Row(
+                              children: [
+                                const Text('Religion : '),
+                                DropdownButton(
+                                  key: const ValueKey('religion'),
+                                  value: _selectedReligion,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      _selectedReligion = newValue as String;
+                                    });
+                                  },
+                                  items: _religions.map((religion) {
+                                    return DropdownMenuItem(
+                                      child: Text(religion),
+                                      value: religion,
+                                    );
+                                  }).toList(),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Row(
+                              children: [
+                                const Text('Nationality : '),
                                 Expanded(
-                                  child: Row(
-                                    children: [
-                                      const Text('Religion : '),
-                                      Expanded(
-                                        child: TextFormField(
-                                          key: const ValueKey('religion'),
-                                          controller: religon,
-                                        ),
-                                      ),
-                                    ],
+                                  child: TextFormField(
+                                    key: const ValueKey('nationality'),
+                                    controller: nationality,
                                   ),
                                 ),
                               ],
-                            )
-                          : const SizedBox(),
-                      _selectedUser == 'Confinement Lady'
-                          ? Row(
+                            ),
+                          ),
+                          Expanded(
+                            child: Row(
                               children: [
+                                const Text('Vegetarian : '),
                                 Expanded(
-                                  child: Row(
-                                    children: [
-                                      const Text('Nationality : '),
-                                      Expanded(
-                                        child: TextFormField(
-                                          key: const ValueKey('nationality'),
-                                          controller: nationality,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Row(
-                                    children: [
-                                      const Text('Vegetarian : '),
-                                      Expanded(
-                                        child: DropdownButton(
-                                          key: const ValueKey('vegan'),
-                                          icon: const Visibility(
-                                            visible: false,
-                                            child: Icon(Icons.arrow_downward),
-                                          ),
-                                          value: _selectedVegan,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _selectedVegan = value as String;
-                                            });
-                                            if (_selectedVegan == 'Yes') {
-                                              _isVegan = true;
-                                            } else {
-                                              _isVegan = false;
-                                            }
-                                          },
-                                          items: _vegans.map((vegan) {
-                                            return DropdownMenuItem(
-                                              child: Text(vegan),
-                                              value: vegan,
-                                            );
-                                          }).toList(),
-                                        ),
-                                      ),
-                                    ],
+                                  child: DropdownButton(
+                                    key: const ValueKey('vegan'),
+                                    icon: const Visibility(
+                                      visible: false,
+                                      child: Icon(Icons.arrow_downward),
+                                    ),
+                                    value: _selectedVegan,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _selectedVegan = value as String;
+                                      });
+                                      if (_selectedVegan == 'Yes') {
+                                        _isVegan = true;
+                                      } else {
+                                        _isVegan = false;
+                                      }
+                                    },
+                                    items: _vegans.map((vegan) {
+                                      return DropdownMenuItem(
+                                        child: Text(vegan),
+                                        value: vegan,
+                                      );
+                                    }).toList(),
                                   ),
                                 ),
                               ],
-                            )
-                          : const SizedBox(),
+                            ),
+                          ),
+                        ],
+                      ),
                       Row(
                         children: [
                           const Text('Date of Birth: '),
@@ -241,8 +266,9 @@ class _PersonalInfoState extends State<PersonalInfo> {
                               } else {
                                 setState(() {
                                   dateOfBirth = date;
+                                  print(dateOfBirth);
                                   dob.text =
-                                      DateFormat('yyyy-MM-dd').format(date);
+                                      DateFormat('yyyy-MM-dd').format(dateOfBirth);
                                 });
                               }
                             },
@@ -343,11 +369,19 @@ class _PersonalInfoState extends State<PersonalInfo> {
     );
   }
 
+  void _getLocation() async {
+    Position position =
+        await LocationService().getCurrentLocation();
+    Database().updateUserData(user.uid, {
+      'latitude': position.latitude,
+      'longitude': position.longitude,
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     email.value = TextEditingValue(text: widget.email);
-    // desc.value = const TextEditingValue(text: 'Briefly introduce yourself');
   }
 
   @override
@@ -363,11 +397,16 @@ class _PersonalInfoState extends State<PersonalInfo> {
     _userFiles = files;
   }
 
-  void _updateProfile() async {
+  Future _updateProfile() async {
     final isValid = _formKey.currentState.validate();
     FocusScope.of(context).unfocus();
     List<String> certUrl = [];
     var age = AgeCalculator.age(dateOfBirth).years;
+
+    if (_userImageFile == null) {
+      Fluttertoast.showToast(msg: 'Please upload an profile photo');
+      return;
+    }
 
     final imageStorage = FirebaseStorage.instance
         .ref()
@@ -419,8 +458,8 @@ class _PersonalInfoState extends State<PersonalInfo> {
         'vegan': _isVegan,
         'dob': dateOfBirth,
         'age': age,
-        'race': race.text,
-        'religion': religon.text,
+        'race': _selectedRace,
+        'religion': _selectedReligion,
         'nationality': nationality.text,
       }).whenComplete(() => {
             Fluttertoast.showToast(msg: 'Sign up successful'),
