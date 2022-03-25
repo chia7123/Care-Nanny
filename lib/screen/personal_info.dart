@@ -63,7 +63,8 @@ class _PersonalInfoState extends State<PersonalInfo> {
         appBar: AppBar(
           title: const Text('Profile Detail'),
           actions: [
-            IconButton(
+            TextButton.icon(
+              label: const Text('Done'),
               onPressed: () {
                 _updateProfile();
               },
@@ -267,8 +268,8 @@ class _PersonalInfoState extends State<PersonalInfo> {
                                 setState(() {
                                   dateOfBirth = date;
                                   print(dateOfBirth);
-                                  dob.text =
-                                      DateFormat('yyyy-MM-dd').format(dateOfBirth);
+                                  dob.text = DateFormat('yyyy-MM-dd')
+                                      .format(dateOfBirth);
                                 });
                               }
                             },
@@ -370,8 +371,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
   }
 
   void _getLocation() async {
-    Position position =
-        await LocationService().getCurrentLocation();
+    Position position = await LocationService().getCurrentLocation();
     Database().updateUserData(user.uid, {
       'latitude': position.latitude,
       'longitude': position.longitude,

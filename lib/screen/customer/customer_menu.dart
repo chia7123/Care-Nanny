@@ -72,7 +72,7 @@ class CustomerMenu extends StatelessWidget {
                             style: GoogleFonts.sansitaSwashed(fontSize: 20),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         )
                       ],

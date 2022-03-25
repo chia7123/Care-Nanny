@@ -440,7 +440,7 @@ class CLProfileDetail extends StatelessWidget {
         ),
         Container(
             alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+            padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
             child: Text(
               doc['description'],
             ))
@@ -474,51 +474,87 @@ class CLProfileDetail extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.active) {
                 final data = snapshot.data;
                 return Container(
-                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-                  child: Table(
-                    children: [
-                      // TableRow(children: [
-                      //   const Text('Basic'),
-                      //   data['basic'].isEmpty
-                      //       ? const Text('Does not provide basic package.')
-                      //       : Container(
-                      //         child: ListView.builder(
-                      //           itemCount: data['basic'].length,
-                      //             itemBuilder: (context, index) {
-                      //               return Text(data['basic'][index]['title']);
-                      //             },
-                      //           ),
-                      //       )
-                      // ]),
-                      TableRow(children: [
+                    padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                    width: double.infinity,
+                    child: Column(
+                      children: [
                         SizedBox(
-                          height: 5,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Basic Package :'),
+                              data['basic'].isEmpty
+                                  ? const Text(
+                                      'Does not provide Basic Package yet.')
+                                  : SizedBox(
+                                      height: 150,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.5,
+                                      child: ListView.builder(
+                                        itemCount: data['basic'].length,
+                                        itemBuilder: (context, index) {
+                                          return Text(
+                                              '• ${data['basic'][index]['title']}');
+                                        },
+                                      ),
+                                    )
+                            ],
+                          ),
                         ),
-                        SizedBox(),
-                      ]),
-                      TableRow(children: [
-                        Text('Premium'),
-                        SizedBox(),
-                      ]),
-                      TableRow(children: [
+                        const Divider(),
                         SizedBox(
-                          height: 5,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Premium Package :'),
+                              data['premium'].isEmpty
+                                  ? const Text(
+                                      'Does not provide Premium Package yet.')
+                                  : SizedBox(
+                                      height: 150,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.5,
+                                      child: ListView.builder(
+                                        itemCount: data['premium'].length,
+                                        itemBuilder: (context, index) {
+                                          return Text(
+                                              '• ${data['premium'][index]['title']}');
+                                        },
+                                      ),
+                                    )
+                            ],
+                          ),
                         ),
-                        SizedBox(),
-                      ]),
-                      TableRow(children: [
-                        Text('Deluxe'),
-                        SizedBox(),
-                      ]),
-                      TableRow(children: [
+                        const Divider(),
                         SizedBox(
-                          height: 5,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Deluxe Package :'),
+                              data['deluxe'].isEmpty
+                                  ? const Text(
+                                      'Does not provide Deluxe Package yet.')
+                                  : SizedBox(
+                                      height: 150,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.5,
+                                      child: ListView.builder(
+                                        padding: const EdgeInsets.only(bottom: 10),
+                                        itemCount: data['deluxe'].length,
+                                        itemBuilder: (context, index) {
+                                          return Text(
+                                              '• ${data['deluxe'][index]['title']}');
+                                        },
+                                      ),
+                                    )
+                            ],
+                          ),
                         ),
-                        SizedBox(),
-                      ]),
-                    ],
-                  ),
-                );
+                      ],
+                    ));
               }
               return const Center(
                 child: CircularProgressIndicator.adaptive(),

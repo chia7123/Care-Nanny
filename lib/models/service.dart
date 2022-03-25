@@ -16,8 +16,8 @@ class ServicePackage {
 }
 
 class Service {
-  final String name;
-  final double price;
+  String name;
+  double price;
   bool value;
 
   Service({this.name, this.price, this.value = false});

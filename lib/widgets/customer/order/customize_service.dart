@@ -27,7 +27,7 @@ class _CustomizePackageState extends State<CustomizePackage> {
   @override
   void initState() {
     super.initState();
-    for (int i = 0; i < _typeService.length; i++) {
+    for (var i = 0; i < _typeService.length; i++) {
       _typeService[i].value = false;
     }
   }

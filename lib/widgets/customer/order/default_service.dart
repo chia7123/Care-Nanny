@@ -9,7 +9,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 class DefaultPackage extends StatelessWidget {
   static const routeName = '/defaultpackage';
   final Function(Map<String, dynamic> package) selectPackage;
-  DefaultPackage({Key key,this.selectPackage}) : super(key: key);
+  DefaultPackage({Key key, this.selectPackage}) : super(key: key);
   final user = FirebaseAuth.instance.currentUser;
   CollectionReference order =
       FirebaseFirestore.instance.collection('orderInfo');

@@ -6,7 +6,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/data/info_data.dart';
 import 'package:fyp2/models/info.dart';
 import 'package:fyp2/screen/customer/cl_detail.dart';
-import 'package:fyp2/screen/customer/get_nearest_cl.dart';
 import 'package:fyp2/screen/customer/order_process.dart';
 import 'package:fyp2/widgets/menu_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -117,7 +116,7 @@ class _CustomerHomeState extends State<CustomerHome> {
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => GetNearestCL(),
+            builder: (context) => OrderProcess(),
           ),
         ),
         icon: const Icon(

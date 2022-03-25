@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:fyp2/service/database.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DateRangePickerService extends StatefulWidget {
-  DateRangePickerService({Key key, this.clId, this.selectDateTime}) : super(key: key);
+  DateRangePickerService({Key key, this.clId, this.selectDateTime})
+      : super(key: key);
 
   final String clId;
-  final Function(DateTime, DateTime) selectDateTime;
+  final Function(DateTime, DateTime, int) selectDateTime;
 
   @override
   State<DateRangePickerService> createState() => _DateRangePickerServiceState();
@@ -17,16 +17,18 @@ class DateRangePickerService extends StatefulWidget {
 class _DateRangePickerServiceState extends State<DateRangePickerService> {
   DateTime _startDate;
   DateTime _endDate;
+  int days;
   DateRangePickerController _dateController = DateRangePickerController();
   List<DateTime> occupiedStartDate = [];
   List<DateTime> occupiedEndDate = [];
   List<DateTime> _blackOutDates = [];
 
   void _updateOrderDate() {
-    widget.selectDateTime(_startDate,_endDate);
+    days = daysBetween(_startDate, _endDate);
+    print('check ' + days.toString());
+    widget.selectDateTime(_startDate, _endDate, days);
     Navigator.of(context).pop();
     Fluttertoast.showToast(msg: 'Date Selected');
-    
   }
 
   @override
@@ -65,6 +67,12 @@ class _DateRangePickerServiceState extends State<DateRangePickerService> {
     _endDate = args.value.endDate;
   }
 
+  int daysBetween(DateTime from, DateTime to) {
+    from = DateTime(from.year, from.month, from.day);
+    to = DateTime(to.year, to.month, to.day);
+    return ((to.difference(from).inHours / 24).round() + 1);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -72,12 +80,13 @@ class _DateRangePickerServiceState extends State<DateRangePickerService> {
         body: SfDateRangePicker(
           enableMultiView: true,
           navigationDirection: DateRangePickerNavigationDirection.vertical,
-          extendableRangeSelectionDirection: ExtendableRangeSelectionDirection.forward,
+          extendableRangeSelectionDirection:
+              ExtendableRangeSelectionDirection.forward,
           headerHeight: 60,
           headerStyle: DateRangePickerHeaderStyle(
             textAlign: TextAlign.center,
             backgroundColor: Theme.of(context).primaryColor,
-            textStyle: const TextStyle(color: Colors.white,fontSize: 20),
+            textStyle: const TextStyle(color: Colors.white, fontSize: 20),
           ),
           monthViewSettings: DateRangePickerMonthViewSettings(
             blackoutDates: _blackOutDates,
@@ -92,6 +101,9 @@ class _DateRangePickerServiceState extends State<DateRangePickerService> {
           controller: _dateController,
           selectionMode: DateRangePickerSelectionMode.range,
           onSubmit: (value) {
+            if (_startDate == null || _endDate == null) {
+              Fluttertoast.showToast(msg: 'Please select at least two dates');
+            }
             _updateOrderDate();
           },
           onCancel: () {

@@ -4,7 +4,7 @@ List<Info> infos = [
   Info(
     title: 'Post-Natal Confinement Practice: The Do’s and Dont’s',
     imageUrl:
-        'https://cdn-aeoeb.nitrocdn.com/FVqrANIDYlFmMNtPPpnWUFTFNVsLdrhx/assets/static/optimized/rev-f9ee58b/blog/wp-content/uploads/2017/09/Post-Natal-Confinement-Practice-The-Dos-and-Donts.jpg',
+        'https://pemconfinement.com/blog/wp-content/uploads/2017/09/Post-Natal-Confinement-Practice-The-Dos-and-Donts.jpg',
     url:
         'https://pemconfinement.com/blog/post-natal-confinement-practice-the-dos-and-donts/',
   ),
