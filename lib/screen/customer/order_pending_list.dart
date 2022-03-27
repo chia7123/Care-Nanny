@@ -102,7 +102,7 @@ class CusPendingOrderList extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    const Text('Price: RM '),
+                                    const Text('Price: '),
                                     Text(
                                       'RM ${doc['price'].toStringAsFixed(2)}',
                                       style: const TextStyle(

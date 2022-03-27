@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp2/screen/customer/order_process.dart';
+import 'package:fyp2/screen/customer/rating_review.dart';
 import 'package:fyp2/widgets/full_screen_image.dart';
 import 'package:intl/intl.dart';
 
@@ -542,7 +543,8 @@ class CLProfileDetail extends StatelessWidget {
                                       width: MediaQuery.of(context).size.width *
                                           0.5,
                                       child: ListView.builder(
-                                        padding: const EdgeInsets.only(bottom: 10),
+                                        padding:
+                                            const EdgeInsets.only(bottom: 10),
                                         itemCount: data['deluxe'].length,
                                         itemBuilder: (context, index) {
                                           return Text(
@@ -606,10 +608,86 @@ class CLProfileDetail extends StatelessWidget {
         const Divider(
           thickness: 0.5,
         ),
-        Container(
-          padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-          child: const Text('content'),
-        )
+        FutureBuilder(
+            future: FirebaseFirestore.instance
+                .collection('rating')
+                .doc(id)
+                .collection('rating')
+                .get(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                final doc = snapshot.data.docs;
+                if (doc.isEmpty) {
+                  return const Text('No review yet.');
+                } else {
+                  return Container(
+                    height: 120,
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                    child: ListView.builder(
+                      itemCount: doc.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const CircleAvatar(
+                                  backgroundColor: Colors.grey,
+                                  radius: 8,
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  doc[index]['cusName'],
+                                  style: const TextStyle(fontSize: 13),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                for (int i = 1;
+                                    i <= doc[index]['rating'].round();
+                                    i++)
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                    size: 13,
+                                  ),
+                                for (int i = 1;
+                                    i <= 5 - doc[index]['rating'].round();
+                                    i++)
+                                  const Icon(Icons.star_border,
+                                      color: Colors.amber, size: 13)
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(doc[index]['comment']),
+                            const Divider(),
+                          ],
+                        );
+                      },
+                    ),
+                  );
+                }
+              }
+              return const Center(
+                child: CircularProgressIndicator.adaptive(),
+              );
+            }),
+        TextButton.icon(
+            onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RatingReview(
+                    id: id,
+                  ),
+                )),
+            icon: const Icon(Icons.keyboard_arrow_right),
+            label: const Text('See More'))
       ],
     );
   }

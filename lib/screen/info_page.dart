@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:fyp2/screen/customer/customer_home.dart';
 import 'package:fyp2/screen/wrapper.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ConfirmationPage extends StatelessWidget {
-  const ConfirmationPage({Key key}) : super(key: key);
+class InfoPage extends StatelessWidget {
+  InfoPage({Key key, this.imgUrl, this.msg, this.color}) : super(key: key);
+  final String imgUrl;
+  final String msg;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.35,
+          const Spacer(
+            flex: 2,
           ),
           Container(
             height: 100,
             width: 100,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               image: DecorationImage(
                 fit: BoxFit.fitHeight,
-                image: AssetImage('assets/images/tick.png'),
+                image: AssetImage(imgUrl),
               ),
             ),
           ),
@@ -28,14 +30,15 @@ class ConfirmationPage extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.03,
           ),
           Text(
-            'You placed the order successfully',
+            msg,
             style: GoogleFonts.raleway(
               fontWeight: FontWeight.bold,
               fontSize: 20,
             ),
+            textAlign: TextAlign.center,
           ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.35,
+          const Spacer(
+            flex: 2,
           ),
           Padding(
             padding: const EdgeInsets.all(12.0),
@@ -57,7 +60,7 @@ class ConfirmationPage extends StatelessWidget {
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                primary: Colors.green,
+                primary: color,
                 minimumSize: const Size.fromHeight(50),
               ),
             ),

@@ -66,7 +66,7 @@ class CLMenu extends StatelessWidget {
                           margin: const EdgeInsets.only(left: 30),
                           child: Text(
                             doc['name'],
-                            style: GoogleFonts.sansitaSwashed(fontSize: 20),
+                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                         ),
                         const SizedBox(

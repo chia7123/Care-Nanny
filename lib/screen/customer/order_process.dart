@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:fyp2/screen/confirmation_page.dart';
+import 'package:fyp2/screen/info_page.dart';
 import 'package:fyp2/screen/customer/service_select.dart';
 import 'package:fyp2/widgets/profile_card.dart';
 import 'package:intl/intl.dart';
@@ -41,6 +41,7 @@ class _OrderProcessState extends State<OrderProcess> {
   String imageUrl;
   double price = 0;
   int _days = 0;
+  double totalPrice = 0;
 
   @override
   void initState() {
@@ -51,20 +52,15 @@ class _OrderProcessState extends State<OrderProcess> {
     super.initState();
   }
 
-  void _selectCL(String id) async {
-    clData = await Database().getUserData(id);
-    setState(() {
-      clID = id;
-      clName = clData['name'];
-      imageUrl = clData['imageUrl'];
-    });
-  }
-
   void _selectPackage(Map<String, dynamic> package) async {
+    if (clID != null) {
+      clData = await Database().getUserData(clID);
+    }
     setState(() {
       _package = package;
     });
     price = _package['price'];
+    totalPrice = price * _days;
   }
 
   void _selectDate(DateTime startDate, DateTime endDate, int days) {
@@ -77,18 +73,18 @@ class _OrderProcessState extends State<OrderProcess> {
 
   Widget getTextWidgets(List<dynamic> strings) {
     return SizedBox(
-            height: MediaQuery.of(context).size.height*0.3,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: strings
-                    .map(
-                      (item) => Text(item),
-                    )
-                    .toList(),
-              ),
-            ),
-          );
+      height: MediaQuery.of(context).size.height * 0.3,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: strings
+              .map(
+                (item) => Text(item),
+              )
+              .toList(),
+        ),
+      ),
+    );
   }
 
   void _checkDetail() {
@@ -129,18 +125,21 @@ class _OrderProcessState extends State<OrderProcess> {
         'clID': clID,
         'clName': clData['name'],
         'clContact': clData['phone'],
-        'price': _package['price'],
+        'dailyPrice': price,
+        'price': totalPrice,
+        'totalDays': _days,
         'startDate': _startDate,
         'endDate': _endDate,
         'serviceSelected': _package['serviceSelected'],
         'typeOfService': _package['typeOfService'],
       });
-      Fluttertoast.showToast(
-          msg: 'Order Placed Successfully, Pending for Confirmation Now');
+      String msg = 'Your order had been placed successfully.';
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const ConfirmationPage(),
+          builder: (context) => InfoPage(
+              color: Colors.green, imgUrl: 'assets/images/tick.png', msg: msg),
         ),
       );
     } else {
@@ -195,7 +194,6 @@ class _OrderProcessState extends State<OrderProcess> {
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
-                              trailing: ProfileCard(clID),
                             ),
                           )
                         : const Text(
@@ -213,9 +211,7 @@ class _OrderProcessState extends State<OrderProcess> {
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => ConLadyList(
-                                selectCL: _selectCL,
-                              ),
+                              builder: (context) => ConLadyList(),
                             ),
                           );
                         },
@@ -410,7 +406,7 @@ class _OrderProcessState extends State<OrderProcess> {
                 ],
               ),
               Text(
-                'RM ${(price * _days).toStringAsFixed(2)}',
+                'RM ${totalPrice.toStringAsFixed(2)}',
                 style:
                     const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),

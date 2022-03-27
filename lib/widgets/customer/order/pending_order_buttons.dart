@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:fyp2/screen/customer/cancel_order.dart';
+import 'package:fyp2/screen/customer/order_cancel.dart';
 import 'package:fyp2/service/database.dart';
 
 class PendingOrderButtons extends StatelessWidget {
@@ -20,13 +20,12 @@ class PendingOrderButtons extends StatelessWidget {
         size: 20,
       ),
       onPressed: () {
-        // Future.delayed(const Duration(seconds: 1), () {
-        //   deleteOrder(doc['orderID']);
-        // });
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CancelOrder(doc: doc,),
+            builder: (context) => CancelOrder(
+              doc: doc,
+            ),
           ),
         );
       },
@@ -39,7 +38,7 @@ class PendingOrderButtons extends StatelessWidget {
 
   Future<void> deleteOrder(String id) {
     return Database().deletePendingOrder(id).then((_) {
-      Fluttertoast.showToast(msg: 'Order Cancelled !');
+      Fluttertoast.showToast(msg: 'Order Cancelled.');
     }).catchError((error) =>
         Fluttertoast.showToast(msg: "Failed to cancel order: $error"));
   }

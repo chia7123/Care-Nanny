@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
+import '../../../screen/customer/order_extend.dart';
 import '../../../service/database.dart';
 import '../../../service/date_range_picker_extend.dart';
 import '../../../service/media_picker/files_picker_rating.dart';
@@ -443,10 +444,13 @@ class _CusProgressOrderDetailState extends State<CusProgressOrderDetail> {
                             color: Colors.white,
                           ),
                           onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => DateRangePickerExtend(
-                                      orderID: doc['orderID'],
-                                    )));
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => ExtendOrder(
+                                  doc: doc,
+                                ),
+                              ),
+                            );
                           },
                           label: const Text(
                             'Extend',

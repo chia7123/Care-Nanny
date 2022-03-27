@@ -1,8 +1,14 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/service/database.dart';
 import 'package:intl/intl.dart';
+
+import '../../../service/videos/video_player.dart';
+import '../../../service/videos/video_widget.dart';
+import '../../full_screen_image.dart';
 
 class CusOrderHistoryDetail extends StatelessWidget {
   final String id;
@@ -197,7 +203,7 @@ class CusOrderHistoryDetail extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text('Rating Given : '),
-                                    Text(doc['ratingGiven'].toString()),
+                                    Text(doc['rating'].toString()),
                                   ],
                                 ),
                                 Row(
@@ -206,7 +212,7 @@ class CusOrderHistoryDetail extends StatelessWidget {
                                     Row(
                                       children: [
                                         for (int i = 1;
-                                            i <= doc['ratingGiven'].round();
+                                            i <= doc['rating'].round();
                                             i++)
                                           const Icon(
                                             Icons.star,
@@ -232,6 +238,64 @@ class CusOrderHistoryDetail extends StatelessWidget {
                             ),
                           ),
                         ),
+                        // Divider(
+                        //   color: Colors.grey[500],
+                        // ),
+                        // const Align(
+                        //   alignment: Alignment.centerLeft,
+                        //   child: Text('Photos/Videos : '),
+                        // ),
+                        // Container(
+                        //   alignment: Alignment.centerLeft,
+                        //   height: 100,
+                        //   width: MediaQuery.of(context).size.height,
+                        //   child: ListView.builder(
+                        //     scrollDirection: Axis.horizontal,
+                        //     itemCount: doc['mediaFiles'].length,
+                        //     itemBuilder: (context, index) {
+                        //       if (doc['mediaFiles'].extension == "jpg" ||
+                        //           doc['mediaFiles'].extension == "png")
+                        //       {
+                        //         return GestureDetector(
+                        //           onTap: () => Navigator.push(
+                        //               context,
+                        //               MaterialPageRoute(
+                        //                 builder: (context) => FullScreenImage(
+                        //                     imageUrl: doc['mediaFiles'][index]),
+                        //               )),
+                        //           child: Container(
+                        //             padding: const EdgeInsets.all(5),
+                        //             height: 120,
+                        //             width: 90,
+                        //             child: FittedBox(
+                        //               fit: BoxFit.fill,
+                        //               child: Image.network(
+                        //                   doc['mediaFiles'][index]),
+                        //             ),
+                        //           ),
+                        //         );
+                        //       }
+                        //       else 
+                        //       {
+                        //         return GestureDetector(
+                        //           onTap: () {
+                        //             Navigator.push(
+                        //                 context,
+                        //                 MaterialPageRoute(
+                        //                   builder: (context) =>
+                        //                       VideoPlayerPlatform(
+                        //                           pickedVideo: File(
+                        //                               doc['mediaFiles'].path)),
+                        //                 ));
+                        //           },
+                        //           child: VideoWidget(
+                        //             pickedVideo: File(doc['mediaFiles'].path),
+                        //           ),
+                        //         );
+                        //       }
+                        //     },
+                        //   ),
+                        // ),
                         const Divider(
                           thickness: 2,
                           color: Colors.black,

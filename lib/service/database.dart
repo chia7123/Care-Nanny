@@ -65,6 +65,13 @@ class Database {
         .get();
   }
 
+  getPendingOrder(String id) {
+    return FirebaseFirestore.instance
+        .collection('onPendingOrder')
+        .doc(id)
+        .get();
+  }
+
   deleteProgressOrder(String id) {
     return FirebaseFirestore.instance
         .collection('onProgressOrder')

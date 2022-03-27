@@ -6,8 +6,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fyp2/screen/customer/order_extend.dart';
+import 'package:fyp2/screen/customer/order_rating.dart';
 import 'package:fyp2/service/database.dart';
-import 'package:fyp2/service/date_range_picker_extend.dart';
 import 'package:fyp2/service/media_picker/files_picker_rating.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -226,10 +227,13 @@ class ProgressOrderButtons extends StatelessWidget {
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => DateRangePickerExtend(
-                      orderID: doc['orderID'],
-                    )));
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => ExtendOrder(
+                  doc: doc,
+                ),
+              ),
+            );
           },
           label: const Text(
             'Extend',
@@ -246,13 +250,21 @@ class ProgressOrderButtons extends StatelessWidget {
             color: Colors.white,
           ),
           onPressed: () {
-            showDialog(
+            // showDialog(
+            //   context,
+            //   doc['clName'],
+            //   doc['clID'],
+            //   doc['orderID'],
+            //   doc['cusName'],
+            //   doc['cusContact'],
+            // );
+            Navigator.push(
               context,
-              doc['clName'],
-              doc['clID'],
-              doc['orderID'],
-              doc['cusName'],
-              doc['cusContact'],
+              MaterialPageRoute(
+                builder: (context) => RatingOrder(
+                  doc: doc,
+                ),
+              ),
             );
           },
           label: const Text(

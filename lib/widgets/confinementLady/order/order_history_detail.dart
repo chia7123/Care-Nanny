@@ -193,7 +193,7 @@ class CLOrderHistoryDetail extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text('Rating Given : '),
-                                    Text(doc['ratingGiven'].toString()),
+                                    Text(doc['rating'].toString()),
                                   ],
                                 ),
                                 Row(
@@ -202,7 +202,7 @@ class CLOrderHistoryDetail extends StatelessWidget {
                                     Row(
                                       children: [
                                         for (int i = 1;
-                                            i <= doc['ratingGiven'].round();
+                                            i <= doc['rating'].round();
                                             i++)
                                           const Icon(
                                             Icons.star,

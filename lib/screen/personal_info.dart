@@ -54,6 +54,8 @@ class _PersonalInfoState extends State<PersonalInfo> {
   TextEditingController desc = TextEditingController();
   TextEditingController dob = TextEditingController();
   TextEditingController nationality = TextEditingController();
+  TextEditingController bankBenefit = TextEditingController();
+  TextEditingController bankAcc= TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +66,11 @@ class _PersonalInfoState extends State<PersonalInfo> {
           title: const Text('Profile Detail'),
           actions: [
             TextButton.icon(
-              label: const Text('Done'),
+              label: const Text('Done', style: TextStyle(color: Colors.white),),
               onPressed: () {
                 _updateProfile();
               },
-              icon: const Icon(Icons.check),
+              icon: const Icon(Icons.check,color: Colors.white,),
             ),
           ],
         ),
@@ -267,7 +269,6 @@ class _PersonalInfoState extends State<PersonalInfo> {
                               } else {
                                 setState(() {
                                   dateOfBirth = date;
-                                  print(dateOfBirth);
                                   dob.text = DateFormat('yyyy-MM-dd')
                                       .format(dateOfBirth);
                                 });
@@ -327,6 +328,24 @@ class _PersonalInfoState extends State<PersonalInfo> {
                           hintText: 'ID : ${user.uid}',
                         ),
                       ),
+                      const SizedBox(height: 12,),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child:  Text('Banking Information', style: TextStyle(fontWeight: FontWeight.bold),),),
+                      TextFormField(
+                        key: const ValueKey('benefit bank'),
+                        decoration: const InputDecoration(
+                          hintText: 'Beneficiary Bank (Maybank, Public Bank, etc.)',
+                        ),
+                        controller: bankBenefit,
+                      ),
+                      TextFormField(
+                        key: const ValueKey('bankAcc'),
+                        decoration: const InputDecoration(
+                          hintText: 'Bank Account No.',
+                        ),
+                        controller: bankAcc,
+                      ),
                       const SizedBox(
                         height: 20,
                       ),
@@ -351,7 +370,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text('Certificates'),
+                                  const Text('Certificates : ', style: TextStyle(fontWeight: FontWeight.bold),),
                                   FilesPicker(
                                     fileSelectFn: _selectFile,
                                   ),
@@ -461,6 +480,8 @@ class _PersonalInfoState extends State<PersonalInfo> {
         'race': _selectedRace,
         'religion': _selectedReligion,
         'nationality': nationality.text,
+        'beneficiaryBank': bankBenefit.text,
+        'bankAccNo': bankAcc.text,
       }).whenComplete(() => {
             Fluttertoast.showToast(msg: 'Sign up successful'),
             Navigator.of(context).pop()

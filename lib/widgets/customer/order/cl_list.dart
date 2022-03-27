@@ -2,20 +2,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp2/screen/customer/cl_detail.dart';
 import 'package:fyp2/widgets/profile_card.dart';
 
 class ConLadyList extends StatelessWidget {
   CollectionReference orderInfo =
       FirebaseFirestore.instance.collection('orderInfo');
   final user = FirebaseAuth.instance.currentUser;
-  Function(String id) selectCL;
-
-  ConLadyList({Key key, this.selectCL}) : super(key: key);
-
-  void _selectCL(BuildContext context, String id) {
-    selectCL(id);
-    Navigator.pop(context);
-  }
+  ConLadyList({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +37,12 @@ class ConLadyList extends StatelessWidget {
                         return Card(
                           elevation: 5,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
+                              borderRadius: BorderRadius.circular(15)),
                           margin: const EdgeInsets.symmetric(
                               horizontal: 15, vertical: 10),
-                          child: ExpansionTile(
+                          child: ListTile(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
                             iconColor: Colors.orange,
                             leading: CachedNetworkImage(
                               placeholder: (context, url) =>
@@ -57,61 +55,97 @@ class ConLadyList extends StatelessWidget {
                                 backgroundImage: imageProvider,
                               ),
                             ),
-                            title: Column(
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      user['name'],
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20),
-                                    ),
-                                    ProfileCard(user['id']),
-                                  ],
+                                Text(
+                                  user['name'],
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
                                 ),
-                                const SizedBox(
-                                  height: 10,
+                                const Text(
+                                  ' | ',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
                                 ),
-                                Row(
-                                  children: [
-                                    const Text(
-                                      'Rating :',
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
-                                    user['rating'] == 0
-                                        ? const Text(
-                                            ' No rating yet',
-                                            style:
-                                                TextStyle(color: Colors.grey),
-                                          )
-                                        : Row(
-                                            children: [
-                                              for (int i = 1;
-                                                  i <= user['rating'].round();
-                                                  i++)
-                                                const Icon(
-                                                  Icons.star,
-                                                  color: Colors.amber,
-                                                )
-                                            ],
-                                          ),
-                                  ],
+                                Text(
+                                  '${user['age']} y/o',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
                                 ),
-                                const SizedBox(
-                                  height: 5,
-                                )
                               ],
                             ),
-                            children: [
-                              ElevatedButton.icon(
-                                  onPressed: () {
-                                    _selectCL(context, user['id']);
-                                  },
-                                  icon: const Icon(Icons.favorite),
-                                  label: const Text('Hire Me'))
-                            ],
+                            subtitle: Column(
+                              children: [
+                                user['rating'] == 0
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          for (int i = 1; i <= 5; i++)
+                                            const Icon(
+                                              Icons.star_border,
+                                              color: Colors.amber,
+                                            )
+                                        ],
+                                      )
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          for (int i = 1;
+                                              i <= user['rating'].round();
+                                              i++)
+                                            const Icon(
+                                              Icons.star,
+                                              color: Colors.amber,
+                                            ),
+                                          for (int i = 1;
+                                              i <= 5 - user['rating'].round();
+                                              i++)
+                                            const Icon(
+                                              Icons.star_border,
+                                              color: Colors.amber,
+                                            )
+                                        ],
+                                      ),
+                                Table(children: [
+                                  TableRow(children: [
+                                    const Text('Race :'),
+                                    Text(user['race']),
+                                  ]),
+                                  TableRow(children: [
+                                    const Text('Religion :'),
+                                    Text(user['religion']),
+                                  ]),
+                                  TableRow(children: [
+                                    const Text('Nationality :'),
+                                    Text(user['nationality']),
+                                  ]),
+                                  TableRow(children: [
+                                    const Text('Vegetarian :'),
+                                    user['vegan']
+                                        ? const Text('Yes')
+                                        : const Text('No'),
+                                  ]),
+                                ]),
+                              ],
+                            ),
+                            style: ListTileStyle.list,
+                            onTap: () {
+                              // _selectCL(context, user['id']);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CLProfileDetail(
+                                    id: user['id'],
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         );
                       } else {

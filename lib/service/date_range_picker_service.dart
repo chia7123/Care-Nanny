@@ -98,6 +98,7 @@ class _DateRangePickerServiceState extends State<DateRangePickerService> {
           onSelectionChanged: _onSelectionChanged,
           selectionShape: DateRangePickerSelectionShape.circle,
           showActionButtons: true,
+          
           controller: _dateController,
           selectionMode: DateRangePickerSelectionMode.range,
           onSubmit: (value) {

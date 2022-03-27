@@ -1,31 +1,38 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:fyp2/service/database.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DateRangePickerExtend extends StatefulWidget {
-  DateRangePickerExtend({Key key, this.orderID}) : super(key: key);
+  DateRangePickerExtend({Key key, this.clID, this.orderID, this.selectedDate})
+      : super(key: key);
   final String orderID;
+  final String clID;
+  final Function(DateTime, int) selectedDate;
 
   @override
   State<DateRangePickerExtend> createState() => _DateRangePickerExtendState();
 }
 
 class _DateRangePickerExtendState extends State<DateRangePickerExtend> {
-  // DateTime _startDate;
+  DateTime _startDate;
   DateTime _endDate;
   DateRangePickerController _dateController = DateRangePickerController();
-  DateTime occupiedStartDate;
-  DateTime occupiedEndDate;
+  int days;
+  List<DateTime> occupiedStartDate = [];
+  List<DateTime> occupiedEndDate = [];
   List<DateTime> _blackOutDates = [];
 
   void _updateOrderDate() {
+    days = daysBetween(_startDate, _endDate);
     Navigator.of(context).pop();
-    Fluttertoast.showToast(msg: 'Date Updated');
-    Database().updateProgressOrder(widget.orderID, {
-      'endDate': _endDate,
-    });
+    print('check $days');
+    widget.selectedDate(_endDate, days);
+  }
+
+  int daysBetween(DateTime from, DateTime to) {
+    from = DateTime(from.year, from.month, from.day);
+    to = DateTime(to.year, to.month, to.day);
+    return ((to.difference(from).inHours / 24).round() + 1);
   }
 
   @override
@@ -40,22 +47,28 @@ class _DateRangePickerExtendState extends State<DateRangePickerExtend> {
   }
 
   void getBookedDate() async {
-    await Database()
-        .getProgressOrder(widget.orderID)
-        .then((DocumentSnapshot snapshot) {
-      Map<String, dynamic> doc = snapshot.data();
-      occupiedStartDate = doc['startDate'].toDate();
-      occupiedEndDate = doc['endDate'].toDate();
+    await FirebaseFirestore.instance
+        .collection('onProgressOrder')
+        .where('clID', isEqualTo: widget.clID)
+        .get()
+        .then((QuerySnapshot snapshot) {
+      for (var doc in snapshot.docs) {
+        occupiedStartDate.add(doc['startDate'].toDate());
+        occupiedEndDate.add(doc['endDate'].toDate());
+      }
     });
 
-    for (var date = occupiedStartDate;
-        date.isBefore(occupiedEndDate) || date == occupiedEndDate;
-        date = date.add(const Duration(days: 1))) {
-      _blackOutDates.add(date);
+    for (var i = 0; i < occupiedStartDate.length; i++) {
+      for (var date = occupiedStartDate[i];
+          date.isBefore(occupiedEndDate[i]) || date == occupiedEndDate[i];
+          date = date.add(const Duration(days: 1))) {
+        _blackOutDates.add(date);
+      }
     }
   }
 
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    _startDate = args.value.startDate;
     _endDate = args.value.endDate;
   }
 
@@ -66,7 +79,6 @@ class _DateRangePickerExtendState extends State<DateRangePickerExtend> {
         body: SfDateRangePicker(
           enableMultiView: true,
           navigationDirection: DateRangePickerNavigationDirection.vertical,
-          initialSelectedRange: PickerDateRange(occupiedStartDate, occupiedEndDate),
           extendableRangeSelectionDirection:
               ExtendableRangeSelectionDirection.forward,
           headerHeight: 60,
@@ -76,7 +88,6 @@ class _DateRangePickerExtendState extends State<DateRangePickerExtend> {
             textStyle: const TextStyle(color: Colors.white, fontSize: 20),
           ),
           monthViewSettings: DateRangePickerMonthViewSettings(
-
             blackoutDates: _blackOutDates,
           ),
           monthCellStyle: const DateRangePickerMonthCellStyle(

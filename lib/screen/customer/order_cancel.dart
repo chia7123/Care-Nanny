@@ -1,4 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import '../../service/database.dart';
+import '../info_page.dart';
 
 class CancelOrder extends StatelessWidget {
   CancelOrder({Key key, this.doc}) : super(key: key);
@@ -29,7 +34,7 @@ class CancelOrder extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.06,
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => submit(context, doc),
                   style: ElevatedButton.styleFrom(
                     primary: Theme.of(context).primaryColor,
                     shape: RoundedRectangleBorder(
@@ -52,7 +57,7 @@ class CancelOrder extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.fromLTRB(8, 16, 0, 16),
             child: Text(
-              'Order Detail',
+              'Cancel Order Detail',
               style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.w800,
@@ -67,7 +72,7 @@ class CancelOrder extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.fromLTRB(8, 8, 0, 0),
             child: Text(
-              'Package',
+              'Confinement Package',
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
             ),
           ),
@@ -134,7 +139,9 @@ class CancelOrder extends StatelessWidget {
                   'Description',
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                 ),
-                SizedBox(height: 5,),
+                SizedBox(
+                  height: 5,
+                ),
                 Text(
                   'Please provide a proper reason to cancel the order.',
                   style: TextStyle(
@@ -160,5 +167,47 @@ class CancelOrder extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  submit(BuildContext context, dynamic doc) {
+    if (desc.text.isEmpty) {
+      Fluttertoast.showToast(
+          msg: 'Please provide the reason to cancel the order.');
+      return;
+    }
+    Database().getPendingOrder(doc['orderID']).then((doc) async {
+      await FirebaseFirestore.instance
+          .collection('cancelOrder')
+          .doc(doc['orderID'])
+          .set(doc.data());
+      await FirebaseFirestore.instance
+          .collection('cancelOrder')
+          .doc(doc['orderID'])
+          .update({
+        'cancelReason': desc.text,
+        'status': 'pending',
+      }).whenComplete(() {
+        String msg = 'Your order had been cancelled.';
+        
+        Future.delayed(const Duration(seconds: 1), () {
+          deleteOrder(doc['orderID']);
+        }).then((value) => {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => InfoPage(
+                      msg: msg,
+                      color: Colors.red,
+                      imgUrl: 'assets/images/cross.png',
+                    ),
+                  ))
+            });
+      });
+    });
+  }
+
+  Future<void> deleteOrder(String id) {
+    return Database().deletePendingOrder(id).catchError((error) =>
+        Fluttertoast.showToast(msg: "Failed to cancel order: $error"));
   }
 }
