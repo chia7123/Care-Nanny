@@ -24,7 +24,11 @@ class _RatingOrderState extends State<RatingOrder> {
 
   List<PlatformFile> _userFiles;
 
+  List<PlatformFile> _videoFiles;
+
   List<String> fileUrls = [];
+
+  List<String> videoUrls = [];
 
   TextEditingController desc = TextEditingController();
 
@@ -201,7 +205,8 @@ class _RatingOrderState extends State<RatingOrder> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-            child: FilesPickerRating(fileSelectFn: _selectedFile),
+            child: FilesPickerRating(
+                fileSelectFn: _selectedFile, videoSelectFn: _selectedVideoFile),
           ),
           Container(
             height: 8,
@@ -249,6 +254,10 @@ class _RatingOrderState extends State<RatingOrder> {
     _userFiles = files;
   }
 
+  void _selectedVideoFile(List<PlatformFile> files) {
+    _videoFiles = files;
+  }
+
   void submit(BuildContext context) async {
     if (desc.text.isEmpty) {
       String msg = 'Please give some comments about the services';
@@ -294,6 +303,7 @@ class _RatingOrderState extends State<RatingOrder> {
             .child('rating')
             .child(widget.doc['clID'])
             .child(widget.doc['orderID'])
+            .child('photo')
             .child('file_' + index.toString());
         index++;
 
@@ -303,12 +313,31 @@ class _RatingOrderState extends State<RatingOrder> {
       }
     }
 
+    if(_videoFiles!=null){
+       int index = 1;
+      for (var file in _videoFiles) {
+        final fileStorage = FirebaseStorage.instance
+            .ref()
+            .child('rating')
+            .child(widget.doc['clID'])
+            .child(widget.doc['orderID'])
+            .child('video')
+            .child('file_' + index.toString());
+        index++;
+
+        await fileStorage.putFile(File(file.path));
+        var url = await fileStorage.getDownloadURL();
+        videoUrls.add(url);
+      }
+    }
+
     await Database().updateProgressOrder(
       widget.doc['orderID'],
       {
         'rating': ratings,
         'comment': desc.text,
-        'mediaFiles': fileUrls,
+        'photoFiles': fileUrls,
+        'videoFiles': videoUrls,
       },
     );
 

@@ -4,6 +4,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/service/database.dart';
 import 'package:intl/intl.dart';
 
+import '../../../service/videos/video_player.dart';
+import '../../../service/videos/video_widget.dart';
+import '../../full_screen_image.dart';
+
 class CLOrderHistoryDetail extends StatelessWidget {
   final String id;
   CLOrderHistoryDetail(this.id, {Key key}) : super(key: key);
@@ -223,7 +227,77 @@ class CLOrderHistoryDetail extends StatelessWidget {
                                     const Text('Comment : '),
                                     Text(doc['comment']),
                                   ],
-                                )
+                                ),
+                                 const Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text('Photos/Videos : '),
+                                ),
+                                doc['videoFiles'].length == 0
+                                    ? const SizedBox()
+                                    : Container(
+                                        alignment: Alignment.centerLeft,
+                                        height: 150,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: ListView.builder(
+                                          itemCount: doc['videoFiles'].length,
+                                          scrollDirection: Axis.horizontal,
+                                          itemBuilder: (context, index) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          VideoPlayerPlatform(
+                                                              videoUrl:
+                                                                  doc['videoFiles']
+                                                                      [index]),
+                                                    ));
+                                              },
+                                              child: VideoWidget(
+                                                  videoUrl: doc['videoFiles']
+                                                      [index]),
+                                            );
+                                          },
+                                        )),
+                                doc['photoFiles'].length == 0
+                                    ? const SizedBox()
+                                    : Container(
+                                        alignment: Alignment.centerLeft,
+                                        height: 150,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: ListView.builder(
+                                          itemCount: doc['photoFiles'].length,
+                                          scrollDirection: Axis.horizontal,
+                                          itemBuilder: (context, index) {
+                                            return GestureDetector(
+                                              onTap: () => Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        FullScreenImage(
+                                                      imageUrl:
+                                                          doc['photoFiles']
+                                                              [index],
+                                                    ),
+                                                  )),
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.all(5),
+                                                height: 120,
+                                                width: 90,
+                                                child: FittedBox(
+                                                    fit: BoxFit.fill,
+                                                    child: Image.network(
+                                                        doc['photoFiles']
+                                                            [index])),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
                               ],
                             ),
                           ),

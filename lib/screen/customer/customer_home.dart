@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/data/info_data.dart';
 import 'package:fyp2/models/info.dart';
@@ -37,12 +38,6 @@ class _CustomerHomeState extends State<CustomerHome> {
           style: GoogleFonts.allura(fontSize: 35),
         ),
         leading: const MenuWidget(),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(20),
-            bottomRight: Radius.circular(20),
-          ),
-        ),
       ),
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
@@ -53,39 +48,77 @@ class _CustomerHomeState extends State<CustomerHome> {
             if (snapshot.connectionState == ConnectionState.active) {
               final data = snapshot.data;
               return SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Hello, ${data['name']}',
-                        style: GoogleFonts.roboto(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
+                child: Column(
+                  children: [
+                    ImageSlideshow(
+                      width: double.infinity,
+                      height: 200,
+                      initialPage: 0,
+                      indicatorColor: Colors.blue,
+                      indicatorBackgroundColor: Colors.grey,
+                      onPageChanged: (value) {
+                        debugPrint('Page changed: $value');
+                      },
+                      autoPlayInterval: 3000,
+                      isLoop: true,
+                      children: [
+                        Image.asset(
+                          'assets/images/slides/slide_image_1.png',
+                          fit: BoxFit.cover,
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'ORDER NOW \u2192',
-                        style: GoogleFonts.mukta(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                        Image.asset(
+                          'assets/images/slides/slide_image_2.png',
+                          fit: BoxFit.cover,
                         ),
+                        Image.asset(
+                          'assets/images/slides/slide_image_3.png',
+                          fit: BoxFit.cover,
+                        ),
+                        Image.asset(
+                          'assets/images/slides/slide_image_4.png',
+                          fit: BoxFit.cover,
+                        ),
+                        Image.asset(
+                          'assets/images/slides/slide_image_5.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Hello, ${data['name']}',
+                            style: GoogleFonts.roboto(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          // Text(
+                          //   'ORDER NOW \u2192',
+                          //   style: GoogleFonts.mukta(
+                          //     fontSize: 20,
+                          //     fontWeight: FontWeight.bold,
+                          //   ),
+                          // ),
+                          // Align(
+                          //   alignment: Alignment.center,
+                          //   child: orderNow(context),
+                          // ),
+                          // const SizedBox(
+                          //   height: 10,
+                          // ),
+                          nearMe(context),
+                          exploreMore(context),
+                        ],
                       ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: orderNow(context),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      nearMe(context),
-                      exploreMore(context),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               );
             } else {
@@ -94,6 +127,20 @@ class _CustomerHomeState extends State<CustomerHome> {
               );
             }
           }),
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Theme.of(context).primaryColor,
+        label: const Text('Order Now'),
+        icon: const Icon(
+          Icons.wallet_travel,
+        ),
+        elevation: 10,
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OrderProcess(),
+          ),
+        ),
+      ),
     );
   }
 
@@ -281,7 +328,7 @@ class _CustomerHomeState extends State<CustomerHome> {
           .get(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-        final data = snapshot.data.docs;
+          final data = snapshot.data.docs;
           return SizedBox(
             height: 210,
             width: double.infinity,
@@ -357,12 +404,8 @@ class _CustomerHomeState extends State<CustomerHome> {
           );
         }
 
-        return const Center(
-          child: CircularProgressIndicator.adaptive()
-        );
+        return const Center(child: CircularProgressIndicator.adaptive());
       },
     );
   }
-
-  
 }

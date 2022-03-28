@@ -31,7 +31,6 @@ class _CustomerProfileState extends State<CustomerProfile> {
   TextEditingController postalCode = TextEditingController();
   TextEditingController stateArea = TextEditingController();
   TextEditingController email = TextEditingController();
-  TextEditingController nationality = TextEditingController();
   TextEditingController bankBenefit = TextEditingController();
   TextEditingController bankAcc = TextEditingController();
   TextEditingController dob = TextEditingController();
@@ -55,7 +54,6 @@ class _CustomerProfileState extends State<CustomerProfile> {
             text: DateFormat('yyyy-MM-dd').format(data['dob'].toDate()));
         bankBenefit.value = TextEditingValue(text: data['beneficiaryBank']);
         bankAcc.value = TextEditingValue(text: data['bankAccNo']);
-        nationality.value = TextEditingValue(text: data['nationality']);
         imageUrl = data['imageUrl'];
         usertype = data['userType'];
       }
@@ -67,42 +65,16 @@ class _CustomerProfileState extends State<CustomerProfile> {
     FocusScope.of(context).unfocus();
     if (dateOfBirth != null) {
       var age = AgeCalculator.age(dateOfBirth).years;
-      Database().updateUserData(user.uid, {
-        'age': age
-      });
+      Database().updateUserData(user.uid, {'dob': dateOfBirth, 'age': age});
     }
 
     if (isValid) {
-      //  Database().updateUserData(user.uid, {
-      //   'name': name.text,
-      //   'phone': phone.text,
-      //   'detailAddress': detailedAddress.text,
-      //   'postalCode': postalCode.text,
-      //   'stateArea': stateArea.text,
-      //   'userType': _selectedUser,
-      //   'imageUrl': url,
-      //   'email': email.text,
-      //   'description': desc.text,
-      //   'id': user.uid,
-      //   'rating': 0,
-      //   'orderSuccess': 0,
-      //   'certUrl': certUrl,
-      //   'vegan': _isVegan,
-      //   'dob': dateOfBirth,
-      //   'age': age,
-      //   'race': _selectedRace,
-      //   'religion': _selectedReligion,
-      //   'nationality': nationality.text,
-      //   'beneficiaryBank': bankBenefit.text,
-      //   'bankAccNo': bankAcc.text,
-      // })
       Database().updateUserData(user.uid, {
         'name': name.text,
         'phone': phone.text,
         'detailAddress': detailedAddress.text,
         'postalCode': postalCode.text,
         'stateArea': stateArea.text,
-        'dob': dateOfBirth,
         'beneficiaryBank': bankBenefit.text,
         'bankAccNo': bankAcc.text,
       }).whenComplete(() => {Fluttertoast.showToast(msg: 'Update sucessful')});
@@ -177,7 +149,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            UserImagePicker(snapshot.data['imageUrl']),
+                            UserImagePicker(doc['imageUrl']),
                             const SizedBox(
                               height: 10,
                             ),
@@ -316,7 +288,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                   onPressed: () async {
                                     final date = await showDatePicker(
                                       context: context,
-                                      initialDate: DateTime.now(),
+                                      initialDate: doc['dob'].toDate(),
                                       firstDate: DateTime(1950),
                                       lastDate: DateTime.now(),
                                     );
@@ -365,7 +337,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                             TextFormField(
                               key: const ValueKey('add3'),
                               decoration: const InputDecoration(
-                                labelText: 'State, Area',
+                                labelText: 'Area, State',
                               ),
                               controller: stateArea,
                             ),
@@ -373,7 +345,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                               key: const ValueKey('Email'),
                               readOnly: true,
                               decoration: const InputDecoration(
-                                labelText: '6. Email',
+                                labelText: 'Email',
                               ),
                               controller: email,
                             ),

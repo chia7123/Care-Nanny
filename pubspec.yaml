@@ -51,6 +51,7 @@ dependencies:
   flutter_braintree: ^2.3.1
   flutter_zoom_drawer: ^2.3.1+1
   age_calculator: ^1.0.0
+  flutter_image_slideshow: ^0.1.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -84,6 +85,11 @@ flutter:
     - assets/images/profile-icon.png
     - assets/images/tick.png
     - assets/images/cross.png
+    - assets/images/slides/slide_image_1.png
+    - assets/images/slides/slide_image_2.png
+    - assets/images/slides/slide_image_3.png
+    - assets/images/slides/slide_image_4.png
+    - assets/images/slides/slide_image_5.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

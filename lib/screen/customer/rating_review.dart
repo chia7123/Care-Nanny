@@ -1,6 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../../service/videos/video_player.dart';
+import '../../service/videos/video_widget.dart';
+import '../../widgets/full_screen_image.dart';
+
 class RatingReview extends StatelessWidget {
   RatingReview({Key key, this.id}) : super(key: key);
   final String id;
@@ -35,10 +39,24 @@ class RatingReview extends StatelessWidget {
                           children: [
                             Row(
                               children: [
-                                const CircleAvatar(
-                                  backgroundColor: Colors.grey,
-                                  radius: 8,
-                                ),
+                                StreamBuilder(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('users')
+                                        .doc(doc[index]['cusID'])
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.active) {
+                                        return CircleAvatar(
+                                          backgroundColor: Colors.grey,
+                                          backgroundImage: NetworkImage(
+                                              snapshot.data['imageUrl']),
+                                          radius: 8,
+                                        );
+                                      }
+                                      return const CircularProgressIndicator
+                                          .adaptive();
+                                    }),
                                 const SizedBox(
                                   width: 5,
                                 ),
@@ -68,6 +86,72 @@ class RatingReview extends StatelessWidget {
                               height: 5,
                             ),
                             Text(doc[index]['comment']),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            doc[index]['videoFiles'].length == 0
+                                ? const SizedBox()
+                                : Container(
+                                    alignment: Alignment.centerLeft,
+                                    height: 120,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: ListView.builder(
+                                      itemCount:
+                                          doc[index]['videoFiles'].length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, i) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      VideoPlayerPlatform(
+                                                          videoUrl: doc[index]
+                                                                  ['videoFiles']
+                                                              [i]),
+                                                ));
+                                          },
+                                          child: VideoWidget(
+                                              videoUrl: doc[index]['videoFiles']
+                                                  [i]),
+                                        );
+                                      },
+                                    )),
+                            doc[index]['photoFiles'].length == 0
+                                ? const SizedBox()
+                                : Container(
+                                    alignment: Alignment.centerLeft,
+                                    height: 120,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: ListView.builder(
+                                      itemCount:
+                                          doc[index]['photoFiles'].length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, i) {
+                                        return GestureDetector(
+                                          onTap: () => Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    FullScreenImage(
+                                                  imageUrl: doc[index]
+                                                      ['photoFiles'][i],
+                                                ),
+                                              )),
+                                          child: Container(
+                                            padding: const EdgeInsets.all(5),
+                                            height: 120,
+                                            width: 90,
+                                            child: FittedBox(
+                                                fit: BoxFit.fill,
+                                                child: Image.network(doc[index]
+                                                    ['photoFiles'][i])),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
                             const Divider(),
                           ],
                         );

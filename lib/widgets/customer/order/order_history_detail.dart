@@ -234,68 +234,83 @@ class CusOrderHistoryDetail extends StatelessWidget {
                                     Text(doc['comment']),
                                   ],
                                 ),
+                                Divider(
+                                  color: Colors.grey[500],
+                                ),
+                                const Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text('Photos/Videos : '),
+                                ),
+                                doc['videoFiles'].length == 0
+                                    ? const SizedBox()
+                                    : Container(
+                                        alignment: Alignment.centerLeft,
+                                        height: 150,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: ListView.builder(
+                                          itemCount: doc['videoFiles'].length,
+                                          scrollDirection: Axis.horizontal,
+                                          itemBuilder: (context, index) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          VideoPlayerPlatform(
+                                                              videoUrl:
+                                                                  doc['videoFiles']
+                                                                      [index]),
+                                                    ));
+                                              },
+                                              child: VideoWidget(
+                                                  videoUrl: doc['videoFiles']
+                                                      [index]),
+                                            );
+                                          },
+                                        )),
+                                doc['photoFiles'].length == 0
+                                    ? const SizedBox()
+                                    : Container(
+                                        alignment: Alignment.centerLeft,
+                                        height: 150,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: ListView.builder(
+                                          itemCount: doc['photoFiles'].length,
+                                          scrollDirection: Axis.horizontal,
+                                          itemBuilder: (context, index) {
+                                            return GestureDetector(
+                                              onTap: () => Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        FullScreenImage(
+                                                      imageUrl:
+                                                          doc['photoFiles']
+                                                              [index],
+                                                    ),
+                                                  )),
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.all(5),
+                                                height: 120,
+                                                width: 90,
+                                                child: FittedBox(
+                                                    fit: BoxFit.fill,
+                                                    child: Image.network(
+                                                        doc['photoFiles']
+                                                            [index])),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
                               ],
                             ),
                           ),
                         ),
-                        // Divider(
-                        //   color: Colors.grey[500],
-                        // ),
-                        // const Align(
-                        //   alignment: Alignment.centerLeft,
-                        //   child: Text('Photos/Videos : '),
-                        // ),
-                        // Container(
-                        //   alignment: Alignment.centerLeft,
-                        //   height: 100,
-                        //   width: MediaQuery.of(context).size.height,
-                        //   child: ListView.builder(
-                        //     scrollDirection: Axis.horizontal,
-                        //     itemCount: doc['mediaFiles'].length,
-                        //     itemBuilder: (context, index) {
-                        //       if (doc['mediaFiles'].extension == "jpg" ||
-                        //           doc['mediaFiles'].extension == "png")
-                        //       {
-                        //         return GestureDetector(
-                        //           onTap: () => Navigator.push(
-                        //               context,
-                        //               MaterialPageRoute(
-                        //                 builder: (context) => FullScreenImage(
-                        //                     imageUrl: doc['mediaFiles'][index]),
-                        //               )),
-                        //           child: Container(
-                        //             padding: const EdgeInsets.all(5),
-                        //             height: 120,
-                        //             width: 90,
-                        //             child: FittedBox(
-                        //               fit: BoxFit.fill,
-                        //               child: Image.network(
-                        //                   doc['mediaFiles'][index]),
-                        //             ),
-                        //           ),
-                        //         );
-                        //       }
-                        //       else 
-                        //       {
-                        //         return GestureDetector(
-                        //           onTap: () {
-                        //             Navigator.push(
-                        //                 context,
-                        //                 MaterialPageRoute(
-                        //                   builder: (context) =>
-                        //                       VideoPlayerPlatform(
-                        //                           pickedVideo: File(
-                        //                               doc['mediaFiles'].path)),
-                        //                 ));
-                        //           },
-                        //           child: VideoWidget(
-                        //             pickedVideo: File(doc['mediaFiles'].path),
-                        //           ),
-                        //         );
-                        //       }
-                        //     },
-                        //   ),
-                        // ),
                         const Divider(
                           thickness: 2,
                           color: Colors.black,

@@ -41,11 +41,16 @@ class MyApp extends StatelessWidget {
         textTheme: TextTheme(
           bodyText1: GoogleFonts.roboto(fontWeight: FontWeight.bold),
           bodyText2: GoogleFonts.roboto(fontSize: 15),
-          
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+              primary: Theme.of(context).primaryColor,
+              onPrimary: Colors.white),
+              
+
         ),
         primaryColor: Colors.blue[200],
         canvasColor: Colors.white,
-       
         primarySwatch: Colors.blue,
       ),
       home: SplashScreen(),

@@ -6,7 +6,6 @@ import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/screen/info_page.dart';
 import 'package:fyp2/screen/customer/service_select.dart';
-import 'package:fyp2/widgets/profile_card.dart';
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -208,18 +207,15 @@ class _OrderProcessState extends State<OrderProcess> {
                       height: 10,
                     ),
                     ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => ConLadyList(),
-                            ),
-                          );
-                        },
-                        child: const Text('Press here'),
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.blue,
-                          onPrimary: Colors.white,
-                        )),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ConLadyList(),
+                          ),
+                        );
+                      },
+                      child: const Text('Press here'),
+                    ),
                   ],
                 ),
               ),
@@ -271,10 +267,7 @@ class _OrderProcessState extends State<OrderProcess> {
                           }
                         },
                         child: const Text('Press here'),
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.blue,
-                          onPrimary: Colors.white,
-                        )),
+                       ),
                   ],
                 ),
               ),
@@ -333,10 +326,7 @@ class _OrderProcessState extends State<OrderProcess> {
                         }
                       },
                       child: const Text('Press here'),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.blue,
-                        onPrimary: Colors.white,
-                      ),
+                     
                     ),
                   ],
                 ),

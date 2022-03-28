@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoWidget extends StatefulWidget {
-  VideoWidget({Key key, this.pickedVideo}) : super(key: key);
+  VideoWidget({Key key, this.pickedVideo, this.videoUrl}) : super(key: key);
 
   final File pickedVideo;
+  final String videoUrl;
 
   @override
   State<VideoWidget> createState() => _VideoWidgetState();
@@ -16,9 +17,16 @@ class _VideoWidgetState extends State<VideoWidget> {
 
   @override
   void initState() {
-    _controller = VideoPlayerController.file(widget.pickedVideo)
-      ..addListener(() => setState(() {}))
-      ..initialize();
+    if (widget.pickedVideo != null) {
+      _controller = VideoPlayerController.file(widget.pickedVideo)
+        ..addListener(() => setState(() {}))
+        ..initialize();
+    } else {
+      _controller = VideoPlayerController.network(widget.videoUrl)
+        ..addListener(() => setState(() {}))
+        ..initialize();
+    }
+
     super.initState();
   }
 
