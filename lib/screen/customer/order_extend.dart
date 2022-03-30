@@ -332,9 +332,4 @@ class _ExtendOrderState extends State<ExtendOrder> {
       Fluttertoast.showToast(msg: 'Plese make the payment to extend your order.');
     }
   }
-
-  Future<void> deleteOrder(String id) {
-    return Database().deletePendingOrder(id).catchError((error) =>
-        Fluttertoast.showToast(msg: "Failed to cancel order: $error"));
-  }
 }

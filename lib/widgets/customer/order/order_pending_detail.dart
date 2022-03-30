@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fyp2/widgets/customer/order/pending_order_buttons.dart';
 import 'package:intl/intl.dart';
 
+import '../../../screen/customer/order_cancel.dart';
 import '../../../service/database.dart';
 
 class CusPendingOrderDetail extends StatelessWidget {
@@ -218,11 +219,14 @@ class CusPendingOrderDetail extends StatelessWidget {
                       size: 20,
                     ),
                     onPressed: () {
-                      Navigator.pop(context);
-                      Future.delayed(const Duration(seconds: 1), () {
-                        deleteOrder(doc['orderID']);
-                        Navigator.pop(context);
-                      });
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CancelOrder(
+                            doc: doc,
+                          ),
+                        ),
+                      );
                     },
                     label: const Text(
                       'Cancel',
@@ -241,11 +245,9 @@ class CusPendingOrderDetail extends StatelessWidget {
   }
 
   Future<void> deleteOrder(String id) {
-    return Database()
-        .deletePendingOrder(id)
-        .then((val) { 
-          Fluttertoast.showToast(msg: 'Order Cancelled !');})
-        .catchError((error) =>
-            Fluttertoast.showToast(msg: "Failed to cancel order: $error"));
+    return Database().deletePendingOrder(id).then((val) {
+      Fluttertoast.showToast(msg: 'Order Cancelled !');
+    }).catchError((error) =>
+        Fluttertoast.showToast(msg: "Failed to cancel order: $error"));
   }
 }

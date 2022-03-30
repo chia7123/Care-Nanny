@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fyp2/data/terms_condition.dart';
 import 'package:fyp2/service/database.dart';
 import 'package:fyp2/service/media_picker/files_picker.dart';
 import 'package:fyp2/service/location.dart';
@@ -44,6 +45,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
   String _selectedReligion;
   bool _isVegan;
   DateTime dateOfBirth;
+  bool check = false;
 
   TextEditingController name = TextEditingController();
   TextEditingController phone = TextEditingController();
@@ -55,7 +57,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
   TextEditingController dob = TextEditingController();
   TextEditingController nationality = TextEditingController();
   TextEditingController bankBenefit = TextEditingController();
-  TextEditingController bankAcc= TextEditingController();
+  TextEditingController bankAcc = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -66,11 +68,17 @@ class _PersonalInfoState extends State<PersonalInfo> {
           title: const Text('Profile Detail'),
           actions: [
             TextButton.icon(
-              label: const Text('Done', style: TextStyle(color: Colors.white),),
+              label: const Text(
+                'Done',
+                style: TextStyle(color: Colors.white),
+              ),
               onPressed: () {
                 _updateProfile();
               },
-              icon: const Icon(Icons.check,color: Colors.white,),
+              icon: const Icon(
+                Icons.check,
+                color: Colors.white,
+              ),
             ),
           ],
         ),
@@ -106,7 +114,10 @@ class _PersonalInfoState extends State<PersonalInfo> {
                       ),
                       DropdownButton(
                         key: const ValueKey('user'),
-                        hint: const Text('Please Choose Your Roles'),
+                        hint: const Text(
+                          'Choose Your Roles',
+                          textAlign: TextAlign.center,
+                        ),
                         value: _selectedUser,
                         onChanged: (newValue) {
                           setState(() {
@@ -328,14 +339,21 @@ class _PersonalInfoState extends State<PersonalInfo> {
                           hintText: 'ID : ${user.uid}',
                         ),
                       ),
-                      const SizedBox(height: 12,),
+                      const SizedBox(
+                        height: 12,
+                      ),
                       const Align(
                         alignment: Alignment.centerLeft,
-                        child:  Text('Banking Information', style: TextStyle(fontWeight: FontWeight.bold),),),
+                        child: Text(
+                          'Banking Information',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
                       TextFormField(
                         key: const ValueKey('benefit bank'),
                         decoration: const InputDecoration(
-                          hintText: 'Beneficiary Bank (Maybank, Public Bank, etc.)',
+                          hintText:
+                              'Beneficiary Bank (Maybank, Public Bank, etc.)',
                         ),
                         controller: bankBenefit,
                       ),
@@ -370,7 +388,11 @@ class _PersonalInfoState extends State<PersonalInfo> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text('Certificates : ', style: TextStyle(fontWeight: FontWeight.bold),),
+                                  const Text(
+                                    'Certificates : ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
                                   FilesPicker(
                                     fileSelectFn: _selectFile,
                                   ),
@@ -401,11 +423,6 @@ class _PersonalInfoState extends State<PersonalInfo> {
   void initState() {
     super.initState();
     email.value = TextEditingValue(text: widget.email);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   void _pickedImage(File image) {
@@ -458,34 +475,32 @@ class _PersonalInfoState extends State<PersonalInfo> {
         certUrl.add(url);
       }
     }
+    Map<String, dynamic> data = {
+      'name': name.text,
+      'phone': phone.text,
+      'detailAddress': detailedAddress.text,
+      'postalCode': postalCode.text,
+      'stateArea': stateArea.text,
+      'userType': _selectedUser,
+      'imageUrl': url,
+      'email': email.text,
+      'description': desc.text,
+      'id': user.uid,
+      'rating': 0,
+      'orderSuccess': 0,
+      'certUrl': certUrl,
+      'vegan': _isVegan,
+      'dob': dateOfBirth,
+      'age': age,
+      'race': _selectedRace,
+      'religion': _selectedReligion,
+      'nationality': nationality.text,
+      'beneficiaryBank': bankBenefit.text,
+      'bankAccNo': bankAcc.text,
+    };
 
     if (isValid) {
-      Database().updateUserData(user.uid, {
-        'name': name.text,
-        'phone': phone.text,
-        'detailAddress': detailedAddress.text,
-        'postalCode': postalCode.text,
-        'stateArea': stateArea.text,
-        'userType': _selectedUser,
-        'imageUrl': url,
-        'email': email.text,
-        'description': desc.text,
-        'id': user.uid,
-        'rating': 0,
-        'orderSuccess': 0,
-        'certUrl': certUrl,
-        'vegan': _isVegan,
-        'dob': dateOfBirth,
-        'age': age,
-        'race': _selectedRace,
-        'religion': _selectedReligion,
-        'nationality': nationality.text,
-        'beneficiaryBank': bankBenefit.text,
-        'bankAccNo': bankAcc.text,
-      }).whenComplete(() => {
-            Fluttertoast.showToast(msg: 'Sign up successful'),
-            Navigator.of(context).pop()
-          });
+      termsCondition(data);
     }
   }
 
@@ -513,5 +528,183 @@ class _PersonalInfoState extends State<PersonalInfo> {
     } catch (e) {
       print(e);
     }
+  }
+
+  void termsCondition(Map<String, dynamic> data) {
+    showBottomSheet(
+        context: context,
+        builder: (context) {
+          return SafeArea(
+            child: Scaffold(
+              appBar: AppBar(
+                title: const Text('Terms & Conditions'),
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
+              body: Column(
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                      height: MediaQuery.of(context).size.height,
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 10),
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                          color: Colors.black,
+                        )),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                instruction,
+                                textAlign: TextAlign.justify,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                generalTerm,
+                                textAlign: TextAlign.justify,
+                              ),
+                              const Text(
+                                '\nI. PRODUCTS',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 23),
+                              ),
+                              Text(
+                                product,
+                                textAlign: TextAlign.justify,
+                              ),
+                              const Text(
+                                '\nII. APPLICATION',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 23),
+                              ),
+                              Text(
+                                application,
+                                textAlign: TextAlign.justify,
+                              ),
+                              const Text(
+                                '\nIII. DISCLAIMER OF WARRANTIES',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 23),
+                              ),
+                              Text(
+                                disclaimer,
+                                textAlign: TextAlign.justify,
+                              ),
+                              const Text(
+                                '\nIV. LIMITATION OF LIABILITY',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 23),
+                              ),
+                              Text(
+                                limitation,
+                                textAlign: TextAlign.justify,
+                              ),
+                              const Text(
+                                '\nV. INDEMNIFICATION',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 23),
+                              ),
+                              Text(
+                                indemnification,
+                                textAlign: TextAlign.justify,
+                              ),
+                              const Text(
+                                '\nVI. PRIVACY',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 23),
+                              ),
+                              Text(
+                                privacy,
+                                textAlign: TextAlign.justify,
+                              ),
+                              const Text(
+                                '\nVII. AGREEMENT TO BE BOUND',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 23),
+                              ),
+                              Text(
+                                agreement,
+                                textAlign: TextAlign.justify,
+                              ),
+                              const Text(
+                                '\nVIII. GENERAL',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 23),
+                              ),
+                              Text(
+                                general,
+                                textAlign: TextAlign.justify,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.06,
+                    width: double.infinity,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(0),
+                                ),
+                                primary: Theme.of(context).primaryColor,
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Fluttertoast.showToast(
+                                    msg:
+                                        'Please agree the Terms & Conditions to procced to the next step.');
+                              },
+                              child: const Text('DECLINE')),
+                        ),
+                        Expanded(
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(0),
+                                ),
+                                primary: Theme.of(context).primaryColor,
+                              ),
+                              onPressed: () {
+                                check = true;
+                                Navigator.pop(context);
+                                if (check) {
+                                  Database()
+                                      .updateUserData(user.uid, data)
+                                      .whenComplete(() => {
+                                            Fluttertoast.showToast(
+                                                msg: 'Sign up successful'),
+                                          });
+                                }
+                              },
+                              child: const Text('AGREE')),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

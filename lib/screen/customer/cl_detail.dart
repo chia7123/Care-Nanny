@@ -490,8 +490,13 @@ class CLProfileDetail extends StatelessWidget {
                             children: [
                               const Text('Basic Package :'),
                               data['basic'].isEmpty
-                                  ? const Text(
-                                      'Does not provide Basic Package yet.')
+                                  ? const SizedBox(
+                                      width: 200,
+                                      child: Text(
+                                        'Does not provide Basic Package yet.',
+                                        softWrap: true,
+                                      ),
+                                    )
                                   : SizedBox(
                                       height: 150,
                                       width: MediaQuery.of(context).size.width *
@@ -515,8 +520,13 @@ class CLProfileDetail extends StatelessWidget {
                             children: [
                               const Text('Premium Package :'),
                               data['premium'].isEmpty
-                                  ? const Text(
-                                      'Does not provide Premium Package yet.')
+                                  ? const SizedBox(
+                                      width: 200,
+                                      child: Text(
+                                        'Does not provide Premium Package yet.',
+                                        softWrap: true,
+                                      ),
+                                    )
                                   : SizedBox(
                                       height: 150,
                                       width: MediaQuery.of(context).size.width *
@@ -540,8 +550,13 @@ class CLProfileDetail extends StatelessWidget {
                             children: [
                               const Text('Deluxe Package :'),
                               data['deluxe'].isEmpty
-                                  ? const Text(
-                                      'Does not provide Deluxe Package yet.')
+                                  ? const SizedBox(
+                                      width: 200,
+                                      child: Text(
+                                        'Does not provide Deluxe Package yet.',
+                                        softWrap: true,
+                                      ),
+                                    )
                                   : SizedBox(
                                       height: 150,
                                       width: MediaQuery.of(context).size.width *
@@ -762,7 +777,7 @@ class CLProfileDetail extends StatelessWidget {
                 child: CircularProgressIndicator.adaptive(),
               );
             }),
-        TextButton.icon(
+        TextButton(
             onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -770,8 +785,7 @@ class CLProfileDetail extends StatelessWidget {
                     id: id,
                   ),
                 )),
-            icon: const Icon(Icons.keyboard_arrow_right),
-            label: const Text('See More'))
+            child: const Text('See More'))
       ],
     );
   }
@@ -807,7 +821,7 @@ class CLProfileDetail extends StatelessWidget {
           alignment: Alignment.centerLeft,
           padding: const EdgeInsets.fromLTRB(8, 8, 0, 0),
           child: const Text(
-            'Similar Confinement Lady',
+            'Recommended Confinement Ladies',
             style: TextStyle(fontSize: 17),
           ),
         ),

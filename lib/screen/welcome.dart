@@ -12,20 +12,19 @@ class Welcome extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Spacer(),
-            Container(
-              height: 400,
-              child: FittedBox(
-                child: Image.asset(
-                  'assets/images/logo.png',
-                ),
-                fit: BoxFit.contain,
+            SizedBox(
+              height: 500,
+              child: Image.asset(
+                'assets/images/logo.png',
+                fit: BoxFit.cover,
               ),
             ),
+            
             const Spacer(),
             const Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Hey There, \nWelcome to CareNanny',
+                'Hey there, \nWelcome to CareNanny',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -49,7 +48,7 @@ class Welcome extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            ElevatedButton.icon(
+            ElevatedButton(
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const Authenticate()));
@@ -58,11 +57,8 @@ class Welcome extends StatelessWidget {
                   primary: Colors.white,
                   onPrimary: Colors.black,
                   minimumSize: const Size(double.infinity, 50)),
-              icon: const Icon(
-                Icons.keyboard_arrow_right,
-                size: 25,
-              ),
-              label: const Text('Press Here to Continue'),
+             
+              child: const Text('Press Here to Continue'),
             ),
             const Spacer(),
           ],

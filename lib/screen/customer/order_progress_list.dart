@@ -133,7 +133,7 @@ class CusProgressOrderList extends StatelessWidget {
                           Divider(
                             color: Colors.grey[800],
                           ),
-                          ProgressOrderButtons(comment: comment,doc: doc,)
+                          ProgressOrderButtons(doc: doc,)
                         ],
                       ),
                     ),
