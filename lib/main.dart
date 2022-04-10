@@ -33,7 +33,8 @@ class MyApp extends StatelessWidget {
       title: 'Final Year Project',
       theme: ThemeData(
         appBarTheme: AppBarTheme(
-            toolbarHeight: 65,
+            elevation: 1,
+            toolbarHeight: 55,
             backgroundColor: Colors.blue[200],
             iconTheme: const IconThemeData(color: Colors.white),
             actionsIconTheme: const IconThemeData(color: Colors.white),
@@ -44,10 +45,7 @@ class MyApp extends StatelessWidget {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-              primary: Theme.of(context).primaryColor,
-              onPrimary: Colors.white),
-              
-
+              primary: Theme.of(context).primaryColor, onPrimary: Colors.white),
         ),
         primaryColor: Colors.blue[200],
         canvasColor: Colors.white,

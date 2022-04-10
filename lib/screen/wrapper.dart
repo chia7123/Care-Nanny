@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fyp2/screen/admin_page.dart';
 import 'package:fyp2/screen/confinementLady/cl_side_nav.dart';
 import 'package:fyp2/screen/customer/customer_side_nav.dart';
 import 'package:fyp2/screen/personal_info.dart';
@@ -55,17 +56,19 @@ class Wrapper extends StatelessWidget {
                         child: CircularProgressIndicator(),
                       );
                     }
-    
+
                     if (snapshot.data['name'] == null) {
                       return PersonalInfo(snapshot.data['email']);
                     }
-    
+
                     if (snapshot.data['userType'] == 'Confinement Lady') {
                       return const CLSideNav();
                     } else if (snapshot.data['userType'] == 'New Mother') {
                       return const CustomerSideNav();
+                    } else if (snapshot.data['userType'] == 'admin') {
+                      return AdminPage();
                     } else {
-                      return const Text('Usertype no data');
+                      return const Center(child: Text('Usertype no data'));
                     }
                   },
                 );

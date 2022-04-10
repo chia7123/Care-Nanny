@@ -36,36 +36,25 @@ class CLHome extends StatelessWidget {
                   children: [
                     ImageSlideshow(
                       width: double.infinity,
-                      height: 200,
+                      height: 150,
                       initialPage: 0,
                       indicatorColor: Colors.blue,
                       indicatorBackgroundColor: Colors.grey,
                       onPageChanged: (value) {
                         debugPrint('Page changed: $value');
                       },
-                      autoPlayInterval: 3000,
+                      autoPlayInterval: 5000,
                       isLoop: true,
                       children: [
                         Image.asset(
-                          'assets/images/slides/slide_image_1.png',
+                          'assets/images/slides/m.png',
                           fit: BoxFit.cover,
                         ),
                         Image.asset(
-                          'assets/images/slides/slide_image_2.png',
+                          'assets/images/slides/cl1.png',
                           fit: BoxFit.cover,
                         ),
-                        Image.asset(
-                          'assets/images/slides/slide_image_3.png',
-                          fit: BoxFit.cover,
-                        ),
-                        Image.asset(
-                          'assets/images/slides/slide_image_4.png',
-                          fit: BoxFit.cover,
-                        ),
-                        Image.asset(
-                          'assets/images/slides/slide_image_5.png',
-                          fit: BoxFit.cover,
-                        ),
+                        
                       ],
                     ),
                     Padding(
