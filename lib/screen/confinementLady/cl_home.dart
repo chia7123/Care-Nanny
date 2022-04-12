@@ -17,7 +17,6 @@ class CLHome extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         leading: const MenuWidget(),
-        toolbarHeight: 80,
         title: Text('CareNanny', style: GoogleFonts.allura(fontSize: 35)),
         backgroundColor: Theme.of(context).primaryColor,
       ),

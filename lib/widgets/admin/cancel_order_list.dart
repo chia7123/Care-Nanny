@@ -32,6 +32,7 @@ class _CancelOrderListState extends State<CancelOrderList> {
                     tileColor: !isPending ? Colors.grey[200] : null,
                     minLeadingWidth: 5,
                     horizontalTitleGap: 5,
+                    isThreeLine: true,
                     onTap: () {
                       Navigator.push(
                         context,
@@ -44,12 +45,22 @@ class _CancelOrderListState extends State<CancelOrderList> {
                     },
                     leading: Text('${index + 1}.'),
                     title: Text(
-                      data[index]['cancelReason'],
+                      data[index]['orderID'],
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    subtitle:
-                        Text('RM ${data[index]['price'].toStringAsFixed(2)}'),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Reason: ${data[index]['cancelReason']}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const Text('Click to view more details.'),
+                      ],
+                    ),
                     trailing: isPending
                         ? SizedBox(
                             width: 80,

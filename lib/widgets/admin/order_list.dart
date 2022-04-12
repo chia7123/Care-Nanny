@@ -16,7 +16,6 @@ class OrderList extends StatefulWidget {
 class _OrderListState extends State<OrderList> {
   @override
   Widget build(BuildContext context) {
-
     return StreamBuilder(
         stream: widget.stream,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -29,6 +28,7 @@ class _OrderListState extends State<OrderList> {
                   tileColor: Colors.grey[300],
                   minLeadingWidth: 5,
                   horizontalTitleGap: 5,
+                  isThreeLine: true,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -41,13 +41,19 @@ class _OrderListState extends State<OrderList> {
                   },
                   leading: Text('${index + 1}.'),
                   title: Text(
-                    data[index]['typeOfService'],
+                    data[index]['orderID'],
                     style: const TextStyle(fontWeight: FontWeight.bold),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  subtitle: Text(
-                    '${DateFormat('yyyy/MM/dd').format(data[index]['startDate'].toDate())} - ${DateFormat('yyyy/MM/dd').format(data[index]['endDate'].toDate())}',
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${DateFormat('yyyy/MM/dd').format(data[index]['startDate'].toDate())} - ${DateFormat('yyyy/MM/dd').format(data[index]['endDate'].toDate())}',
+                      ),
+                      const Text('Click to view more details.'),
+                    ],
                   ),
                   trailing: Text(
                     'RM ${data[index]['price'].toStringAsFixed(2)}',

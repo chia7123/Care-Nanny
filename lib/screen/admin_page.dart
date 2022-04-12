@@ -65,8 +65,8 @@ class _AdminPageState extends State<AdminPage> {
               child: Text(
                 'Confinement Lady',
                 style: GoogleFonts.archivo(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w900,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
                   color: Colors.black,
                 ),
               ),
@@ -87,8 +87,8 @@ class _AdminPageState extends State<AdminPage> {
               child: Text(
                 'Mother',
                 style: GoogleFonts.archivo(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w900,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
                   color: Colors.black,
                 ),
               ),
@@ -106,13 +106,30 @@ class _AdminPageState extends State<AdminPage> {
             Container(
               padding: const EdgeInsets.only(left: 10),
               alignment: Alignment.centerLeft,
-              child: Text(
-                'Cancel Order Request',
-                style: GoogleFonts.archivo(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.black,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Cancel Order Request',
+                    style: GoogleFonts.archivo(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      const Text(
+                        '\u2713 ',
+                        style: TextStyle(color: Colors.green),
+                      ),
+                      Text(
+                        'to approve the request, \u274C to decline the request.',
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
+                    ],
+                  )
+                ],
               ),
             ),
             const SizedBox(
@@ -131,8 +148,8 @@ class _AdminPageState extends State<AdminPage> {
               child: Text(
                 'Completed Order Information',
                 style: GoogleFonts.archivo(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w900,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
                   color: Colors.black,
                 ),
               ),
@@ -144,18 +161,17 @@ class _AdminPageState extends State<AdminPage> {
           ],
         );
         break;
-        case AdminViews.onGoing:
+      case AdminViews.onGoing:
         return Column(
           children: [
             Container(
-              // width: MediaQuery.of(context).size.width*0.7,
               padding: const EdgeInsets.only(left: 10),
               alignment: Alignment.centerLeft,
               child: Text(
                 'On-Going Order Information',
                 style: GoogleFonts.archivo(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w900,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
                   color: Colors.black,
                 ),
               ),
@@ -167,7 +183,7 @@ class _AdminPageState extends State<AdminPage> {
           ],
         );
         break;
-        case AdminViews.pending:
+      case AdminViews.pending:
         return Column(
           children: [
             Container(
@@ -176,8 +192,8 @@ class _AdminPageState extends State<AdminPage> {
               child: Text(
                 'Pending Order Information',
                 style: GoogleFonts.archivo(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w900,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
                   color: Colors.black,
                 ),
               ),
@@ -190,12 +206,20 @@ class _AdminPageState extends State<AdminPage> {
         );
         break;
       default:
-        return const SizedBox();
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.45,
+          padding: const EdgeInsets.all(12),
+          alignment: Alignment.center,
+          child: const Text(
+            'Press the listing on top to view more information.',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        );
     }
   }
-
-  // const Color(0xff53fdd7);
-  // const Color(0xff2c4260),
 
   Widget clWidget() {
     return Container(
@@ -249,7 +273,7 @@ class _AdminPageState extends State<AdminPage> {
   Widget listOfTitle(BuildContext context) {
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-        height: MediaQuery.of(context).size.height * 0.3,
+        height: MediaQuery.of(context).size.height * 0.26,
         width: double.infinity,
         child: ListView(
           scrollDirection: Axis.horizontal,
@@ -257,7 +281,7 @@ class _AdminPageState extends State<AdminPage> {
             //no of confinement lady
             Container(
               margin: const EdgeInsets.all(8),
-              width: 180,
+              width: 170,
               child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('users')
@@ -287,10 +311,10 @@ class _AdminPageState extends State<AdminPage> {
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    'No. of\nConfinement Lady',
+                                    'No. of\nService Provider',
                                     softWrap: true,
                                     style: GoogleFonts.archivo(
-                                      fontSize: 24,
+                                      fontSize: 22,
                                       fontWeight: FontWeight.w900,
                                       color: Colors.white,
                                     ),
@@ -328,10 +352,10 @@ class _AdminPageState extends State<AdminPage> {
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                'No. of\nConfinement Lady',
+                                'No. of\nService Provider',
                                 softWrap: true,
                                 style: GoogleFonts.archivo(
-                                  fontSize: 24,
+                                  fontSize: 22,
                                   fontWeight: FontWeight.w900,
                                   color: Colors.white,
                                 ),
@@ -343,7 +367,7 @@ class _AdminPageState extends State<AdminPage> {
                                 '0',
                                 softWrap: true,
                                 style: GoogleFonts.archivo(
-                                  fontSize: 24,
+                                  fontSize: 22,
                                   fontWeight: FontWeight.w900,
                                   color: Colors.white,
                                 ),
@@ -358,7 +382,7 @@ class _AdminPageState extends State<AdminPage> {
             //no of mother
             Container(
               margin: const EdgeInsets.all(8),
-              width: 180,
+              width: 170,
               child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('users')
@@ -388,10 +412,10 @@ class _AdminPageState extends State<AdminPage> {
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    'No. of\nMother',
+                                    'No. of\nBuyer',
                                     softWrap: true,
                                     style: GoogleFonts.archivo(
-                                      fontSize: 24,
+                                      fontSize: 22,
                                       fontWeight: FontWeight.w900,
                                       color: Colors.white,
                                     ),
@@ -429,10 +453,10 @@ class _AdminPageState extends State<AdminPage> {
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                'No. of\nMother',
+                                'No. of\nBuyer',
                                 softWrap: true,
                                 style: GoogleFonts.archivo(
-                                  fontSize: 24,
+                                  fontSize: 22,
                                   fontWeight: FontWeight.w900,
                                   color: Colors.white,
                                 ),
@@ -444,7 +468,7 @@ class _AdminPageState extends State<AdminPage> {
                                 '0',
                                 softWrap: true,
                                 style: GoogleFonts.archivo(
-                                  fontSize: 24,
+                                  fontSize: 22,
                                   fontWeight: FontWeight.w900,
                                   color: Colors.white,
                                 ),
@@ -459,7 +483,7 @@ class _AdminPageState extends State<AdminPage> {
             //no of cancel order
             Container(
               margin: const EdgeInsets.all(8),
-              width: 180,
+              width: 170,
               child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('cancelOrder')
@@ -491,7 +515,7 @@ class _AdminPageState extends State<AdminPage> {
                                     'Cancel\nOrder',
                                     softWrap: true,
                                     style: GoogleFonts.archivo(
-                                      fontSize: 24,
+                                      fontSize: 22,
                                       fontWeight: FontWeight.w900,
                                       color: Colors.white,
                                     ),
@@ -532,7 +556,7 @@ class _AdminPageState extends State<AdminPage> {
                                 'Cancel\nOrder',
                                 softWrap: true,
                                 style: GoogleFonts.archivo(
-                                  fontSize: 24,
+                                  fontSize: 22,
                                   fontWeight: FontWeight.w900,
                                   color: Colors.white,
                                 ),
@@ -544,214 +568,7 @@ class _AdminPageState extends State<AdminPage> {
                                 '0',
                                 softWrap: true,
                                 style: GoogleFonts.archivo(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }),
-            ),
-            //no of progress order
-            Container(
-              margin: const EdgeInsets.all(8),
-              width: 180,
-              child: StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('onProgressOrder')
-                      .snapshots(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.active) {
-                      final data = snapshot.data.docs;
-                      return InkWell(
-                        onTap: () {
-                          setState(() {
-                            view = AdminViews.onGoing;
-                            stream = FirebaseFirestore.instance
-                                .collection('onProgressOrder')
-                                .orderBy('endDate', descending: true)
-                                .snapshots();
-                          });
-                        },
-                        child: Card(
-                          elevation: 5,
-                          color: Colors.orange[800],
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'On-Going Order',
-                                    softWrap: true,
-                                    style: GoogleFonts.archivo(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 0, 10, 5),
-                                  child: Text(
-                                    data.length.toString(),
-                                    softWrap: true,
-                                    style: GoogleFonts.archivo(
-                                      fontSize: 70,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-                    return Card(
-                      elevation: 5,
-                      color: Colors.orange[800],
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'On-Going Order',
-                                softWrap: true,
-                                style: GoogleFonts.archivo(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                '0',
-                                softWrap: true,
-                                style: GoogleFonts.archivo(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }),
-            ),
-
-            //no of success order
-            Container(
-              margin: const EdgeInsets.all(8),
-              width: 180,
-              child: StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('customerOrderHistory')
-                      .snapshots(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.active) {
-                      final data = snapshot.data.docs;
-                      return InkWell(
-                        onTap: (() {
-                          setState(() {
-                            view = AdminViews.completed;
-                            stream = FirebaseFirestore.instance
-                                .collection('customerOrderHistory')
-                                .orderBy('endDate', descending: true)
-                                .snapshots();
-                          });
-                        }),
-                        child: Card(
-                          elevation: 5,
-                          color: Colors.green[500],
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Completed Order',
-                                    softWrap: true,
-                                    style: GoogleFonts.archivo(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 0, 10, 5),
-                                  child: Text(
-                                    data.length.toString(),
-                                    softWrap: true,
-                                    style: GoogleFonts.archivo(
-                                      fontSize: 70,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-                    return Card(
-                      elevation: 5,
-                      color: Colors.green[500],
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'Completed Order',
-                                softWrap: true,
-                                style: GoogleFonts.archivo(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                '0',
-                                softWrap: true,
-                                style: GoogleFonts.archivo(
-                                  fontSize: 24,
+                                  fontSize: 22,
                                   fontWeight: FontWeight.w900,
                                   color: Colors.white,
                                 ),
@@ -766,7 +583,7 @@ class _AdminPageState extends State<AdminPage> {
             //no of pending order
             Container(
               margin: const EdgeInsets.all(8),
-              width: 180,
+              width: 170,
               child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('onPendingOrder')
@@ -801,7 +618,7 @@ class _AdminPageState extends State<AdminPage> {
                                     'Pending Order',
                                     softWrap: true,
                                     style: GoogleFonts.archivo(
-                                      fontSize: 24,
+                                      fontSize: 22,
                                       fontWeight: FontWeight.w900,
                                       color: Colors.white,
                                     ),
@@ -842,7 +659,7 @@ class _AdminPageState extends State<AdminPage> {
                                 'Pending Order',
                                 softWrap: true,
                                 style: GoogleFonts.archivo(
-                                  fontSize: 24,
+                                  fontSize: 22,
                                   fontWeight: FontWeight.w900,
                                   color: Colors.white,
                                 ),
@@ -854,7 +671,213 @@ class _AdminPageState extends State<AdminPage> {
                                 '0',
                                 softWrap: true,
                                 style: GoogleFonts.archivo(
-                                  fontSize: 24,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+            //no of progress order
+            Container(
+              margin: const EdgeInsets.all(8),
+              width: 170,
+              child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('onProgressOrder')
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.active) {
+                      final data = snapshot.data.docs;
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            view = AdminViews.onGoing;
+                            stream = FirebaseFirestore.instance
+                                .collection('onProgressOrder')
+                                .orderBy('endDate', descending: true)
+                                .snapshots();
+                          });
+                        },
+                        child: Card(
+                          elevation: 5,
+                          color: Colors.orange[800],
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'On-Going Order',
+                                    softWrap: true,
+                                    style: GoogleFonts.archivo(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 10, 5),
+                                  child: Text(
+                                    data.length.toString(),
+                                    softWrap: true,
+                                    style: GoogleFonts.archivo(
+                                      fontSize: 70,
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    return Card(
+                      elevation: 5,
+                      color: Colors.orange[800],
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'On-Going Order',
+                                softWrap: true,
+                                style: GoogleFonts.archivo(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                '0',
+                                softWrap: true,
+                                style: GoogleFonts.archivo(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+            //no of success order
+            Container(
+              margin: const EdgeInsets.all(8),
+              width: 170,
+              child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('customerOrderHistory')
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.active) {
+                      final data = snapshot.data.docs;
+                      return InkWell(
+                        onTap: (() {
+                          setState(() {
+                            view = AdminViews.completed;
+                            stream = FirebaseFirestore.instance
+                                .collection('customerOrderHistory')
+                                .orderBy('endDate', descending: true)
+                                .snapshots();
+                          });
+                        }),
+                        child: Card(
+                          elevation: 5,
+                          color: Colors.green[500],
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Completed Order',
+                                    softWrap: true,
+                                    style: GoogleFonts.archivo(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 10, 5),
+                                  child: Text(
+                                    data.length.toString(),
+                                    softWrap: true,
+                                    style: GoogleFonts.archivo(
+                                      fontSize: 70,
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    return Card(
+                      elevation: 5,
+                      color: Colors.green[500],
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Completed Order',
+                                softWrap: true,
+                                style: GoogleFonts.archivo(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                '0',
+                                softWrap: true,
+                                style: GoogleFonts.archivo(
+                                  fontSize: 22,
                                   fontWeight: FontWeight.w900,
                                   color: Colors.white,
                                 ),

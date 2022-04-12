@@ -1,9 +1,5 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:fyp2/service/database.dart';
 import 'package:intl/intl.dart';
 
 import '../../../service/videos/video_player.dart';

@@ -109,7 +109,7 @@ class CancelOrderDetail extends StatelessWidget {
                 padding: const EdgeInsets.all(12.0),
                 child: Row(children: [
                   const Text(
-                    'Confinement Lady ID:',
+                    'Service Provider ID:',
                   ),
                   const Spacer(),
                   SizedBox(
@@ -124,7 +124,7 @@ class CancelOrderDetail extends StatelessWidget {
                 padding: const EdgeInsets.all(12.0),
                 child: Row(children: [
                   const Text(
-                    'Mother ID:',
+                    'Buyer ID:',
                   ),
                   const Spacer(),
                   SizedBox(

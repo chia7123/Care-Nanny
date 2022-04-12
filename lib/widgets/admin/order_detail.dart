@@ -74,22 +74,7 @@ class OrderDetail extends StatelessWidget {
                 padding: const EdgeInsets.all(12.0),
                 child: Row(children: [
                   const Text(
-                    'Mother ID:',
-                  ),
-                  const Spacer(),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.45,
-                    child: Text(
-                      data['cusID'],
-                    ),
-                  )
-                ]),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(children: [
-                  const Text(
-                    'Confinement Lady ID:',
+                    'Service Provider ID:',
                   ),
                   const Spacer(),
                   SizedBox(
@@ -100,20 +85,35 @@ class OrderDetail extends StatelessWidget {
                   )
                 ]),
               ),
-               const Divider(
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(children: [
+                  const Text(
+                    'Buyer ID:',
+                  ),
+                  const Spacer(),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.45,
+                    child: Text(
+                      data['cusID'],
+                    ),
+                  )
+                ]),
+              ),
+              const Divider(
                 thickness: 5,
               ),
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
                         'Services Included: ',
                       ),
                       Container(
-                        height:250,
+                        height: 250,
                         width: MediaQuery.of(context).size.width * 0.5,
                         padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
                         child: ListView.builder(
@@ -124,8 +124,6 @@ class OrderDetail extends StatelessWidget {
                       ),
                     ]),
               ),
-             
-              
             ],
           ),
         ),
