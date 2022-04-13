@@ -27,7 +27,7 @@ class PersonalInfo extends StatefulWidget {
 class _PersonalInfoState extends State<PersonalInfo> {
   final user = FirebaseAuth.instance.currentUser;
   final _formKey = GlobalKey<FormState>();
-  final List<String> _users = ['New Mother', 'Confinement Lady'];
+  final List<String> _users = ['Buyer', 'Confinement Lady'];
   final List<String> _vegans = ['Yes', 'No'];
   final List<String> _races = ['Chinese', 'Malay', 'India', 'Others...'];
   final List<String> _religions = [

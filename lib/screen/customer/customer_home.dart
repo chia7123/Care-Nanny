@@ -113,9 +113,9 @@ class _CustomerHomeState extends State<CustomerHome> {
           }),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Theme.of(context).primaryColor,
-        label: const Text('Order Now'),
+        label: const Text('Make Appointment'),
         icon: const Icon(
-          Icons.wallet_travel,
+          Icons.add_to_photos,
         ),
         elevation: 10,
         onPressed: () => Navigator.push(
