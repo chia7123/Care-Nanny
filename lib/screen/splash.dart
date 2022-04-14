@@ -27,17 +27,20 @@ class _splashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const Spacer(),
             SizedBox(
-              height: 600,
+              height: MediaQuery.of(context).size.height*0.5,
               child: Image.asset(
                 'assets/images/logo.png',
                 fit: BoxFit.contain,
               ),
             ),
+            const Spacer(),
             const SpinKitRotatingCircle(
               color: Colors.white,
               size: 50.0,
-            )
+            ),
+            const Spacer(),
           ],
         ),
       ),

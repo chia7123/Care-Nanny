@@ -26,14 +26,25 @@ class CLPendingOrderDetail extends StatelessWidget {
     );
   }
 
-  Future<void> declineOrder(String id) {
-    return FirebaseFirestore.instance
+  Future<void> declineOrder(String id) async {
+    await FirebaseFirestore.instance
+        .collection('onPendingOrder')
+        .doc(id)
+        .get()
+        .then((doc) {
+      FirebaseFirestore.instance
+          .collection('declinedOrder')
+          .doc(id)
+          .set(doc.data());
+    }).catchError((error) => Fluttertoast.showToast(msg: "$error"));
+
+    await FirebaseFirestore.instance
         .collection('onPendingOrder')
         .doc(id)
         .delete()
-        .then((value) => Fluttertoast.showToast(msg: 'Order Declined'))
-        .catchError((error) =>
-            Fluttertoast.showToast(msg: "Failed to delete user: $error"));
+        .catchError((error) => Fluttertoast.showToast(msg: "$error"));
+
+    return Fluttertoast.showToast(msg: 'Order Declined');
   }
 
   Future<void> acceptOrder(String id, BuildContext context) {
@@ -254,13 +265,13 @@ class CLPendingOrderDetail extends StatelessWidget {
                       ),
                     ),
                     TextButton.icon(
-                      icon: Icon(Icons.check, color: Colors.red[600]),
+                      icon: Icon(Icons.check, color: Colors.green[600]),
                       onPressed: () {
                         acceptOrder(doc['orderID'], context);
                       },
                       label: Text(
                         'Accept Order',
-                        style: TextStyle(color: Colors.red[600]),
+                        style: TextStyle(color: Colors.green[600]),
                       ),
                     ),
                   ],

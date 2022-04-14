@@ -11,15 +11,14 @@ class Welcome extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Spacer(),
+            const Spacer(),
             SizedBox(
-              height: 500,
+              height: MediaQuery.of(context).size.height*0.6,
               child: Image.asset(
                 'assets/images/logo.png',
                 fit: BoxFit.cover,
               ),
             ),
-            
             const Spacer(),
             const Align(
               alignment: Alignment.centerLeft,

@@ -28,7 +28,7 @@ class ResetPassword extends StatelessWidget {
               height: 10,
             ),
             MaterialButton(
-              color: Colors.orange,
+              color: Theme.of(context).primaryColor,
               shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),

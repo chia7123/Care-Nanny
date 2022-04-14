@@ -13,6 +13,7 @@ class AdminViews {
   static const onGoing = AdminView('On Going Order');
   static const completed = AdminView('Completed Order');
   static const pending = AdminView('Pending Order');
+  static const declined = AdminView('Declined Order');
 
   static const all = <AdminView>[
     cl,
@@ -21,5 +22,6 @@ class AdminViews {
     onGoing,
     completed,
     pending,
+    declined
   ];
 }

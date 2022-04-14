@@ -26,6 +26,7 @@ class _AdminPageState extends State<AdminPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: const Text(
           'Dashboard',
@@ -41,7 +42,7 @@ class _AdminPageState extends State<AdminPage> {
                 color: Colors.red,
               ))
         ],
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[100],
       ),
       body: SafeArea(
         child: Column(
@@ -205,6 +206,28 @@ class _AdminPageState extends State<AdminPage> {
           ],
         );
         break;
+         case AdminViews.declined:
+        return Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.only(left: 10),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Declined Order Information',
+                style: GoogleFonts.archivo(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            orderWidget(),
+          ],
+        );
+        break;
       default:
         return Container(
           height: MediaQuery.of(context).size.height * 0.45,
@@ -299,7 +322,7 @@ class _AdminPageState extends State<AdminPage> {
                           });
                         },
                         child: Card(
-                          elevation: 5,
+                          elevation: 10,
                           color: Colors.amber[600],
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15)),
@@ -341,7 +364,7 @@ class _AdminPageState extends State<AdminPage> {
                       );
                     }
                     return Card(
-                      elevation: 5,
+                      elevation: 10,
                       color: Colors.amber[600],
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15)),
@@ -400,7 +423,7 @@ class _AdminPageState extends State<AdminPage> {
                           });
                         }),
                         child: Card(
-                          elevation: 5,
+                          elevation: 10,
                           color: Colors.blue[900],
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15)),
@@ -442,7 +465,7 @@ class _AdminPageState extends State<AdminPage> {
                       );
                     }
                     return Card(
-                      elevation: 5,
+                      elevation: 10,
                       color: Colors.blue[900],
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15)),
@@ -500,7 +523,7 @@ class _AdminPageState extends State<AdminPage> {
                           });
                         }),
                         child: Card(
-                          elevation: 5,
+                          elevation: 10,
                           color: Colors.red[900],
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15)),
@@ -542,7 +565,7 @@ class _AdminPageState extends State<AdminPage> {
                       );
                     }
                     return Card(
-                      elevation: 5,
+                      elevation: 10,
                       color: Colors.red[900],
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15)),
@@ -603,7 +626,7 @@ class _AdminPageState extends State<AdminPage> {
                           });
                         },
                         child: Card(
-                          elevation: 5,
+                          elevation: 10,
                           color: Colors.lightBlue[200],
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15)),
@@ -645,7 +668,7 @@ class _AdminPageState extends State<AdminPage> {
                       );
                     }
                     return Card(
-                      elevation: 5,
+                      elevation: 10,
                       color: Colors.lightBlue[200],
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15)),
@@ -706,7 +729,7 @@ class _AdminPageState extends State<AdminPage> {
                           });
                         },
                         child: Card(
-                          elevation: 5,
+                          elevation: 10,
                           color: Colors.orange[800],
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15)),
@@ -748,7 +771,7 @@ class _AdminPageState extends State<AdminPage> {
                       );
                     }
                     return Card(
-                      elevation: 5,
+                      elevation: 10,
                       color: Colors.orange[800],
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15)),
@@ -809,7 +832,7 @@ class _AdminPageState extends State<AdminPage> {
                           });
                         }),
                         child: Card(
-                          elevation: 5,
+                          elevation: 10,
                           color: Colors.green[500],
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15)),
@@ -851,7 +874,7 @@ class _AdminPageState extends State<AdminPage> {
                       );
                     }
                     return Card(
-                      elevation: 5,
+                      elevation: 10,
                       color: Colors.green[500],
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15)),
@@ -889,6 +912,110 @@ class _AdminPageState extends State<AdminPage> {
                     );
                   }),
             ),
+            //no of declined order
+            Container(
+              margin: const EdgeInsets.all(8),
+              width: 170,
+              child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('declinedOrder')
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.active) {
+                      final data = snapshot.data.docs;
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            view = AdminViews.pending;
+                            stream = FirebaseFirestore.instance
+                                .collection('declinedOrder')
+                                .orderBy('endDate', descending: true)
+                                .snapshots();
+                          });
+                        },
+                        child: Card(
+                          elevation: 10,
+                          color: Colors.purple[800],
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Declined Order',
+                                    softWrap: true,
+                                    style: GoogleFonts.archivo(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 10, 5),
+                                  child: Text(
+                                    data.length.toString(),
+                                    softWrap: true,
+                                    style: GoogleFonts.archivo(
+                                      fontSize: 70,
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    return Card(
+                      elevation: 10,
+                      color: Colors.purple[800],
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Declined Order',
+                                softWrap: true,
+                                style: GoogleFonts.archivo(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                '0',
+                                softWrap: true,
+                                style: GoogleFonts.archivo(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+            
           ],
         ));
   }
