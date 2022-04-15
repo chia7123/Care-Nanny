@@ -221,7 +221,7 @@ class _OrderProcessState extends State<OrderProcess> {
               ),
               Step(
                 title: const Text(
-                  'Select Date of Confinement',
+                  'Select Confinement Date',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w800,

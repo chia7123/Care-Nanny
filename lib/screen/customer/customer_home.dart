@@ -113,7 +113,7 @@ class _CustomerHomeState extends State<CustomerHome> {
           }),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Theme.of(context).primaryColor,
-        label: const Text('Make Appointment'),
+        label: const Text('Order Now'),
         icon: const Icon(
           Icons.add_to_photos,
         ),

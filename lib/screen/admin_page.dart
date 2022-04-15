@@ -206,7 +206,7 @@ class _AdminPageState extends State<AdminPage> {
           ],
         );
         break;
-         case AdminViews.declined:
+      case AdminViews.declined:
         return Column(
           children: [
             Container(
@@ -927,7 +927,7 @@ class _AdminPageState extends State<AdminPage> {
                       return InkWell(
                         onTap: () {
                           setState(() {
-                            view = AdminViews.pending;
+                            view = AdminViews.declined;
                             stream = FirebaseFirestore.instance
                                 .collection('declinedOrder')
                                 .orderBy('endDate', descending: true)
@@ -1015,7 +1015,6 @@ class _AdminPageState extends State<AdminPage> {
                     );
                   }),
             ),
-            
           ],
         ));
   }

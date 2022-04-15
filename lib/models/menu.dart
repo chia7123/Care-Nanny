@@ -11,11 +11,13 @@ class CustomerMenuItems {
   static const home = MenuItem('Home', Icons.home);
   static const profile = MenuItem('Profile', Icons.person);
   static const orders = MenuItem('Orders', Icons.pending_actions);
+  static const refund = MenuItem('Refund', Icons.refresh_rounded);
   static const aboutus = MenuItem('About Us', Icons.info);
 
   static const all = <MenuItem>[
     home,
     profile,
+    refund,
     orders,
     aboutus,
   ];

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:fyp2/screen/aboutUs.dart';
+import 'package:fyp2/screen/customer/cancel_order_status.dart';
 import 'package:fyp2/screen/customer/customer_profile.dart';
 import 'package:fyp2/screen/customer/order_tab.dart';
 
@@ -54,6 +55,8 @@ class _CustomerSideNavState extends State<CustomerSideNav> {
         );
       case CustomerMenuItems.aboutus:
         return const AboutUs();
+        case CustomerMenuItems.refund:
+        return CancelOrderStatusPage();
       default:
         return CustomerHome();
         break;

@@ -28,79 +28,87 @@ class _CancelOrderListState extends State<CancelOrderList> {
                 data[index]['status'] == 'pending'
                     ? isPending = true
                     : isPending = false;
-                return ListTile(
-                    tileColor: !isPending ? Colors.grey[200] : null,
-                    minLeadingWidth: 5,
-                    horizontalTitleGap: 5,
-                    isThreeLine: true,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => CancelOrderDetail(
-                            data: data[index],
-                          ),
-                        ),
-                      );
-                    },
-                    leading: Text('${index + 1}.'),
-                    title: Text(
-                      data[index]['orderID'],
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Reason: ${data[index]['cancelReason']}',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const Text('Click to view more details.'),
-                      ],
-                    ),
-                    trailing: isPending
-                        ? SizedBox(
-                            width: 80,
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 35,
-                                  decoration: BoxDecoration(
-                                      color: Colors.green[600],
-                                      shape: BoxShape.circle),
-                                  child: IconButton(
-                                    color: Colors.white,
-                                    icon: const Icon(Icons.check),
-                                    iconSize: 16,
-                                    onPressed: () =>
-                                        approveRequest(data[index]),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                Container(
-                                  width: 35,
-                                  decoration: BoxDecoration(
-                                      color: Colors.red[800],
-                                      shape: BoxShape.circle),
-                                  child: IconButton(
-                                    color: Colors.white,
-                                    icon: const Icon(Icons.close),
-                                    iconSize: 16,
-                                    onPressed: () => rejectRequest(data[index]),
-                                  ),
-                                ),
-                              ],
+                return Card(
+                  margin: const EdgeInsets.symmetric(vertical: 8,horizontal: 4),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  elevation: 5,
+                  child: ListTile(
+                     shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                      tileColor: !isPending ? Colors.grey[200] : null,
+                      minLeadingWidth: 5,
+                      horizontalTitleGap: 5,
+                      isThreeLine: true,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => CancelOrderDetail(
+                              data: data[index],
                             ),
-                          )
-                        : const ElevatedButton(
-                            child: Text('Reviewed'),
-                            onPressed: null,
-                          ));
+                          ),
+                        );
+                      },
+                      leading: Text('${index + 1}.'),
+                      title: Text(
+                        data[index]['orderID'],
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Reason: ${data[index]['cancelReason']}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const Text('Click to view more details.'),
+                        ],
+                      ),
+                      trailing: isPending
+                          ? SizedBox(
+                              width: 80,
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 35,
+                                    decoration: BoxDecoration(
+                                        color: Colors.green[600],
+                                        shape: BoxShape.circle),
+                                    child: IconButton(
+                                      color: Colors.white,
+                                      icon: const Icon(Icons.check),
+                                      iconSize: 16,
+                                      onPressed: () =>
+                                          approveRequest(data[index]),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  Container(
+                                    width: 35,
+                                    decoration: BoxDecoration(
+                                        color: Colors.red[800],
+                                        shape: BoxShape.circle),
+                                    child: IconButton(
+                                      color: Colors.white,
+                                      icon: const Icon(Icons.close),
+                                      iconSize: 16,
+                                      onPressed: () => rejectRequest(data[index]),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : const ElevatedButton(
+                              child: Text('Reviewed'),
+                              onPressed: null,
+                            )),
+                );
               },
             );
           }
