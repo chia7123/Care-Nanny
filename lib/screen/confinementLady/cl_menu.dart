@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../models/menu.dart';
 import '../../widgets/full_screen_image.dart';
@@ -66,7 +65,7 @@ class CLMenu extends StatelessWidget {
                           margin: const EdgeInsets.only(left: 30),
                           child: Text(
                             doc['name'],
-                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white),
                           ),
                         ),
                         const SizedBox(
@@ -74,7 +73,7 @@ class CLMenu extends StatelessWidget {
                         )
                       ],
                     ),
-                    ...CustomerMenuItems.all.map(buildMenuItems).toList(),
+                    ...CLMenuItems.all.map(buildMenuItems).toList(),
                     const Spacer(),
                     Container(
                       margin: const EdgeInsets.only(left: 20),

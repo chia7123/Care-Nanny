@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fyp2/screen/welcome.dart';
 import 'package:fyp2/screen/wrapper.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -14,7 +13,7 @@ class _splashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(
-      const Duration(seconds: 2),
+      const Duration(seconds: 1),
       () => Navigator.pushReplacementNamed(context, Wrapper.routeName)
     );
   }

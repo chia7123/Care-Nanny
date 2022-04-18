@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp2/screen/customer/cl_detail.dart';
-import 'package:fyp2/widgets/profile_card.dart';
 
 class ConLadyList extends StatelessWidget {
   CollectionReference orderInfo =
@@ -136,7 +135,6 @@ class ConLadyList extends StatelessWidget {
                             ),
                             style: ListTileStyle.list,
                             onTap: () {
-                              // _selectCL(context, user['id']);
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

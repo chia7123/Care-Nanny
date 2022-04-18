@@ -68,7 +68,7 @@ class CustomerMenu extends StatelessWidget {
                           margin: const EdgeInsets.only(left: 30),
                           child: Text(
                             doc['name'],
-                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white),
                           ),
                         ),
                         const SizedBox(
