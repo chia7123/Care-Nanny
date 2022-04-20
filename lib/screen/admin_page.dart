@@ -409,7 +409,7 @@ class _AdminPageState extends State<AdminPage> {
               child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('users')
-                      .where('userType', isEqualTo: 'New Mother')
+                      .where('userType', isEqualTo: 'Buyer')
                       .snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {

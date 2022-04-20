@@ -63,7 +63,7 @@ class Wrapper extends StatelessWidget {
 
                     if (snapshot.data['userType'] == 'Confinement Lady') {
                       return const CLSideNav();
-                    } else if (snapshot.data['userType'] == 'New Mother') {
+                    } else if (snapshot.data['userType'] == 'Buyer') {
                       return const CustomerSideNav();
                     } else if (snapshot.data['userType'] == 'admin') {
                       return AdminPage();

@@ -112,24 +112,33 @@ class _PersonalInfoState extends State<PersonalInfo> {
                       const SizedBox(
                         height: 10,
                       ),
-                      DropdownButton(
-                        key: const ValueKey('user'),
-                        hint: const Text(
-                          'Choose Your Roles',
-                          textAlign: TextAlign.center,
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        child: DropdownButtonFormField(
+                          key: const ValueKey('user'),
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Please select your role';
+                            }
+                            return null;
+                          },
+                          hint: const Text(
+                            'Choose Your Roles',
+                            textAlign: TextAlign.center,
+                          ),
+                          value: _selectedUser,
+                          onChanged: (newValue) {
+                            setState(() {
+                              _selectedUser = newValue as String;
+                            });
+                          },
+                          items: _users.map((user) {
+                            return DropdownMenuItem(
+                              child: Text(user),
+                              value: user,
+                            );
+                          }).toList(),
                         ),
-                        value: _selectedUser,
-                        onChanged: (newValue) {
-                          setState(() {
-                            _selectedUser = newValue as String;
-                          });
-                        },
-                        items: _users.map((user) {
-                          return DropdownMenuItem(
-                            child: Text(user),
-                            value: user,
-                          );
-                        }).toList(),
                       ),
                       TextFormField(
                         key: const ValueKey('name'),
@@ -165,20 +174,30 @@ class _PersonalInfoState extends State<PersonalInfo> {
                             child: Row(
                               children: [
                                 const Text('Race : '),
-                                DropdownButton(
-                                  key: const ValueKey('race'),
-                                  value: _selectedRace,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      _selectedRace = newValue as String;
-                                    });
-                                  },
-                                  items: _races.map((race) {
-                                    return DropdownMenuItem(
-                                      child: Text(race),
-                                      value: race,
-                                    );
-                                  }).toList(),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.25,
+                                  child: DropdownButtonFormField(
+                                    validator: (value) {
+                                      if (value == null) {
+                                        return 'Select race';
+                                      }
+                                      return null;
+                                    },
+                                    key: const ValueKey('race'),
+                                    value: _selectedRace,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        _selectedRace = newValue as String;
+                                      });
+                                    },
+                                    items: _races.map((race) {
+                                      return DropdownMenuItem(
+                                        child: Text(race),
+                                        value: race,
+                                      );
+                                    }).toList(),
+                                  ),
                                 ),
                               ],
                             ),
@@ -187,20 +206,30 @@ class _PersonalInfoState extends State<PersonalInfo> {
                             child: Row(
                               children: [
                                 const Text('Religion : '),
-                                DropdownButton(
-                                  key: const ValueKey('religion'),
-                                  value: _selectedReligion,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      _selectedReligion = newValue as String;
-                                    });
-                                  },
-                                  items: _religions.map((religion) {
-                                    return DropdownMenuItem(
-                                      child: Text(religion),
-                                      value: religion,
-                                    );
-                                  }).toList(),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.25,
+                                  child: DropdownButtonFormField(
+                                    validator: (value) {
+                                      if (value == null) {
+                                        return 'Select religion';
+                                      }
+                                      return null;
+                                    },
+                                    key: const ValueKey('religion'),
+                                    value: _selectedReligion,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        _selectedReligion = newValue as String;
+                                      });
+                                    },
+                                    items: _religions.map((religion) {
+                                      return DropdownMenuItem(
+                                        child: Text(religion),
+                                        value: religion,
+                                      );
+                                    }).toList(),
+                                  ),
                                 ),
                               ],
                             ),
@@ -215,6 +244,12 @@ class _PersonalInfoState extends State<PersonalInfo> {
                                 const Text('Nationality : '),
                                 Expanded(
                                   child: TextFormField(
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return 'Please enter nationality';
+                                      }
+                                      return null;
+                                    },
                                     key: const ValueKey('nationality'),
                                     controller: nationality,
                                   ),
@@ -227,29 +262,35 @@ class _PersonalInfoState extends State<PersonalInfo> {
                               children: [
                                 const Text('Vegetarian : '),
                                 Expanded(
-                                  child: DropdownButton(
-                                    key: const ValueKey('vegan'),
-                                    icon: const Visibility(
-                                      visible: false,
-                                      child: Icon(Icons.arrow_downward),
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.25,
+                                    child: DropdownButtonFormField(
+                                      validator: (value) {
+                                        if (value == null) {
+                                          return 'Select Vegetarianality';
+                                        }
+                                        return null;
+                                      },
+                                      key: const ValueKey('vegan'),
+                                      value: _selectedVegan,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedVegan = value as String;
+                                        });
+                                        if (_selectedVegan == 'Yes') {
+                                          _isVegan = true;
+                                        } else {
+                                          _isVegan = false;
+                                        }
+                                      },
+                                      items: _vegans.map((vegan) {
+                                        return DropdownMenuItem(
+                                          child: Text(vegan),
+                                          value: vegan,
+                                        );
+                                      }).toList(),
                                     ),
-                                    value: _selectedVegan,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _selectedVegan = value as String;
-                                      });
-                                      if (_selectedVegan == 'Yes') {
-                                        _isVegan = true;
-                                      } else {
-                                        _isVegan = false;
-                                      }
-                                    },
-                                    items: _vegans.map((vegan) {
-                                      return DropdownMenuItem(
-                                        child: Text(vegan),
-                                        value: vegan,
-                                      );
-                                    }).toList(),
                                   ),
                                 ),
                               ],
@@ -262,6 +303,12 @@ class _PersonalInfoState extends State<PersonalInfo> {
                           const Text('Date of Birth: '),
                           Expanded(
                             child: TextFormField(
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please select your birth date';
+                                }
+                                return null;
+                              },
                               readOnly: true,
                               key: const ValueKey('dob'),
                               controller: dob,
@@ -294,6 +341,12 @@ class _PersonalInfoState extends State<PersonalInfo> {
                           Expanded(
                             flex: 7,
                             child: TextFormField(
+                              validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter your address';
+                            }
+                            return null;
+                          },
                               key: const ValueKey('detailAddress'),
                               minLines: 1,
                               maxLines: 2,
@@ -313,6 +366,12 @@ class _PersonalInfoState extends State<PersonalInfo> {
                         ],
                       ),
                       TextFormField(
+                        validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter your postcode';
+                            }
+                            return null;
+                          },
                         key: const ValueKey('postalCode'),
                         decoration: const InputDecoration(
                           hintText: 'Postal Code',
@@ -320,6 +379,12 @@ class _PersonalInfoState extends State<PersonalInfo> {
                         controller: postalCode,
                       ),
                       TextFormField(
+                        validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enetr your area state';
+                            }
+                            return null;
+                          },
                         key: const ValueKey('stateArea'),
                         decoration: const InputDecoration(
                           hintText: 'State, Area',
@@ -350,6 +415,12 @@ class _PersonalInfoState extends State<PersonalInfo> {
                         ),
                       ),
                       TextFormField(
+                        validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter your banking information';
+                            }
+                            return null;
+                          },
                         key: const ValueKey('benefit bank'),
                         decoration: const InputDecoration(
                           hintText:
@@ -358,6 +429,12 @@ class _PersonalInfoState extends State<PersonalInfo> {
                         controller: bankBenefit,
                       ),
                       TextFormField(
+                        validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter your bank acocount';
+                            }
+                            return null;
+                          },
                         key: const ValueKey('bankAcc'),
                         decoration: const InputDecoration(
                           hintText: 'Bank Account No.',
@@ -501,6 +578,8 @@ class _PersonalInfoState extends State<PersonalInfo> {
 
     if (isValid) {
       termsCondition(data);
+    }else {
+      Fluttertoast.showToast(msg: 'Please agree to the T&C first.');
     }
   }
 
