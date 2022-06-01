@@ -143,7 +143,7 @@ class CancelOrder extends StatelessWidget {
                   height: 5,
                 ),
                 Text(
-                  'Please provide a proper reason to cancel the order.',
+                  'Please provide a proper reason to cancel the order otherwise the money would not be refund.',
                   style: TextStyle(
                       fontWeight: FontWeight.w200,
                       fontSize: 14,

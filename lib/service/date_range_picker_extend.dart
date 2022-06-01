@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DateRangePickerExtend extends StatefulWidget {
-  DateRangePickerExtend({Key key, this.clID, this.orderID, this.selectedDate})
+  DateRangePickerExtend({Key key, this.clID, this.orderID, this.selectedDate, this.minDate})
       : super(key: key);
   final String orderID;
   final String clID;
+  final DateTime minDate;
   final Function(DateTime, int) selectedDate;
 
   @override
@@ -77,6 +78,8 @@ class _DateRangePickerExtendState extends State<DateRangePickerExtend> {
     return SafeArea(
       child: Scaffold(
         body: SfDateRangePicker(
+          minDate: widget.minDate,
+          initialDisplayDate: null,
           enableMultiView: true,
           navigationDirection: DateRangePickerNavigationDirection.vertical,
           extendableRangeSelectionDirection:

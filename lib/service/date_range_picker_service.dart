@@ -78,6 +78,7 @@ class _DateRangePickerServiceState extends State<DateRangePickerService> {
     return SafeArea(
       child: Scaffold(
         body: SfDateRangePicker(
+          minDate: DateTime.now(),
           enableMultiView: true,
           navigationDirection: DateRangePickerNavigationDirection.vertical,
           extendableRangeSelectionDirection:

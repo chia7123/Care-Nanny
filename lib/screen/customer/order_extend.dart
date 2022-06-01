@@ -180,6 +180,7 @@ class _ExtendOrderState extends State<ExtendOrder> {
                           clID: widget.doc['clID'],
                           orderID: widget.doc['orderID'],
                           selectedDate: _getSelectedDate,
+                          minDate: widget.doc['endDate'].toDate().add(const Duration(days: 1)),
                         ),
                       ),
                     );
