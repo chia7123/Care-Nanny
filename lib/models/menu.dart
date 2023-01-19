@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-class MenuItem {
+class MenuItems {
   final String title;
   final IconData icon;
 
-  const MenuItem(this.title, this.icon);
+  const MenuItems(this.title, this.icon);
 }
 
 class CustomerMenuItems {
-  static const home = MenuItem('Home', Icons.home);
-  static const profile = MenuItem('Profile', Icons.person);
-  static const orders = MenuItem('Orders', Icons.pending_actions);
-  static const refund = MenuItem('Refund', Icons.refresh_rounded);
-  static const aboutus = MenuItem('About Us', Icons.info);
+  static const home = MenuItems('Home', Icons.home);
+  static const profile = MenuItems('Profile', Icons.person);
+  static const orders = MenuItems('Orders', Icons.pending_actions);
+  static const refund = MenuItems('Refund', Icons.refresh_rounded);
+  static const aboutus = MenuItems('About Us', Icons.info);
 
-  static const all = <MenuItem>[
+  static const all = <MenuItems>[
     home,
     profile,
     refund,
@@ -24,12 +24,12 @@ class CustomerMenuItems {
 }
 
 class CLMenuItems {
-  static const home = MenuItem('Home', Icons.home);
-  static const profile = MenuItem('Profile', Icons.person);
-  static const orders = MenuItem('Orders', Icons.pending_actions);
-  static const aboutus = MenuItem('About Us', Icons.info);
+  static const home = MenuItems('Home', Icons.home);
+  static const profile = MenuItems('Profile', Icons.person);
+  static const orders = MenuItems('Orders', Icons.pending_actions);
+  static const aboutus = MenuItems('About Us', Icons.info);
 
-  static const all = <MenuItem>[
+  static const all = <MenuItems>[
     home,
     profile,
     orders,

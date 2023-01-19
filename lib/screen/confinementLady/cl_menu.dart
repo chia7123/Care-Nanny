@@ -2,14 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import '../../models/menu.dart';
+
 import '../../widgets/full_screen_image.dart';
 import '../wrapper.dart';
 
 class CLMenu extends StatelessWidget {
-  final MenuItem currentItem;
-  final ValueChanged<MenuItem> onSelectedItem;
+  final MenuItems currentItem;
+  final ValueChanged<MenuItems> onSelectedItem;
   const CLMenu({Key key, this.currentItem, this.onSelectedItem})
       : super(key: key);
 
@@ -114,7 +114,7 @@ class CLMenu extends StatelessWidget {
     );
   }
 
-  Widget buildMenuItems(MenuItem item) => ListTile(
+  Widget buildMenuItems(MenuItems item) => ListTile(
         selectedTileColor: Colors.white24,
         selected: currentItem == item,
         minLeadingWidth: 20,

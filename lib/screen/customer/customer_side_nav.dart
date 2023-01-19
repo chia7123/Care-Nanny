@@ -18,7 +18,7 @@ class CustomerSideNav extends StatefulWidget {
 }
 
 class _CustomerSideNavState extends State<CustomerSideNav> {
-  MenuItem currentItem = CustomerMenuItems.home;
+  MenuItems currentItem = CustomerMenuItems.home;
 
   @override
   Widget build(BuildContext context) {

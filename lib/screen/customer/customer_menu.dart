@@ -7,8 +7,8 @@ import '../../widgets/full_screen_image.dart';
 import '../wrapper.dart';
 
 class CustomerMenu extends StatelessWidget {
-  final MenuItem currentItem;
-  final ValueChanged<MenuItem> onSelectedItem;
+  final MenuItems currentItem;
+  final ValueChanged<MenuItems> onSelectedItem;
 
   const CustomerMenu({
     Key key,
@@ -117,7 +117,7 @@ class CustomerMenu extends StatelessWidget {
     );
   }
 
-  Widget buildMenuItems(MenuItem item) => ListTile(
+  Widget buildMenuItems(MenuItems item) => ListTile(
         selectedTileColor: Colors.white24,
         selected: currentItem == item,
         minLeadingWidth: 20,

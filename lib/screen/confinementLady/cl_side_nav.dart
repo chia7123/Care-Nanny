@@ -16,7 +16,7 @@ class CLSideNav extends StatefulWidget {
 }
 
 class _CLSideNavState extends State<CLSideNav> {
-  MenuItem currentItem = CLMenuItems.home;
+  MenuItems currentItem = CLMenuItems.home;
 
   @override
   Widget build(BuildContext context) {
