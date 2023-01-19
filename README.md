@@ -1,16 +1,18 @@
-# fyp2
+# Care Nanny
 
-A new Flutter project.
+This project is intended to develop a native mobile app that connects new mothers with confinement ladies who offer confinement services. This application is initially designed for Android devices, but plans are in place to release versions for other types of devices once the Android version is stable.
 
-## Getting Started
+The primary feature of the application will allow new mothers to easily locate and connect with confinement ladies in their area using GPS tracking. Additionally, the application will include other features that will make it more user-friendly and convenient for new mothers to use.
 
-This project is a starting point for a Flutter application.
+## Features
+Here are some core function of this application:
 
-A few resources to get you started if this is your first Flutter project:
+**- Fully customizable confinement service**
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+**- GPS track the nearby confinement lady**
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+**- Rating system**
+
+**- Recommended confinement lady features**
+
+##Screenshot
