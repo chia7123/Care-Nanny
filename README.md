@@ -37,3 +37,5 @@ Here are some core function of this application:
 ![image15](https://github.com/chia7123/Care-Nanny/blob/main/screenshot/15_50.png) 
 ![image16](https://github.com/chia7123/Care-Nanny/blob/main/screenshot/16_50.png) 
 ![image17](https://github.com/chia7123/Care-Nanny/blob/main/screenshot/17_50.png) 
+
+Feel free to reach me through email : chiaky1214@gmail.com
